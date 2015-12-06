@@ -87,7 +87,7 @@ namespace OrbisBot
             Client.Run(async () =>
             {
                 //Connect to the Discord server using our email and password
-                await Client.Connect("ethan.tang95@outlook.com", "WfpZw0j7wrx7NJN4I3oxg5qDSs");
+                await Client.Connect("", "");
             });
         }
     }
