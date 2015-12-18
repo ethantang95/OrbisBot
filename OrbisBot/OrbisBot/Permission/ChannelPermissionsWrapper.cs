@@ -35,6 +35,11 @@ namespace OrbisBot.Permission
             //The file will contain the channel ID, then the server ID, then is it muted or not
             //Rest will be individual's permission levels
 
+            if (channelSettings == null)
+            {
+                return;
+            }
+
             var channelPermission = new ChannelPermission(Int64.Parse(channelSettings[Constants.CHANNEL_ID]),
                     Int64.Parse(channelSettings[Constants.SERVER_ID]),
                     bool.Parse(channelSettings[Constants.CHANNEL_MUTED]));
@@ -90,6 +95,29 @@ namespace OrbisBot.Permission
             channel.Muted = muted;
             FileHelper.WriteValuesToFile(channel.toFileOutput(),
                 Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
+        }
+
+        public bool ContainsChannel(long channelId)
+        {
+            return ChannelPermissions.ContainsKey(channelId);
+        }
+
+        public bool IsUserInChannel(long channelId, long userId)
+        {
+            if (!ContainsChannel(channelId))
+            {
+                return false;
+            }
+            return ChannelPermissions[channelId].UserPermissions.ContainsKey(userId);
+        }
+
+        public PermissionLevel GetUserPermission(long channelId, long userId)
+        {
+            if (!IsUserInChannel(channelId, userId))
+            {
+                return PermissionLevel.User;
+            }
+            return ChannelPermissions[channelId].UserPermissions[userId];
         }
     }
 }

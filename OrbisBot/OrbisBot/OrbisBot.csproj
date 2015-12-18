@@ -53,6 +53,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
@@ -74,11 +75,15 @@
     <Compile Include="CommandParser.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="DiscordMethods.cs" />
     <Compile Include="Permission\ChannelPermission.cs" />
     <Compile Include="Permission\ChannelPermissionsWrapper.cs" />
     <Compile Include="Permission\CommandPermission.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\AboutTask.cs" />
+    <Compile Include="Tasks\AdjustPermissionTask.cs" />
+    <Compile Include="Tasks\RegisterSelfTask.cs" />
     <Compile Include="Tasks\TaskAbstract.cs" />
     <Compile Include="Tasks\WolframAlphaTask.cs" />
   </ItemGroup>
@@ -86,6 +91,7 @@
     <None Include="App.config" />
     <Compile Include="FileHelper.cs" />
     <None Include="packages.config" />
+    <None Include="TemplateApp.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.S3.3.1.3.9\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />

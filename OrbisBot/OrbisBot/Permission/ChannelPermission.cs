@@ -19,6 +19,7 @@ namespace OrbisBot.Permission
             ChannelId = channelId;
             ServerId = serverId;
             Muted = muted;
+            UserPermissions = new Dictionary<long, PermissionLevel>();
         }
 
         public Dictionary<string, string> toFileOutput()

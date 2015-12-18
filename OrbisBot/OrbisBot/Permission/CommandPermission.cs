@@ -6,13 +6,29 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.Permission
 {
-    public enum PermissionLevel { Owner = 5, Admin = 4, Moderator = 3, User = 2, RestrictedUser = 1}
+    public enum PermissionLevel { Developer = 6, Owner = 5, Admin = 4, Moderator = 3, User = 2, RestrictedUser = 1}
 
     public class PermissionEnumMethods
     {
         public static PermissionLevel ParseString(string toParse)
         {
-            return (PermissionLevel)Enum.Parse(typeof(PermissionLevel), toParse);
+            return ParseString(toParse, false);
+        }
+
+        public static PermissionLevel ParseString(string toParse, bool throwOnFail)
+        {
+            try
+            {
+                return (PermissionLevel)Enum.Parse(typeof(PermissionLevel), toParse);
+            }
+            catch (Exception e)
+            {
+                if (throwOnFail)
+                {
+                    throw e;
+                }
+                return PermissionLevel.User;
+            }
         }
     }
 

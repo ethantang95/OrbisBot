@@ -21,6 +21,11 @@ namespace OrbisBot.Tasks
             return new CommandPermission(false, PermissionLevel.User, false);
         }
 
+        public override string CommandText()
+        {
+            return "!Wolfram";
+        }
+
         public override string PermissionFileSource()
         {
             return Constants.WOLFRAMALPHA_SETTINGS_FILE;

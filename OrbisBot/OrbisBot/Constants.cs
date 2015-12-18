@@ -22,5 +22,15 @@ namespace OrbisBot
         public const string COMMAND_OVERRIDE = "Override";
 
         public const string WOLFRAMALPHA_SETTINGS_FILE = "WolframAlphaSettings.txt";
+        public const string ABOUT_SETTINGS_FILE = "OrbisAbout.txt";
+        public const string ADJUST_PERMISSION_FILE = "AdjustPermission.txt";
+        public const string REGISTER_SELF_FILE = "RegisterFile.txt";
+
+        public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
+        public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
+
+        public const string APP_VERSION = "0.0.1";
+
+        public const string SYNTAX_INTRO = "This command's sytnax is:";
     }
 }

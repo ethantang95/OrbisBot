@@ -3,6 +3,7 @@ using OrbisBot.Permission;
 using OrbisBot.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +50,15 @@ namespace OrbisBot
 
         private void PopulateTaskDictionary()
         {
-            Tasks.Add("!Wolfram", new WolframAlphaTask());
+            AddTask(new WolframAlphaTask());
+            AddTask(new AboutTask());
+            AddTask(new RegisterSelfTask());
+            AddTask(new AdjustPermissionTask());
+        }
+
+        private void AddTask(TaskAbstract toAdd)
+        {
+            Tasks.Add(toAdd.CommandText(), toAdd);
         }
 
         private void SetUpDiscordClient()
@@ -57,37 +66,18 @@ namespace OrbisBot
             Client = new DiscordClient();
 
             //Display all log messages in the console
-            Client.LogMessage += (s, e) => Console.WriteLine($"[{e.Severity}] {e.Source}: {e.Message}");
+            Client.LogMessage += DiscordMethods.LogMessage;
 
 #pragma warning disable CS1998
-            Client.MessageReceived += async (s, e) =>
-#pragma warning restore CS1998
-            {
-                if (!e.Message.IsAuthor)
-                {
-                    try
-                    {
-                        var commandSplitted = e.Message.Text.Split(' ');
-                        var command = e.Message.Text;
-                        if (Context.Instance.Tasks.ContainsKey(commandSplitted[0]))
-                        {
-                            var task = Context.Instance.Tasks[commandSplitted[0]];
-                            var args = CommandParser.ParseCommand(e.Message.Text);
-                            task.RunTask(args, e);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await Client.SendMessage(e.Channel, string.Format("Error occurred, Exception: {0}; Message Received {1}", ex.Message, e.Message.Text));
-                    }
-                }
-            };
+            Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             Client.Run(async () =>
             {
                 //Connect to the Discord server using our email and password
-                await Client.Connect("", "");
+                var username = ConfigurationManager.AppSettings[Constants.DISCORD_USERNAME_KEY];
+                var password = ConfigurationManager.AppSettings[Constants.DISCORD_PASSWORD_KEY];
+                await Client.Connect(username, password);
             });
         }
     }
