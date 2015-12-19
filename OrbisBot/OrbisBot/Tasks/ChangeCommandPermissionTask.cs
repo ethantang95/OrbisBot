@@ -64,7 +64,12 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "!SetCommandPermission";
+            return "!ChangeCommandPermission";
+        }
+
+        public override string AboutText()
+        {
+            return "Changes a command's minimum required permission level";
         }
     }
 }

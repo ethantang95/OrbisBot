@@ -82,7 +82,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\AboutTask.cs" />
-    <Compile Include="Tasks\AdjustPermissionTask.cs" />
+    <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />

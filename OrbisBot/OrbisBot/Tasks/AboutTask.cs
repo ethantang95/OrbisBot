@@ -39,5 +39,10 @@ namespace OrbisBot.Tasks
         {
             return "!About";
         }
+
+        public override string AboutText()
+        {
+            return "Shows information about OrbisBot";
+        }
     }
 }

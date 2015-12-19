@@ -51,5 +51,10 @@ namespace OrbisBot.Tasks
         {
             return "!Register";
         }
+
+        public override string AboutText()
+        {
+            return "Registers yourself and the server to help with permissions and roles";
+        }
     }
 }
