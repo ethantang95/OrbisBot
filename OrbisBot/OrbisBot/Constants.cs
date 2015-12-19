@@ -25,6 +25,8 @@ namespace OrbisBot
         public const string ABOUT_SETTINGS_FILE = "OrbisAbout.txt";
         public const string ADJUST_PERMISSION_FILE = "AdjustPermission.txt";
         public const string REGISTER_SELF_FILE = "RegisterFile.txt";
+        public const string CHANGE_COMMAND_PERMISSION_FILE = "ChangeCommandPermission.txt";
+        public const string LIST_COMMANDS_FILE = "ListCommands.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";

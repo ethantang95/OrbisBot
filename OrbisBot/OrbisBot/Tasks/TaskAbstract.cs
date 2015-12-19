@@ -22,20 +22,25 @@ namespace OrbisBot.Tasks
             PopulatePermissions();
         }
 
+        public bool IsCommandDisabled()
+        {
+            return _commandPermission.Disabled;
+        }
+
         public void RunTask(string[] args, MessageEventArgs messageEventArgs)
         {
             //here, check if we will proceed based on the command and channel settings
-            if (!proceedWithCommand(messageEventArgs))
+            if (!ProceedWithCommand(messageEventArgs))
             {
                 return;
             }
 
             //here, we check for permissions, first, check the server permissions
             //default permission is always user
-            var userPermission = getUserPermission(messageEventArgs);
+            var userPermission = GetUserPermission(messageEventArgs);
 
             //get the command permission now
-            var commandPermission = getCommandPermission(messageEventArgs);
+            var commandPermission = GetCommandPermission(messageEventArgs.Channel.Id);
 
             if (commandPermission > userPermission)
             {
@@ -49,7 +54,7 @@ namespace OrbisBot.Tasks
             taskThread.Start();
         }
 
-        private bool proceedWithCommand(MessageEventArgs messageEventArgs)
+        private bool ProceedWithCommand(MessageEventArgs messageEventArgs)
         {
             var proceed = true;
             if (Context.Instance.ChannelPermission.ContainsChannel(messageEventArgs.Channel.Id))
@@ -61,21 +66,19 @@ namespace OrbisBot.Tasks
             return proceed;
         }
 
-        private PermissionLevel getUserPermission(MessageEventArgs messageEventArgs)
+        public PermissionLevel GetCommandPermission(long channelId)
+        {
+            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
+            {
+                return _commandPermission.ChannelPermissionLevel[channelId];
+            }
+            return _commandPermission.DefaultLevel;
+        }
+
+        private PermissionLevel GetUserPermission(MessageEventArgs messageEventArgs)
         {
             return Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id,
                 messageEventArgs.User.Id);
-        }
-
-        private PermissionLevel getCommandPermission(MessageEventArgs messageEventArgs)
-        {
-            var commandPermission = _commandPermission.DefaultLevel;
-
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(messageEventArgs.Channel.Id))
-            {
-                commandPermission = _commandPermission.ChannelPermissionLevel[messageEventArgs.Channel.Id];
-            }
-            return commandPermission;
         }
 
         private void ExecuteTask()
@@ -117,16 +120,16 @@ namespace OrbisBot.Tasks
             }
         }
 
-        public void SetPermission(long channelID, PermissionLevel level)
+        public void SetPermission(long channelId, PermissionLevel level)
         {
             //first check if such permissoin.
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelID))
+            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermissionLevel[channelID] = level;
+                _commandPermission.ChannelPermissionLevel[channelId] = level;
             }
             else
             {
-                _commandPermission.ChannelPermissionLevel.Add(channelID, level);
+                _commandPermission.ChannelPermissionLevel.Add(channelId, level);
             }
             FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
         }
