@@ -26,6 +26,11 @@ namespace OrbisBot.Tasks
             return "!Wolfram";
         }
 
+        public override string AboutText()
+        {
+            return "Asks WolframAlpha for results to a question";
+        }
+
         public override string PermissionFileSource()
         {
             return Constants.WOLFRAMALPHA_SETTINGS_FILE;

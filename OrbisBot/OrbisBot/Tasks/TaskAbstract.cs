@@ -2,6 +2,7 @@
 using OrbisBot.Permission;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -83,7 +84,15 @@ namespace OrbisBot.Tasks
 
         private void ExecuteTask()
         {
-            _taskResult = TaskComponent(_args, _messageSource);
+            //check if it is for about, or if it's for activating the test
+            if (_args.Length > 1 && _args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
+            {
+                _taskResult = $"{CommandText()} - {AboutText()}";
+            }
+            else
+            {
+                _taskResult = TaskComponent(_args, _messageSource);
+            }
             PublishTask();
         }
 
@@ -141,5 +150,7 @@ namespace OrbisBot.Tasks
         public abstract CommandPermission DefaultCommands();
 
         public abstract string CommandText();
+
+        public abstract string AboutText();
     }
 }

@@ -18,8 +18,8 @@ namespace OrbisBot.Tasks
 
             var availableCommands =
                 Context.Instance.Tasks.Where(s =>
-                        s.Value.GetCommandPermission(messageSource.Channel.Id) <= userPermission &&
-                        !s.Value.IsCommandDisabled()).Select(s => s.Key);
+                    s.Value.GetCommandPermission(messageSource.Channel.Id) <= userPermission &&
+                    !s.Value.IsCommandDisabled());
 
             var returnMessage = new StringBuilder().AppendLine($"The commands you have available as a(n) {userPermission} on this channel are:");
 
@@ -29,7 +29,7 @@ namespace OrbisBot.Tasks
             }
             else
             {
-                availableCommands.ToList().ForEach(s => returnMessage.AppendLine(s));
+                availableCommands.ToList().ForEach(s => returnMessage.AppendLine($"{s.Value.CommandText()} - {s.Value.AboutText()}"));
             }
 
             return returnMessage.ToString();
@@ -48,6 +48,11 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "!Commands";
+        }
+
+        public override string AboutText()
+        {
+            return "Lists all the commands you have access to in this server and its information";
         }
     }
 }

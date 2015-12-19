@@ -8,7 +8,7 @@ using OrbisBot.Permission;
 
 namespace OrbisBot.Tasks
 {
-    class AdjustPermissionTask : TaskAbstract
+    class AdjustUserPermissionTask : TaskAbstract
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
@@ -79,7 +79,12 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "!AdjustPermission";
+            return "!ChangeUserPermission";
+        }
+
+        public override string AboutText()
+        {
+            return "Changes a user's permission or role on the current channel";
         }
     }
 }

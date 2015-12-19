@@ -19,7 +19,8 @@ namespace OrbisBot.Tasks
                 .Append("Currently I am on version ").AppendLine(Constants.APP_VERSION)
                 .AppendLine("All my commands are activated with an exclamation mark, like \"!About\".")
                 .AppendLine("Type \"!Commands\" to see what I can do")
-                .AppendLine("You should also register yourself to me by typing \"!Register\".");
+                .AppendLine("You should also register yourself to me by typing \"!Register\".")
+                .AppendLine("If you would like to see the source code, it is available at https://github.com/ethantang95/OrbisBot");
 
             return message.ToString();
         }
