@@ -56,6 +56,7 @@ namespace OrbisBot
             AddTask(new AdjustUserPermissionTask());
             AddTask(new ChangeCommandPermissionTask());
             AddTask(new ListCommandsTask());
+            AddTask(new MetaInfoTask());
         }
 
         private void AddTask(TaskAbstract toAdd)

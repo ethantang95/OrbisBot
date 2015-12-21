@@ -85,6 +85,7 @@
     <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
+    <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />
     <Compile Include="Tasks\TaskAbstract.cs" />
     <Compile Include="Tasks\WolframAlphaTask.cs" />

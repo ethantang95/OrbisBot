@@ -33,6 +33,7 @@ namespace OrbisBot
                     var argWord = command.Substring(lastPosition, i - lastPosition);
                     if (!String.IsNullOrWhiteSpace(argWord))
                     {
+                        argWord = argWord.Trim();
                         parsedArgs.Add(argWord);
                     }
                     lastPosition = i + 1;
@@ -48,7 +49,7 @@ namespace OrbisBot
                     {
                         //we are at the end of the query
                         var argQuery = command.Substring(lastPosition, i - lastPosition + 1);
-                        argQuery = argQuery.Replace("\"", "");
+                        argQuery = argQuery.Replace("\"", "").Trim();
                         parsedArgs.Add(argQuery);
                         lastPosition = i + 1;
                         insideQuery = false;
@@ -62,7 +63,7 @@ namespace OrbisBot
                 else if (command[i] == ']' && insideList)
                 {
                     var argList = command.Substring(lastPosition, i - lastPosition + 1);
-                    argList = argList.Substring(1, argList.Length - 2); //remove the backets
+                    argList = argList.Substring(1, argList.Length - 2).Trim(); //remove the backets
                     parsedArgs.Add(argList);
                     lastPosition = i + 1;
                     insideList = false;

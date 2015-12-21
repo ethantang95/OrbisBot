@@ -27,6 +27,7 @@ namespace OrbisBot
         public const string REGISTER_SELF_FILE = "RegisterFile.txt";
         public const string CHANGE_COMMAND_PERMISSION_FILE = "ChangeCommandPermission.txt";
         public const string LIST_COMMANDS_FILE = "ListCommands.txt";
+        public const string META_INFO_FILE = "MetaInfo.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
@@ -34,5 +35,7 @@ namespace OrbisBot
         public const string APP_VERSION = "0.0.1";
 
         public const string SYNTAX_INTRO = "This command's sytnax is:";
+
+        public const string DISCORD_API_ENDPOINT = "https://discordapp.com/api/";
     }
 }

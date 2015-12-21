@@ -61,7 +61,8 @@ namespace OrbisBot.Tasks
             if (Context.Instance.ChannelPermission.ContainsChannel(messageEventArgs.Channel.Id))
             {
                 proceed &= !Context.Instance.ChannelPermission.ChannelPermissions[messageEventArgs.Channel.Id].Muted
-                    || _commandPermission.OverrideMuting;
+                    || (_commandPermission.OverrideMuting 
+                        && Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id, messageEventArgs.User.Id) >= PermissionLevel.Admin); //if a channel is muted, only an admin can proceed with override mute commands
             }
             proceed &= !_commandPermission.Disabled;
             return proceed;
