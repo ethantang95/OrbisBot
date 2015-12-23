@@ -11,6 +11,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using Amazon.S3.Model;
 using OrbisBot.Permission;
+using OrbisBot.TaskHelpers.WolframAlpha;
 
 namespace OrbisBot.Tasks
 {
@@ -23,7 +24,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "!Wolfram";
+            return "Wolfram";
         }
 
         public override string AboutText()

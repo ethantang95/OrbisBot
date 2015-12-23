@@ -37,7 +37,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "!About";
+            return "About";
         }
 
         public override string AboutText()

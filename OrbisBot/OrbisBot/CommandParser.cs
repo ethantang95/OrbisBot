@@ -72,5 +72,50 @@ namespace OrbisBot
 
             return parsedArgs.ToArray();
         }
+
+        public static string[] ParseList(string toParse)
+        {
+            var parsedList = new List<string>();
+            var lastPosition = 0;
+            var insideQuery = false;
+            for (int i = 0; i < toParse.Length; i++)
+            {
+                if ((toParse[i] == ',' || i == toParse.Length - 1) && !insideQuery)
+                {
+                    //we detected a space
+                    //edge case, if we are at the end of a command
+                    if (i == toParse.Length - 1)
+                    {
+                        i++;
+                    }
+                    var argWord = toParse.Substring(lastPosition, i - lastPosition);
+                    if (!String.IsNullOrWhiteSpace(argWord))
+                    {
+                        argWord = argWord.Trim();
+                        parsedList.Add(argWord);
+                    }
+                    lastPosition = i + 1;
+                }
+                else if (toParse[i] == '"')
+                {
+                    if (!insideQuery)
+                    {
+                        insideQuery = true;
+                        lastPosition = i;
+                    }
+                    else
+                    {
+                        //we are at the end of the query
+                        var argQuery = toParse.Substring(lastPosition, i - lastPosition + 1);
+                        argQuery = argQuery.Replace("\"", "").Trim();
+                        parsedList.Add(argQuery);
+                        lastPosition = i + 1;
+                        insideQuery = false;
+                    }
+                }
+            }
+
+            return parsedList.ToArray();
+        }
     }
 }

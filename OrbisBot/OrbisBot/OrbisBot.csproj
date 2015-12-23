@@ -40,6 +40,10 @@
       <HintPath>..\packages\AWSSDK.S3.3.1.3.9\lib\net45\AWSSDK.S3.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Ciloci.Flee, Version=0.9.26.0, Culture=neutral, PublicKeyToken=c8526a021ef298ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Trove.FLEE.0.9.26.0\lib\net20\Ciloci.Flee.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Discord.Net, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Discord.Net.0.8.1-beta2\lib\net45\Discord.Net.dll</HintPath>
       <Private>True</Private>
@@ -67,8 +71,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="WolframAlpha.NET, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Visual Studio 2015\Projects\WolframAlpha.NET-master\WolframAlpha.NET\bin\Debug\WolframAlpha.NET.dll</HintPath>
+      <HintPath>..\packages\WolframAlpha.NET.1.1.0\lib\WolframAlpha.NET.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +85,13 @@
     <Compile Include="Permission\CommandPermission.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
+    <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
     <Compile Include="Tasks\AboutTask.cs" />
     <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
+    <Compile Include="Tasks\CustomCommandTask.cs" />
+    <Compile Include="Tasks\CustomTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />
@@ -91,7 +99,9 @@
     <Compile Include="Tasks\WolframAlphaTask.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="FileHelper.cs" />
     <None Include="packages.config" />
     <None Include="TemplateApp.config" />

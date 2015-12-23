@@ -49,7 +49,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "!Register";
+            return "Register";
         }
 
         public override string AboutText()

@@ -57,11 +57,13 @@ namespace OrbisBot
             AddTask(new ChangeCommandPermissionTask());
             AddTask(new ListCommandsTask());
             AddTask(new MetaInfoTask());
+
+            AddTask(new CustomTask());
         }
 
         private void AddTask(TaskAbstract toAdd)
         {
-            Tasks.Add(toAdd.CommandText(), toAdd);
+            Tasks.Add(toAdd.CommandTrigger(), toAdd);
         }
 
         private void SetUpDiscordClient()

@@ -28,6 +28,7 @@ namespace OrbisBot
         public const string CHANGE_COMMAND_PERMISSION_FILE = "ChangeCommandPermission.txt";
         public const string LIST_COMMANDS_FILE = "ListCommands.txt";
         public const string META_INFO_FILE = "MetaInfo.txt";
+        public const string CUSTOM_COMMAND_FILE = "CustomCommand.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";

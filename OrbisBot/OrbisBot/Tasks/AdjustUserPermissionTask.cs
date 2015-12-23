@@ -79,7 +79,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "!ChangeUserPermission";
+            return "ChangeUserPermission";
         }
 
         public override string AboutText()

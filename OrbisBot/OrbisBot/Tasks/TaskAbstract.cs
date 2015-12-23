@@ -85,14 +85,21 @@ namespace OrbisBot.Tasks
 
         private void ExecuteTask()
         {
-            //check if it is for about, or if it's for activating the test
-            if (_args.Length > 1 && _args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
+            try
             {
-                _taskResult = $"{CommandText()} - {AboutText()}";
+                //check if it is for about, or if it's for activating the test
+                if (_args.Length > 1 && _args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    _taskResult = $"{CommandText()} - {AboutText()}";
+                }
+                else
+                {
+                    _taskResult = TaskComponent(_args, _messageSource);
+                }
             }
-            else
+            catch (Exception e)
             {
-                _taskResult = TaskComponent(_args, _messageSource);
+                _taskResult = $"Error occurred, Exception: {e.Message}; Message Received {_messageSource.Message.Text}";
             }
             PublishTask();
         }
@@ -105,14 +112,13 @@ namespace OrbisBot.Tasks
 
         private void PopulatePermissions()
         {
-
-            var permissionListRaw = FileHelper.GetValuesFromFile(PermissionFileSource());
-
             try
             {
+                var permissionListRaw = FileHelper.GetValuesFromFile(PermissionFileSource());
+
                 _commandPermission = new CommandPermission(bool.Parse(permissionListRaw[Constants.COMMAND_DISABLED]),
-                    PermissionEnumMethods.ParseString(permissionListRaw[Constants.COMMAND_DEFAULT]),
-                    bool.Parse(permissionListRaw[Constants.COMMAND_OVERRIDE]));
+                            PermissionEnumMethods.ParseString(permissionListRaw[Constants.COMMAND_DEFAULT]),
+                            bool.Parse(permissionListRaw[Constants.COMMAND_OVERRIDE]));
 
                 permissionListRaw.Remove(Constants.COMMAND_DISABLED);
                 permissionListRaw.Remove(Constants.COMMAND_DEFAULT);
@@ -121,6 +127,12 @@ namespace OrbisBot.Tasks
                 var permissionList = permissionListRaw.ToDictionary(s => long.Parse(s.Key), s => PermissionEnumMethods.ParseString(s.Value));
 
                 _commandPermission.ChannelPermissionLevel = permissionList;
+            }
+            catch (NotSupportedException e)
+            {
+                //we uhh kinda knows that the inherited class will do its own thing with permissions..
+                //so we trust that it is implemented correctly and just use defaults
+                _commandPermission = DefaultCommands();
             }
             catch (Exception e)
             {
@@ -142,6 +154,11 @@ namespace OrbisBot.Tasks
                 _commandPermission.ChannelPermissionLevel.Add(channelId, level);
             }
             FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
+        }
+
+        public string CommandTrigger()
+        {
+            return "!" + CommandText();
         }
 
         public abstract string TaskComponent(string[] args, MessageEventArgs messageSource);
