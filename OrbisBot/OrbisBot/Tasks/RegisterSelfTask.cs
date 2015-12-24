@@ -9,7 +9,7 @@ using OrbisBot.Permission;
 namespace OrbisBot.Tasks
 {
     //really a task to make the other ones easier... mostly to register admins
-    class RegisterSelfTask : TaskAbstract
+    class RegisterSelfTask : FilePermissionTaskAbstract
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {

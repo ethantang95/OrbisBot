@@ -15,7 +15,7 @@ using OrbisBot.TaskHelpers.WolframAlpha;
 
 namespace OrbisBot.Tasks
 {
-    class WolframAlphaTask : TaskAbstract
+    class WolframAlphaTask : FilePermissionTaskAbstract
     {
         public override CommandPermission DefaultCommands()
         {

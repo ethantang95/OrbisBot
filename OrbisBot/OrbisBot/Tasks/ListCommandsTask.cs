@@ -8,7 +8,7 @@ using OrbisBot.Permission;
 
 namespace OrbisBot.Tasks
 {
-    class ListCommandsTask : TaskAbstract
+    class ListCommandsTask : FilePermissionTaskAbstract
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
@@ -18,7 +18,7 @@ namespace OrbisBot.Tasks
 
             var availableCommands =
                 Context.Instance.Tasks.Where(s =>
-                    s.Value.GetCommandPermission(messageSource.Channel.Id) <= userPermission &&
+                    s.Value.GetCommandPermissionForChannel(messageSource.Channel.Id) <= userPermission &&
                     !s.Value.IsCommandDisabled());
 
             var returnMessage = new StringBuilder().AppendLine($"The commands you have available as a(n) {userPermission} on this channel are:");

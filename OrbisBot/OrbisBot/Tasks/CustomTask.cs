@@ -8,7 +8,7 @@ using OrbisBot.Permission;
 
 namespace OrbisBot.Tasks
 {
-    class CustomTask : TaskAbstract
+    class CustomTask : SingleChannelTaskAbstract
     {
         private string _commandText = "test";
         public CustomTask()
@@ -16,6 +16,11 @@ namespace OrbisBot.Tasks
 
         }
         public override string AboutText()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool AllowTaskExecution(MessageEventArgs messageEventArgs)
         {
             throw new NotImplementedException();
         }
@@ -28,16 +33,6 @@ namespace OrbisBot.Tasks
         public override CommandPermission DefaultCommands()
         {
             return new CommandPermission(false, PermissionLevel.User, false);
-        }
-
-        public override string PermissionFileSource()
-        {
-            throw new NotSupportedException(); //we will not have a permission source for custom command
-            //instead, we will have a different file that contains everything about it
-        }
-
-        public new void SetPermission(long channelId, PermissionLevel level)
-        {
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

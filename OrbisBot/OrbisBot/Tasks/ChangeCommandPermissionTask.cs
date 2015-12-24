@@ -8,7 +8,7 @@ using OrbisBot.Permission;
 
 namespace OrbisBot.Tasks
 {
-    class ChangeCommandPermissionTask : TaskAbstract
+    class ChangeCommandPermissionTask : FilePermissionTaskAbstract
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
@@ -21,7 +21,7 @@ namespace OrbisBot.Tasks
             //first, check to see if the command exists
             if (!Context.Instance.Tasks.ContainsKey(args[1]))
             {
-                return $"The command {args[1]} does not exist, did you mis-spell it? Type \"!Commands for a list of commands\"";
+                return $"The command {args[1]} does not exist, did you mis-spell it? Type \"-Commands for a list of commands\"";
             }
 
             var commandToChange = Context.Instance.Tasks[args[1]];
@@ -37,7 +37,7 @@ namespace OrbisBot.Tasks
             }
 
             //if the user's level is below the command's level
-            if (commandToChange.GetCommandPermission(messageSource.Channel.Id) > userPermissionLevel)
+            if (commandToChange.GetCommandPermissionForChannel(messageSource.Channel.Id) > userPermissionLevel)
             {
                 return "You do not have sufficient privledge to change the permission level of this command";
             }
@@ -48,7 +48,7 @@ namespace OrbisBot.Tasks
                 return "You cannot set the permission level of this command above your current permission level";
             }
             
-            commandToChange.SetPermission(messageSource.Channel.Id, targetNewPermissionLevel);
+            commandToChange.SetCommandPermissionForChannel(messageSource.Channel.Id, targetNewPermissionLevel);
             return $"Permission level for command {args[1]} has successfully been set to {targetNewPermissionLevel}";
         }
 

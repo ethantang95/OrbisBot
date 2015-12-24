@@ -8,7 +8,7 @@ using OrbisBot.Permission;
 
 namespace OrbisBot.Tasks
 {
-    class CreateCustomTask : TaskAbstract
+    class CreateCustomTask : FilePermissionTaskAbstract
     {
         public override string AboutText()
         {

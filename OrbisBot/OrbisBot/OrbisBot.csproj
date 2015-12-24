@@ -92,10 +92,12 @@
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
     <Compile Include="Tasks\CustomCommandTask.cs" />
     <Compile Include="Tasks\CustomTask.cs" />
+    <Compile Include="TaskAbstracts\FilePermissionTaskAbstract.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />
-    <Compile Include="Tasks\TaskAbstract.cs" />
+    <Compile Include="TaskAbstracts\SingleChannelTaskAbstract.cs" />
+    <Compile Include="TaskAbstracts\TaskAbstract.cs" />
     <Compile Include="Tasks\WolframAlphaTask.cs" />
   </ItemGroup>
   <ItemGroup>
