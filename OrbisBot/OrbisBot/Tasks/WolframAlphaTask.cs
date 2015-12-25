@@ -17,7 +17,7 @@ namespace OrbisBot.Tasks
 {
     class WolframAlphaTask : FilePermissionTaskAbstract
     {
-        public override CommandPermission DefaultCommands()
+        public override CommandPermission DefaultCommandPermission()
         {
             return new CommandPermission(false, PermissionLevel.User, false);
         }

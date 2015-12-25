@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.Permission
 {
-    public enum PermissionLevel { Developer = 6, Owner = 5, Admin = 4, Moderator = 3, User = 2, RestrictedUser = 1}
+    public enum PermissionLevel { UsageDenied = 999, Developer = 6, Owner = 5, Admin = 4, Moderator = 3, User = 2, RestrictedUser = 1, Restricted = 0}
+    //restricted should be absolutely restricted, nothing should allow restricted
+    //usageDenied is reserved for tasks that are denied to be executed due to permission... a bit hacky
 
     public class PermissionEnumMethods
     {

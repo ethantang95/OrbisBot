@@ -20,7 +20,7 @@ namespace OrbisBot.Tasks
         public TaskAbstract()
         {
             //to ensure non-nullability, we will always start the command permissions to start with default
-            _commandPermission = DefaultCommands();
+            _commandPermission = DefaultCommandPermission();
         }
 
         public bool IsCommandDisabled()
@@ -92,7 +92,7 @@ namespace OrbisBot.Tasks
 
         public abstract string TaskComponent(string[] args, MessageEventArgs messageSource);
 
-        public abstract CommandPermission DefaultCommands();
+        public abstract CommandPermission DefaultCommandPermission();
 
         public abstract string CommandText();
 

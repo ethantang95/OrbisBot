@@ -42,7 +42,7 @@ namespace OrbisBot.Tasks
             return Constants.REGISTER_SELF_FILE;
         }
 
-        public override CommandPermission DefaultCommands()
+        public override CommandPermission DefaultCommandPermission()
         {
             return new CommandPermission(false, PermissionLevel.RestrictedUser, true);
         }

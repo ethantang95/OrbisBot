@@ -30,7 +30,7 @@ namespace OrbisBot.Tasks
             return Constants.ABOUT_SETTINGS_FILE;
         }
 
-        public override CommandPermission DefaultCommands()
+        public override CommandPermission DefaultCommandPermission()
         {
             return new CommandPermission(false, PermissionLevel.RestrictedUser, false);
         }

@@ -49,7 +49,7 @@ namespace OrbisBot.Tasks
             //get the command permission now
             var commandPermission = GetCommandPermissionForChannel(messageEventArgs.Channel.Id);
 
-            if (commandPermission > userPermission)
+            if (commandPermission > userPermission || userPermission == PermissionLevel.Restricted)
             {
                 return false; //the user does not have the rights to perform this task
             }
@@ -66,16 +66,16 @@ namespace OrbisBot.Tasks
             return _commandPermission.DefaultLevel;
         }
 
-        public override void SetCommandPermissionForChannel(long channelId, PermissionLevel level)
+        public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
         {
             //first check if such permissoin.
             if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermissionLevel[channelId] = level;
+                _commandPermission.ChannelPermissionLevel[channelId] = newPermissionLevel;
             }
             else
             {
-                _commandPermission.ChannelPermissionLevel.Add(channelId, level);
+                _commandPermission.ChannelPermissionLevel.Add(channelId, newPermissionLevel);
             }
             FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
         }

@@ -52,7 +52,7 @@ namespace OrbisBot.Tasks
             return Constants.META_INFO_FILE;
         }
 
-        public override CommandPermission DefaultCommands()
+        public override CommandPermission DefaultCommandPermission()
         {
             return new CommandPermission(false, PermissionLevel.User, true);
         }

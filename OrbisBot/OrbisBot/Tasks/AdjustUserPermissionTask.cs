@@ -72,7 +72,7 @@ namespace OrbisBot.Tasks
             return Constants.ADJUST_PERMISSION_FILE;
         }
 
-        public override CommandPermission DefaultCommands()
+        public override CommandPermission DefaultCommandPermission()
         {
             return new CommandPermission(false, PermissionLevel.Moderator, true);
         }

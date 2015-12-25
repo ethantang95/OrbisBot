@@ -47,6 +47,12 @@ namespace OrbisBot.Tasks
             {
                 return "You cannot set the permission level of this command above your current permission level";
             }
+
+            //if the user tries to change it to restricted
+            if (targetNewPermissionLevel == PermissionLevel.Restricted)
+            {
+                return "You cannot set the permission level to restricted as it is reserved for special cases only";
+            }
             
             commandToChange.SetCommandPermissionForChannel(messageSource.Channel.Id, targetNewPermissionLevel);
             return $"Permission level for command {args[1]} has successfully been set to {targetNewPermissionLevel}";
@@ -57,7 +63,7 @@ namespace OrbisBot.Tasks
             return Constants.CHANGE_COMMAND_PERMISSION_FILE;
         }
 
-        public override CommandPermission DefaultCommands()
+        public override CommandPermission DefaultCommandPermission()
         {
             return new CommandPermission(false, PermissionLevel.Admin, true);
         }
