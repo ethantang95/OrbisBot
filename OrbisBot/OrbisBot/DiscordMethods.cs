@@ -2,6 +2,7 @@
 using Discord;
 using System.Configuration;
 using System.Threading.Tasks;
+using OrbisBot.Tasks;
 
 namespace OrbisBot
 {
@@ -24,6 +25,12 @@ namespace OrbisBot
                         var task = Context.Instance.Tasks[commandSplitted[0]];
                         var args = CommandParser.ParseCommand(eventArgs.Message.Text);
                         task.RunTask(args, eventArgs);
+                    }
+                    else if (eventArgs.Message.IsMentioningMe)
+                    {
+                        var aboutTask = new AboutTask();
+                        aboutTask.RunTask(new string[] {"dummy"}, eventArgs);
+                        //pass in a dummy string to bypass the NPE
                     }
                 }
                 catch (Exception ex)

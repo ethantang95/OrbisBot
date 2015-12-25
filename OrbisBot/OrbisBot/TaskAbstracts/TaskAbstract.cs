@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.Tasks
 {
-    abstract class TaskAbstract
+    abstract class TaskAbstract : IComparable<TaskAbstract>
     {
         private string _taskResult;
         private string[] _args;
@@ -90,6 +90,11 @@ namespace OrbisBot.Tasks
             return "-" + CommandText();
         }
 
+        public bool OverrideMuting()
+        {
+            return _commandPermission.OverrideMuting;
+        }
+
         public abstract string TaskComponent(string[] args, MessageEventArgs messageSource);
 
         public abstract CommandPermission DefaultCommandPermission();
@@ -103,5 +108,10 @@ namespace OrbisBot.Tasks
         public abstract PermissionLevel GetCommandPermissionForChannel(long channelId);
 
         public abstract void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel);
+
+        public int CompareTo(TaskAbstract other)
+        {
+            return this.CommandText().CompareTo(other.CommandText());
+        }
     }
 }

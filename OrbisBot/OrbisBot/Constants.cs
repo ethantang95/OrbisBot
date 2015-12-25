@@ -32,6 +32,7 @@ namespace OrbisBot
         public const string CUSTOM_COMMAND_FILE = "CustomCommand.txt";
         public const string RANDOM_COMMAND_FILE = "RandomCommand.txt";
         public const string CHANGE_MAIN_CHANNEL_FILE = "ChangeMainChannel.txt";
+        public const string MUTE_BOT_FILE = "MuteBot.txt"; //mute and unmute will use the same file
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";

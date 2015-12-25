@@ -16,10 +16,14 @@ namespace OrbisBot.Tasks
             var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
                 messageSource.User.Id);
 
+            var channelMuted = Context.Instance.ChannelPermission.ContainsChannel(messageSource.Channel.Id) ? Context.Instance.ChannelPermission.ChannelPermissions[messageSource.Channel.Id].Muted : false;
+
             var availableCommands =
                 Context.Instance.Tasks.Where(s =>
-                    s.Value.GetCommandPermissionForChannel(messageSource.Channel.Id) <= userPermission &&
-                    !s.Value.IsCommandDisabled());
+                    (s.Value.GetCommandPermissionForChannel(messageSource.Channel.Id) <= userPermission) &&
+                    !s.Value.IsCommandDisabled() &&
+                    (!channelMuted ||
+                        (s.Value.OverrideMuting() && userPermission >= PermissionLevel.Admin)));
 
             var returnMessage = new StringBuilder().AppendLine($"The commands you have available as a(n) {userPermission} on this channel are:");
 
@@ -29,7 +33,9 @@ namespace OrbisBot.Tasks
             }
             else
             {
-                availableCommands.ToList().ForEach(s => returnMessage.AppendLine($"{s.Value.CommandText()} - {s.Value.AboutText()}"));
+                var availableTasks = availableCommands.Select(s => s.Value).ToList();
+                availableTasks.Sort();
+                availableTasks.ForEach(s => returnMessage.AppendLine($"{s.CommandTrigger()} - {s.AboutText()}"));
             }
 
             return returnMessage.ToString();

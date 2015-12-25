@@ -17,7 +17,10 @@ namespace OrbisBot.Tasks
                 return $"{Constants.SYNTAX_INTRO} OPTIONAL \"<user's name>\"";
             }
 
+            var mainChannel = messageSource.Server.Channels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
+
             var returnText = new StringBuilder().AppendLine($"Channel ID: {messageSource.Channel.Id}")
+                .AppendLine($"Main Channel: {mainChannel?.Name}")
                 .AppendLine($"Server ID: {messageSource.Server.Id}")
                 .AppendLine($"Server Owner: {messageSource.Server.Owner.Name}");
 
