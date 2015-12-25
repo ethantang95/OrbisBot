@@ -87,7 +87,7 @@ namespace OrbisBot.Tasks
 
         public string CommandTrigger()
         {
-            return "-" + CommandText();
+            return Constants.TRIGGER_CHAR + CommandText();
         }
 
         public bool OverrideMuting()

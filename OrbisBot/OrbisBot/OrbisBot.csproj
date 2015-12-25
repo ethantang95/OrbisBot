@@ -86,6 +86,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandBuilder.cs" />
+    <Compile Include="TaskHelpers\CustomCommands\CustomCommandFileHandler.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandUtils.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />

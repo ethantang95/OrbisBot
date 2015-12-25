@@ -50,6 +50,11 @@ namespace OrbisBot.Tasks
                 return HelpText();
             }
 
+            if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]) && Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]].GetType() != typeof(CustomTask))
+            {
+                return "The name of the command already exist and is not a custom command";
+            }
+
             //separate the commands
             var customReturns = CommandParser.ParseList(args[3]);
 

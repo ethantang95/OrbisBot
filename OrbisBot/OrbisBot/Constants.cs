@@ -42,5 +42,7 @@ namespace OrbisBot
         public const string SYNTAX_INTRO = "This command's sytnax is:";
 
         public const string DISCORD_API_ENDPOINT = "https://discordapp.com/api/";
+
+        public const string TRIGGER_CHAR = "-";
     }
 }
