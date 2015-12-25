@@ -16,6 +16,7 @@ namespace OrbisBot
         public const string PROFILES_FOLDER = "Profile";
         public const string REGISTERED_CHANNEL_FILE = "RegisteredChannel.txt";
 
+        public const string MAIN_CHANNEL_ID = "MainChannelID";
         public const string CHANNEL_ID = "ChannelID";
         public const string SERVER_ID = "ServerID";
         public const string CHANNEL_MUTED = "Muted";
@@ -29,6 +30,8 @@ namespace OrbisBot
         public const string LIST_COMMANDS_FILE = "ListCommands.txt";
         public const string META_INFO_FILE = "MetaInfo.txt";
         public const string CUSTOM_COMMAND_FILE = "CustomCommand.txt";
+        public const string RANDOM_COMMAND_FILE = "RandomCommand.txt";
+        public const string CHANGE_MAIN_CHANNEL_FILE = "ChangeMainChannel.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";

@@ -92,12 +92,14 @@
     <Compile Include="Tasks\AboutTask.cs" />
     <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
+    <Compile Include="Tasks\ChangeMainChannelTask.cs" />
     <Compile Include="Tasks\CreateCustomTask.cs" />
     <Compile Include="Tasks\CustomTask.cs" />
     <Compile Include="TaskAbstracts\FilePermissionTaskAbstract.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\MuteBotTask.cs" />
+    <Compile Include="Tasks\RandomNumberTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />
     <Compile Include="TaskAbstracts\SingleChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />

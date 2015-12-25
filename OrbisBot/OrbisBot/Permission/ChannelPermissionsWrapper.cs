@@ -40,10 +40,12 @@ namespace OrbisBot.Permission
                 return;
             }
 
-            var channelPermission = new ChannelPermission(Int64.Parse(channelSettings[Constants.CHANNEL_ID]),
-                    Int64.Parse(channelSettings[Constants.SERVER_ID]),
-                    bool.Parse(channelSettings[Constants.CHANNEL_MUTED]));
+            var channelPermission = new ChannelPermission(Int64.Parse(channelSettings[Constants.MAIN_CHANNEL_ID]), 
+                Int64.Parse(channelSettings[Constants.CHANNEL_ID]),
+                Int64.Parse(channelSettings[Constants.SERVER_ID]),
+                bool.Parse(channelSettings[Constants.CHANNEL_MUTED]));
 
+            channelSettings.Remove(Constants.MAIN_CHANNEL_ID);
             channelSettings.Remove(Constants.CHANNEL_ID);
             channelSettings.Remove(Constants.SERVER_ID);
             channelSettings.Remove(Constants.CHANNEL_MUTED);
@@ -59,8 +61,12 @@ namespace OrbisBot.Permission
         {
             if (!ChannelPermissions.ContainsKey(channelId))
             {
-                var channel = new ChannelPermission(channelId, serverId, false);
+                //find other channels under the same server with a main channel id
+                var mainChannelId = Context.Instance.ChannelPermission.ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId).Value.MainChannelId ?? channelId;
+
+                var channel = new ChannelPermission(mainChannelId, channelId, serverId, false);
                 ChannelPermissions.Add(channelId, channel);
+                SaveChannelID();
             }
         }
 
@@ -68,6 +74,32 @@ namespace OrbisBot.Permission
         {
             FileHelper.WriteToFile(ChannelPermissions.Keys.Select(s => s.ToString()).ToList(),
                 Constants.REGISTERED_CHANNEL_FILE);
+        }
+
+        public void SetMainChannelForServer(long serverId, long channelId)
+        {
+            var channels = ChannelPermissions.Where(s => s.Value.ServerId == serverId).ToList();
+            if (channels.Count == 0)// I am actually not even sure if this can be called
+            {
+                CheckAndCreateChannel(serverId, channelId);
+                return;
+            }
+            foreach (var channel in channels)
+            {
+                channel.Value.MainChannelId = channelId;
+                FileHelper.WriteValuesToFile(channel.Value.toFileOutput(),
+                    Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channel.Key.ToString()));
+            }
+        }
+
+        public long GetMainChannelForServer(long serverId)
+        {
+            var channel = ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId);
+            if (!channel.HasValue)
+            {
+                return 0;
+            }
+            return channel.Value.Value.MainChannelId;
         }
 
         public void SetUserPermission(long serverId, long channelId, long userId, PermissionLevel level)
@@ -81,7 +113,6 @@ namespace OrbisBot.Permission
             else
             {
                 channel.UserPermissions.Add(userId, level);
-                SaveChannelID();
             }
 
             FileHelper.WriteValuesToFile(channel.toFileOutput(),

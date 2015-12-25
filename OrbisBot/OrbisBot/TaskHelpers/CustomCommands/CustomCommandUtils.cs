@@ -56,7 +56,7 @@ namespace OrbisBot.TaskHelpers.CustomCommands
             //format would be a:b where as a and b are integers
             var limits = innerContent.Split(':').Select(Int32.Parse).ToArray();
             var random = new Random();
-            var value = random.Next(limits[0], limits[1]);
+            var value = random.Next(limits[0], limits[1] + 1);
             return value.ToString();
         }
 

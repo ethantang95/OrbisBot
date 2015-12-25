@@ -58,6 +58,7 @@ namespace OrbisBot
             AddTask(new ListCommandsTask());
             AddTask(new MetaInfoTask());
             AddTask(new CreateCustomTask());
+            AddTask(new RandomNumberTask());
         }
 
         public void AddTask(TaskAbstract toAdd)
@@ -74,6 +75,8 @@ namespace OrbisBot
 
 #pragma warning disable CS1998
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
+
+            Client.JoinedServer += DiscordMethods.OnServerJoined;
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             Client.Run(async () =>

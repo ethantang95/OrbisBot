@@ -43,6 +43,11 @@ namespace OrbisBot.Tasks
                 return $"Not enough parameters was supplied for this command, it requires {_maxArgs} parameters.";
             }
 
+            var mentioned = messageSource.Message.MentionedUsers;
+
+            //we will first parse the args into mentioned
+            args = args.Select(s => s[0] == '@' && mentioned.FirstOrDefault(r => r.Name == s.Substring(1)) != null ? Mention.User(mentioned.First(r => r.Name == s.Substring(1))) : s).ToArray();
+            
             var selectedLine = _returnValues[new Random().Next(0, _returnValues.Length)]; //dammit, why the hell isn't it inclusive
 
             var commandArgs = args.Skip(1).ToArray();

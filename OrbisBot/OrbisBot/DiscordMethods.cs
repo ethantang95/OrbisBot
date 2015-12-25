@@ -33,5 +33,21 @@ namespace OrbisBot
                 }
             }
         }
+
+        public static async void OnServerJoined(object o, ServerEventArgs eventArgs)
+        {
+            var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
+
+            var channels = eventArgs.Server.TextChannels;
+
+            foreach (var channel in channels)
+            {
+                if (channel.Id == mainChannelID)
+                {
+                    await Context.Instance.Client.SendMessage(channel, $"Welcome to server {eventArgs.Server.Name}");
+                    break;
+                }
+            }
+        }
     }
 }

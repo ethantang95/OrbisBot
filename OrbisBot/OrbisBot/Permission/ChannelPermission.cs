@@ -9,13 +9,15 @@ namespace OrbisBot.Permission
     //this exists for the purpose of each channel, this will contain each individual's permission settings
     class ChannelPermission
     {
+        public long MainChannelId { get; set; }
         public long ChannelId { get; private set; }
         public long ServerId { get; private set; }
         public bool Muted { get; set; }
         public Dictionary<long, PermissionLevel> UserPermissions { get; set; }
 
-        public ChannelPermission(long channelId, long serverId, bool muted)
+        public ChannelPermission(long mainChannelId, long channelId, long serverId, bool muted)
         {
+            MainChannelId = mainChannelId;
             ChannelId = channelId;
             ServerId = serverId;
             Muted = muted;
@@ -25,6 +27,7 @@ namespace OrbisBot.Permission
         public Dictionary<string, string> toFileOutput()
         {
             Dictionary<string, string> toReturn = new Dictionary<string, string>();
+            toReturn.Add(Constants.MAIN_CHANNEL_ID, MainChannelId.ToString());
             toReturn.Add(Constants.CHANNEL_ID, ChannelId.ToString());
             toReturn.Add(Constants.SERVER_ID, ServerId.ToString());
             toReturn.Add(Constants.CHANNEL_MUTED, Muted.ToString());
