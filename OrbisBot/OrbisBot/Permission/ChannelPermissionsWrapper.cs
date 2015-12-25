@@ -62,7 +62,18 @@ namespace OrbisBot.Permission
             if (!ChannelPermissions.ContainsKey(channelId))
             {
                 //find other channels under the same server with a main channel id
-                var mainChannelId = Context.Instance.ChannelPermission.ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId).Value.MainChannelId ?? channelId;
+                var mainChannel = Context.Instance.ChannelPermission.ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId);
+
+                long mainChannelId;
+
+                if (mainChannel.Value.Value == null) //this is a weird struct...
+                {
+                    mainChannelId = channelId;
+                }
+                else
+                {
+                    mainChannelId = mainChannel.Value.Value.ChannelId;
+                }
 
                 var channel = new ChannelPermission(mainChannelId, channelId, serverId, false);
                 ChannelPermissions.Add(channelId, channel);
@@ -95,7 +106,7 @@ namespace OrbisBot.Permission
         public long GetMainChannelForServer(long serverId)
         {
             var channel = ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId);
-            if (!channel.HasValue)
+            if (channel.Value.Value == null)
             {
                 return 0;
             }

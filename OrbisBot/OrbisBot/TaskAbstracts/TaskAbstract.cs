@@ -31,7 +31,7 @@ namespace OrbisBot.Tasks
         public void RunTask(string[] args, MessageEventArgs messageEventArgs)
         {
             //here, check if we will proceed based on the command and channel settings
-            if (!ProceedWithCommand(messageEventArgs) && AllowTaskExecution(messageEventArgs))
+            if (!ProceedWithCommand(messageEventArgs) || !AllowTaskExecution(messageEventArgs))
             {
                 return;
             }

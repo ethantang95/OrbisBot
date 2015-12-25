@@ -59,6 +59,7 @@ namespace OrbisBot
             AddTask(new MetaInfoTask());
             AddTask(new CreateCustomTask());
             AddTask(new RandomNumberTask());
+            AddTask(new ChangeMainChannelTask());
         }
 
         public void AddTask(TaskAbstract toAdd)
