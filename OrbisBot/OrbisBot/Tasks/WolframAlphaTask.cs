@@ -41,7 +41,7 @@ namespace OrbisBot.Tasks
         {
             if (args.Length != 2)
             {
-                return "This command's syntax is: !Wolfram \"<search query>\"";
+                return "This command's syntax is: \"<search query>\"";
             }
 
             var wolframTask = new WARequest();

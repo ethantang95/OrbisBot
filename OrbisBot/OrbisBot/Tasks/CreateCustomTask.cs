@@ -81,6 +81,8 @@ namespace OrbisBot.Tasks
 
             Context.Instance.AddTask(newTask);
 
+            CustomCommandFileHandler.SaveCustomTask(newTask.ToFileOutput());
+
             return $"The command {newTask.CommandTrigger()} has been added";
         }
 

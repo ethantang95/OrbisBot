@@ -17,7 +17,7 @@ namespace OrbisBot.Tasks
                 .AppendLine("I can do many different things, including being your mini personal assistance.")
                 .AppendLine("I am optimized for the game DN but can also handle tasks for other games and general purposes.")
                 .Append("Currently I am on version ").AppendLine(Constants.APP_VERSION)
-                .AppendLine("All my commands are activated with an exclamation mark, like \"-About\".")
+                .AppendLine("All my commands are activated with a dash, like \"-About\".")
                 .AppendLine("Type \"-Commands\" to see what I can do")
                 .AppendLine("You should also register yourself to me by typing \"-Register\".")
                 .AppendLine("If you would like to see the source code, it is available at https://github.com/ethantang95/OrbisBot");
