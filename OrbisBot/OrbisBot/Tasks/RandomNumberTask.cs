@@ -59,7 +59,7 @@ namespace OrbisBot.Tasks
                             break;
                         default:
                             imageUrl = "http://i.giphy.com/3o85xrIROugu8cWn4Y.gif";
-                            break; break;
+                            break;
                     }
                     return $"{flip} \n{imageUrl}";
                 }

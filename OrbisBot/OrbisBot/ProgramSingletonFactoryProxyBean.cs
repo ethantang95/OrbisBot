@@ -1,5 +1,6 @@
 ﻿using Discord;
 using OrbisBot.Permission;
+using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.Tasks;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ namespace OrbisBot
             Tasks = new Dictionary<string, TaskAbstract>();
             ChannelPermission = new ChannelPermissionsWrapper();
             PopulateTaskDictionary();
+            PopulateCustomTasks();
             SetUpDiscordClient();
         }
 
@@ -62,6 +64,18 @@ namespace OrbisBot
             AddTask(new ChangeMainChannelTask());
             AddTask(new MuteBotTask());
             AddTask(new UnmuteBotTask());
+            AddTask(new CutePictureTask());
+        }
+
+        private void PopulateCustomTasks()
+        {
+            var files = FileHelper.GetAllFiles(Constants.CUSTOM_COMMANDS_FOLDER);
+            files.ForEach(s =>
+            {
+                var customTaskContents = CustomCommandFileHandler.GetCustomTaskFromFile(s);
+                var customTask = new CustomTask(customTaskContents[0].CommandName, customTaskContents);
+                AddTask(customTask);
+            });
         }
 
         public void AddTask(TaskAbstract toAdd)
@@ -76,10 +90,9 @@ namespace OrbisBot
             //Display all log messages in the console
             Client.LogMessage += DiscordMethods.LogMessage;
 
-#pragma warning disable CS1998
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
-            Client.JoinedServer += DiscordMethods.OnServerJoined;
+            Client.UserJoined += DiscordMethods.OnUserJoinsServer;
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             Client.Run(async () =>

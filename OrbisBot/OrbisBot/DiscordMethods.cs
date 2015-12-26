@@ -41,7 +41,7 @@ namespace OrbisBot
             }
         }
 
-        public static async void OnServerJoined(object o, ServerEventArgs eventArgs)
+        public static async void OnUserJoinsServer(object o, UserEventArgs eventArgs)
         {
             var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
 
@@ -51,7 +51,7 @@ namespace OrbisBot
             {
                 if (channel.Id == mainChannelID)
                 {
-                    await Context.Instance.Client.SendMessage(channel, $"Welcome to server {eventArgs.Server.Name}");
+                    await Context.Instance.Client.SendMessage(channel, $"Welcome {eventArgs.User.Name} to server {eventArgs.Server.Name}.");
                     break;
                 }
             }

@@ -66,8 +66,18 @@ namespace OrbisBot.Tasks
                 var result = validationBuilder.GenerateString();
             }
 
+
             //here, the command successfully validates, because otherwise, we would've gotten an exception
-            var newTask = new CustomTask(args[1], maxParams, customReturns, messageSource.Channel.Id);
+            var customCommand = new CustomCommandForm(args[1], maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList());
+
+            if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))
+            {
+                var task = (CustomTask)Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
+                task.AddContent(customCommand);
+                return $"The command {customCommand.CommandName} has been added";
+            }
+
+            var newTask = new CustomTask(args[1], new List<CustomCommandForm> { customCommand });
 
             Context.Instance.AddTask(newTask);
 

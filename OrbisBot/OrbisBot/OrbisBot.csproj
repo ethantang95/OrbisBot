@@ -78,7 +78,7 @@
   <ItemGroup>
     <Compile Include="CommandParser.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="ProgramSingletonFactoryProxyBean.cs" />
     <Compile Include="DiscordMethods.cs" />
     <Compile Include="Permission\ChannelPermission.cs" />
     <Compile Include="Permission\ChannelPermissionsWrapper.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandBuilder.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandFileHandler.cs" />
+    <Compile Include="TaskHelpers\CustomCommands\CustomCommandForm.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandUtils.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Tasks\CreateCustomTask.cs" />
     <Compile Include="Tasks\CustomTask.cs" />
     <Compile Include="TaskAbstracts\FilePermissionTaskAbstract.cs" />
+    <Compile Include="Tasks\CutePictureTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\MuteBotTask.cs" />

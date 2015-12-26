@@ -21,14 +21,20 @@ namespace OrbisBot
                 Console.WriteLine("Created folder for orbis bot");
             }
 
-            if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, Constants.CHANNELS_OPTIONS_FOLDER)))
-            {
-                Directory.CreateDirectory(Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, Constants.CHANNELS_OPTIONS_FOLDER));
-                Console.WriteLine("Created folder for orbis bot's channel information");
-            }
+            CheckAndCreateFolders(Constants.CUSTOM_COMMANDS_FOLDER);
+            CheckAndCreateFolders(Constants.CHANNELS_OPTIONS_FOLDER);
 
             var app = Context.Instance;
+        }
+
+        public static void CheckAndCreateFolders(string folder)
+        {
+            if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, folder)))
+            {
+                Directory.CreateDirectory(Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, folder));
+                Console.WriteLine($"Created OrbisBot Folder {folder}");
+            }
         }
     }
 }
