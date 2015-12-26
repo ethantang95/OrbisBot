@@ -17,6 +17,7 @@ namespace OrbisBot
         public DiscordClient Client { get; private set; }
         public Dictionary<string, TaskAbstract> Tasks { get; private set; }
         public ChannelPermissionsWrapper ChannelPermission { get; private set; }
+        public Dictionary<string, string> OAuthKeys { get; set; }
 
         private static Context _context;
 
@@ -44,6 +45,7 @@ namespace OrbisBot
         {
             Client = new DiscordClient();
             Tasks = new Dictionary<string, TaskAbstract>();
+            OAuthKeys = new Dictionary<string, string>();
             ChannelPermission = new ChannelPermissionsWrapper();
             PopulateTaskDictionary();
             PopulateCustomTasks();

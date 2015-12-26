@@ -43,6 +43,8 @@ namespace OrbisBot
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
+        public const string IMGUR_CLIENT_ID = "ImgurClientID";
+        public const string IMGUR_CLIENT_SECRET = "ImgurClientSecret";
 
         public const string APP_VERSION = "0.0.5";
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using RestSharp;
+using System.Configuration;
 
 namespace OrbisBot.Tasks
 {
