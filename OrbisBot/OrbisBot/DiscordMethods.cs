@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Discord;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -26,9 +27,9 @@ namespace OrbisBot
                         var args = CommandParser.ParseCommand(eventArgs.Message.Text);
                         task.RunTask(args, eventArgs);
                     }
-                    else if (eventArgs.Message.IsMentioningMe)
+                    else if (eventArgs.Message.IsMentioningMe && !eventArgs.Message.MentionedRoles.Contains(eventArgs.Server.EveryoneRole))
                     {
-                        var aboutTask = new AboutTask();
+                        var aboutTask = Context.Instance.Tasks["-About"];
                         aboutTask.RunTask(new string[] {"dummy"}, eventArgs);
                         //pass in a dummy string to bypass the NPE
                     }
@@ -45,15 +46,11 @@ namespace OrbisBot
         {
             var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
 
-            var channels = eventArgs.Server.TextChannels;
+            var channel = eventArgs.Server.TextChannels.FirstOrDefault(s => s.Id == mainChannelID);
 
-            foreach (var channel in channels)
+            if (channel != null)
             {
-                if (channel.Id == mainChannelID)
-                {
-                    await Context.Instance.Client.SendMessage(channel, $"Welcome {eventArgs.User.Name} to server {eventArgs.Server.Name}.");
-                    break;
-                }
+                await Context.Instance.Client.SendMessage(channel, $"Welcome {eventArgs.User.Name} to server {eventArgs.Server.Name}.");
             }
         }
     }
