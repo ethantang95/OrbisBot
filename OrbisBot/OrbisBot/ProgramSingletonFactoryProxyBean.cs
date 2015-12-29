@@ -67,6 +67,7 @@ namespace OrbisBot
             AddTask(new MuteBotTask());
             AddTask(new UnmuteBotTask());
             AddTask(new CutePictureTask());
+            AddTask(new RedditTask());
         }
 
         private void PopulateCustomTasks()

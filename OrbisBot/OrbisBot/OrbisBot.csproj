@@ -103,6 +103,7 @@
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\MuteBotTask.cs" />
     <Compile Include="Tasks\RandomNumberTask.cs" />
+    <Compile Include="Tasks\RedditTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />
     <Compile Include="TaskAbstracts\SingleChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />

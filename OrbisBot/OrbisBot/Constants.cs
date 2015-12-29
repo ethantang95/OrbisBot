@@ -40,13 +40,14 @@ namespace OrbisBot
         public const string CHANGE_MAIN_CHANNEL_FILE = "ChangeMainChannel.txt";
         public const string MUTE_BOT_FILE = "MuteBot.txt"; //mute and unmute will use the same file
         public const string CUTE_PICTURE_FILE = "CutePicture.txt";
+        public const string REDDIT_FILE = "Reddit.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
         public const string IMGUR_CLIENT_ID = "ImgurClientID";
         public const string IMGUR_CLIENT_SECRET = "ImgurClientSecret";
 
-        public const string APP_VERSION = "0.1.2";
+        public const string APP_VERSION = "0.1.3";
 
         public const string SYNTAX_INTRO = "This command's sytnax is:";
 
