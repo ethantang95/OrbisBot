@@ -47,7 +47,7 @@ namespace OrbisBot
         public const string IMGUR_CLIENT_ID = "ImgurClientID";
         public const string IMGUR_CLIENT_SECRET = "ImgurClientSecret";
 
-        public const string APP_VERSION = "0.1.3";
+        public const string APP_VERSION = "0.1.4";
 
         public const string SYNTAX_INTRO = "This command's sytnax is:";
 

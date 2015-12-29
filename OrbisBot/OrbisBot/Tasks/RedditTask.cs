@@ -68,16 +68,26 @@ namespace OrbisBot.Tasks
 
             foreach (var postNode in postRoot)
             {
+                if (Boolean.Parse(postNode["over_18"].Value<string>()))
+                {
+                    continue;
+                }
+                var title = postNode["title"] + ":";
                 if (IsImageExtension(postNode["url"].Value<string>()))
                 {
                     //get the source for quality purposes
-                    postResults.Add(postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                    postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
                 }
                 else
                 {
-                    postResults.Add(postNode["url"].Value<string>());
+                    postResults.Add(title + "\n" + postNode["url"].Value<string>());
                 }
 
+            }
+
+            if (postResults.Count == 0)
+            {
+                return "No valid results has been found";
             }
 
             return postResults[new Random().Next(0, postResults.Count)];
@@ -87,6 +97,7 @@ namespace OrbisBot.Tasks
         private bool IsImageExtension(string url)
         {
             var isImage = false;
+            isImage |= url.Contains("imgur");
             isImage |= url.Contains(".jpg");
             isImage |= url.Contains(".jpeg");
             isImage |= url.Contains(".png");
