@@ -7,6 +7,7 @@ using Discord;
 using OrbisBot.Permission;
 using RestSharp;
 using Newtonsoft.Json.Linq;
+using OrbisBot.TaskHelpers.Reddit;
 
 namespace OrbisBot.Tasks
 {
@@ -56,54 +57,14 @@ namespace OrbisBot.Tasks
 
             var redditObj = JObject.Parse(response.Content);
 
-            if (redditObj["data"]["children"].ToList().Count == 0)
+            if (redditObj["error"] != null || redditObj["data"]["children"].ToList().Count == 0)
             {
                 //only way to see if the subreddit exists or not
                 return $"The subreddit {args[1]} does not exist or does not have any posts";
             }
 
-            var postRoot = redditObj["data"]["children"].ToList().Select(s => s["data"]).ToList();
+            return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj);
 
-            List<string> postResults = new List<string>();
-
-            foreach (var postNode in postRoot)
-            {
-                if (Boolean.Parse(postNode["over_18"].Value<string>()))
-                {
-                    continue;
-                }
-                var title = postNode["title"] + ":";
-                if (IsImageExtension(postNode["url"].Value<string>()))
-                {
-                    //get the source for quality purposes
-                    postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
-                }
-                else
-                {
-                    postResults.Add(title + "\n" + postNode["url"].Value<string>());
-                }
-
-            }
-
-            if (postResults.Count == 0)
-            {
-                return "No valid results has been found";
-            }
-
-            return postResults[new Random().Next(0, postResults.Count)];
-
-        }
-
-        private bool IsImageExtension(string url)
-        {
-            var isImage = false;
-            isImage |= url.Contains("imgur");
-            isImage |= url.Contains(".jpg");
-            isImage |= url.Contains(".jpeg");
-            isImage |= url.Contains(".png");
-            isImage |= url.Contains(".gif");
-
-            return isImage;
         }
     }
 }

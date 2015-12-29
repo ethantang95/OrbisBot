@@ -9,6 +9,7 @@ using RestSharp;
 using System.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OrbisBot.TaskHelpers.Reddit;
 
 namespace OrbisBot.Tasks
 {
@@ -61,18 +62,7 @@ namespace OrbisBot.Tasks
 
                 var redditObj = JObject.Parse(response.Content);
 
-                var imagesRoot = redditObj["data"]["children"].ToList().Select(s => s["data"]["preview"]["images"]).ToList();
-
-                List<string> imageResults = new List<string>();
-
-                foreach (var imageNode in imagesRoot)
-                {
-                    var resultImage = imageNode.Select(s => s["source"]["url"]).ToList();
-
-                    imageResults.Add(resultImage[0].Value<string>());
-                }
-
-                return imageResults[new Random().Next(0, imageResults.Count)];
+                return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj);
             }
         }
     }
