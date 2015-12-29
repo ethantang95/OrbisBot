@@ -2,6 +2,7 @@
 using OrbisBot.Permission;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -74,7 +75,19 @@ namespace OrbisBot.Tasks
             }
             catch (Exception e)
             {
-                _taskResult = $"Error occurred, Exception: {e.Message}; Message Received {_messageSource.Message.Text}";
+                try
+                {
+                    _taskResult = $"Error occurred, Exception: {e.Message}; Message Received {_messageSource.Message.Text}";
+
+                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
+
+                    Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {e.Message}, {e.ToString()} \n Stacktrace is: {e.StackTrace}");
+                }
+                catch (Exception ex)
+                {
+                    //I'm about my wits end
+                    _taskResult = $"It really broke hard... {e.Message}. \n {e.StackTrace}";
+                }
             }
             PublishTask();
         }

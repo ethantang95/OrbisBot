@@ -26,7 +26,14 @@ namespace OrbisBot.TaskHelpers.Reddit
                 if (IsImageExtension(postNode["url"].Value<string>()))
                 {
                     //get the source for quality purposes
-                    postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                    try
+                    {
+                        postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                    }
+                    catch (Exception e) {
+                        //for whatever dumb reason
+                        postResults.Add(title + "\n" + postNode["url"].Value<string>());
+                    }
                 }
                 else
                 {
