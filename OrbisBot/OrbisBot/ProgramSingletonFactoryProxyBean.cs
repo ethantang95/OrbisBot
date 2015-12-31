@@ -42,7 +42,7 @@ namespace OrbisBot
 
         }
 
-        private void Initalize()
+        public void Initalize()
         {
             Client = new DiscordClient();
             Tasks = new Dictionary<string, TaskAbstract>();
@@ -71,6 +71,7 @@ namespace OrbisBot
             AddTask(new RedditTask());
             AddTask(new ExceptionThrowingTask());
             AddTask(new AutoRoleAssignTask());
+            AddTask(new RestartContextTask());
         }
 
         private void PopulateCustomTasks()
@@ -89,6 +90,15 @@ namespace OrbisBot
             Tasks.Add(toAdd.CommandTrigger(), toAdd);
         }
 
+        public void DestorySelf()
+        {
+            Client.Disconnect();
+            Client = null;
+            Tasks = null;
+            ChannelPermission = null;
+            OAuthKeys = null;
+        }
+
         private void SetUpDiscordClient()
         {
             Client = new DiscordClient();
@@ -98,7 +108,8 @@ namespace OrbisBot
 
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
-            Client.UserJoined += DiscordMethods.OnUserJoinsServer;
+            //Client.UserJoined += DiscordMethods.OnUserJoinsServer;
+            //disabled until I manage to set server permissions and settings files
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             Client.Run(async () =>

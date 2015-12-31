@@ -111,6 +111,7 @@
     <Compile Include="Tasks\RegisterSelfTask.cs" />
     <Compile Include="TaskAbstracts\RegisteredChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />
+    <Compile Include="Tasks\RestartContextTask.cs" />
     <Compile Include="Tasks\UnmuteBotTask.cs" />
     <Compile Include="Tasks\WolframAlphaTask.cs" />
   </ItemGroup>
