@@ -96,6 +96,7 @@
     <Compile Include="Tasks\AboutTask.cs" />
     <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\AutoRoleAssignTask.cs" />
+    <Compile Include="Tasks\BotMentionTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
     <Compile Include="Tasks\ChangeMainChannelTask.cs" />
     <Compile Include="Tasks\CreateCustomTask.cs" />

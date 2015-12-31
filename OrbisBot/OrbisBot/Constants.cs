@@ -42,6 +42,7 @@ namespace OrbisBot
         public const string CUTE_PICTURE_FILE = "CutePicture.txt";
         public const string REDDIT_FILE = "Reddit.txt";
         public const string EXCEPTION_TEST_FILE = "ExceptionTest.txt";
+        public const string BOT_MENTION_FILE = "BotMention.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";

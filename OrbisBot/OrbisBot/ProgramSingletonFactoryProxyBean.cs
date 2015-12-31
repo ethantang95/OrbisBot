@@ -72,6 +72,7 @@ namespace OrbisBot
             AddTask(new ExceptionThrowingTask());
             AddTask(new AutoRoleAssignTask());
             AddTask(new RestartContextTask());
+            AddTask(new BotMentionTask());
         }
 
         private void PopulateCustomTasks()

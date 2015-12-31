@@ -40,8 +40,7 @@ namespace OrbisBot.TaskAbstracts
             _args = args;
             _messageSource = messageEventArgs;
             //do consider using a threadpool in the future to prevent request bombs
-            Thread taskThread = new Thread(ExecuteTask);
-            taskThread.Start();
+            Task.Run(() => ExecuteTask());
         }
 
         private bool ProceedWithCommand(MessageEventArgs messageEventArgs)

@@ -29,7 +29,7 @@ namespace OrbisBot
                     }
                     else if (eventArgs.Message.IsMentioningMe && !eventArgs.Message.MentionedRoles.Contains(eventArgs.Server.EveryoneRole))
                     {
-                        var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "about"];
+                        var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "botmention"];
                         aboutTask.RunTask(new string[] {"dummy"}, eventArgs);
                         //pass in a dummy string to bypass the NPE
                     }
