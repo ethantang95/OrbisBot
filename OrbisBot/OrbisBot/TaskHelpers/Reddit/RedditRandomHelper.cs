@@ -10,7 +10,7 @@ namespace OrbisBot.TaskHelpers.Reddit
     class RedditRandomHelper
     {
         //gets a random url with a reddit source JObject
-        public static string GetRandomLinkFromRedditSource(JObject redditObj)
+        public static string GetRandomLinkFromRedditSource(JObject redditObj, bool imageOnly)
         {
             var postRoot = redditObj["data"]["children"].ToList().Select(s => s["data"]).ToList();
 
@@ -35,7 +35,7 @@ namespace OrbisBot.TaskHelpers.Reddit
                         postResults.Add(title + "\n" + postNode["url"].Value<string>());
                     }
                 }
-                else
+                else if (!imageOnly)
                 {
                     postResults.Add(title + "\n" + postNode["url"].Value<string>());
                 }

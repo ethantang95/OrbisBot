@@ -70,12 +70,17 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "ChangeCommandPermission";
+            return "changecommandpermission";
         }
 
         public override string AboutText()
         {
             return "Changes a command's minimum required permission level";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return "An error has occurred when trying to change the command's permission, the developers has been notified of this problem";
         }
     }
 }

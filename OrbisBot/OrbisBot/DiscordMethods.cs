@@ -21,15 +21,15 @@ namespace OrbisBot
                 try
                 {
                     var commandSplitted = eventArgs.Message.Text.Split(' ');
-                    if (Context.Instance.Tasks.ContainsKey(commandSplitted[0]))
+                    if (Context.Instance.Tasks.ContainsKey(commandSplitted[0].ToLower()))
                     {
-                        var task = Context.Instance.Tasks[commandSplitted[0]];
+                        var task = Context.Instance.Tasks[commandSplitted[0].ToLower()];
                         var args = CommandParser.ParseCommand(eventArgs.Message.Text);
                         task.RunTask(args, eventArgs);
                     }
                     else if (eventArgs.Message.IsMentioningMe && !eventArgs.Message.MentionedRoles.Contains(eventArgs.Server.EveryoneRole))
                     {
-                        var aboutTask = Context.Instance.Tasks["-About"];
+                        var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "about"];
                         aboutTask.RunTask(new string[] {"dummy"}, eventArgs);
                         //pass in a dummy string to bypass the NPE
                     }

@@ -77,16 +77,17 @@ namespace OrbisBot.Tasks
             {
                 try
                 {
-                    _taskResult = $"Error occurred, Exception: {e.Message}; Message Received {_messageSource.Message.Text}";
+                    _taskResult = ExceptionMessage(e, _messageSource);
 
                     var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
 
-                    Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {e.Message}, {e.ToString()} \n Stacktrace is: {e.StackTrace}");
+                    Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {e.ToString()} \n Stacktrace is: {e.StackTrace}");
                 }
                 catch (Exception ex)
                 {
-                    //I'm about my wits end
-                    _taskResult = $"It really broke hard... {e.Message}. \n {e.StackTrace}";
+                    //I'm about my wits end.. in case stuff screws up even harder
+                    //prolly just return is better
+                    return;
                 }
             }
             PublishTask();
@@ -94,6 +95,10 @@ namespace OrbisBot.Tasks
 
         private void PublishTask()
         {
+            if (_taskResult == "" || _taskResult == String.Empty)
+            {
+                return;
+            }
             var discordClient = Context.Instance.Client;
             discordClient.SendMessage(_messageSource.Channel, _taskResult);
         }
@@ -116,7 +121,9 @@ namespace OrbisBot.Tasks
 
         public abstract string AboutText();
 
-        public abstract bool AllowTaskExecution(MessageEventArgs messageEventArgs);
+        public abstract string ExceptionMessage(Exception ex, MessageEventArgs eventArgs);
+
+        public abstract bool AllowTaskExecution(MessageEventArgs eventArgs);
 
         public abstract PermissionLevel GetCommandPermissionForChannel(long channelId);
 

@@ -86,6 +86,11 @@ namespace OrbisBot.Tasks
                 messageEventArgs.User.Id);
         }
 
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return String.Empty;
+        }
+
         public abstract string PermissionFileSource();
     }
 }

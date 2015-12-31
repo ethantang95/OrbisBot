@@ -41,14 +41,16 @@ namespace OrbisBot
         public const string MUTE_BOT_FILE = "MuteBot.txt"; //mute and unmute will use the same file
         public const string CUTE_PICTURE_FILE = "CutePicture.txt";
         public const string REDDIT_FILE = "Reddit.txt";
+        public const string EXCEPTION_TEST_FILE = "ExceptionTest.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
         public const string IMGUR_CLIENT_ID = "ImgurClientID";
         public const string IMGUR_CLIENT_SECRET = "ImgurClientSecret";
         public const string LOGGING_CHANNEL = "LoggingChannel";
+        public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.1.4";
+        public const string APP_VERSION = "0.1.5";
 
         public const string SYNTAX_INTRO = "This command's sytnax is:";
 

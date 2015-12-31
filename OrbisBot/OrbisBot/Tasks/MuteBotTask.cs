@@ -17,7 +17,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "MuteBot";
+            return "mutebot";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -57,6 +57,11 @@ namespace OrbisBot.Tasks
         private string SyntaxStructure()
         {
             return $"{Constants.SYNTAX_INTRO} OPTIONAL Server. Type the word server after the command to mute the entire server";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return "An error has occurred when trying to mute the bot, the developers has been notified of this problem";
         }
     }
 }

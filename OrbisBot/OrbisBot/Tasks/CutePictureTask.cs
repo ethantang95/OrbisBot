@@ -22,7 +22,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "Aww";
+            return "aww";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -53,7 +53,7 @@ namespace OrbisBot.Tasks
 
                 return response.ResponseUri.AbsoluteUri;
             }
-            else
+            else if (args.Length == 1)
             {
                 var client = new RestClient("http://reddit.com");
                 var request = new RestRequest("r/aww/rising/.json", Method.GET);
@@ -62,7 +62,11 @@ namespace OrbisBot.Tasks
 
                 var redditObj = JObject.Parse(response.Content);
 
-                return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj);
+                return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj, true);
+            }
+            else
+            {
+                return $"This command does not currently support {args[1]} right now";
             }
         }
     }

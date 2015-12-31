@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
+using System.Configuration;
 
 namespace OrbisBot.Tasks
 {
@@ -13,7 +14,8 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (messageSource.User.Id == 91325420921683968)  //Cyg
+            var developers = ConfigurationManager.AppSettings[Constants.DEVELOPERS].Split(',').Select(s => s.Trim());
+            if (developers.Contains(messageSource.User.Id.ToString())) 
             {
                 Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, messageSource.User.Id, PermissionLevel.Developer);
                 return $"Welcome {messageSource.User.Name}, you are now registered as a developer in this channel";
@@ -49,7 +51,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "Register";
+            return "register";
         }
 
         public override string AboutText()

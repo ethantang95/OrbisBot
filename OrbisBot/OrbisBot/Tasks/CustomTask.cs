@@ -9,7 +9,7 @@ using OrbisBot.TaskHelpers.CustomCommands;
 
 namespace OrbisBot.Tasks
 {
-    class CustomTask : SingleChannelTaskAbstract
+    class CustomTask : RegisterChannelTaskAbstract
     {
         private string _commandText;
         private Dictionary<long, CustomCommandForm> _customCommands; 
@@ -26,7 +26,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return _commandText;
+            return _commandText.ToLower();
         }
 
         public override CommandPermission DefaultCommandPermission()

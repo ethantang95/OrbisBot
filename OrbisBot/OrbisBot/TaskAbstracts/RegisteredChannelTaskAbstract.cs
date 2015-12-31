@@ -8,8 +8,8 @@ using Discord;
 
 namespace OrbisBot.Tasks { 
 
-    //this class exists for tasks that belongs to a single channel
-    abstract class SingleChannelTaskAbstract : TaskAbstract
+    //this class exists for tasks that belongs to a registered channel
+    abstract class RegisterChannelTaskAbstract : TaskAbstract
     {
         public override PermissionLevel GetCommandPermissionForChannel(long channelId)
         {
@@ -51,6 +51,11 @@ namespace OrbisBot.Tasks {
         {
             return Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id,
                 messageEventArgs.User.Id);
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return String.Empty;
         }
     }
 }

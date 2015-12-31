@@ -17,7 +17,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "Random";
+            return "random";
         }
 
         public override CommandPermission DefaultCommandPermission()

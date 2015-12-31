@@ -79,12 +79,17 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "ChangeUserPermission";
+            return "changeuserpermission";
         }
 
         public override string AboutText()
         {
             return "Changes a user's permission or role on the current channel";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return "An error has occurred when trying to change the person's permission, the developers has been notified of this problem";
         }
     }
 }

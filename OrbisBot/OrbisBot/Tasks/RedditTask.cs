@@ -20,7 +20,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "Reddit";
+            return "reddit";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -35,14 +35,25 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length > 2)
+            if (args.Length > 3)
             {
-                return $"{Constants.SYNTAX_INTRO} OPTIONAL(<subreddit name>). If no subreddit is specified, it will return something from the front page of reddit";
+                return $"{Constants.SYNTAX_INTRO} OPTIONAL(<subreddit name>) OPTIONAL(image). If no subreddit is specified, it will return something from the front page of reddit. For a subreddit, you can specifiy if you want an image only or not with the word image after the subreddit's name";
             }
+            var imageOnly = false;
 
             string extensionUrl;
-
-            if (args.Length == 2)
+            if (args.Length == 3)
+            {
+                if (args[2].Equals("image", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    imageOnly = true;
+                }
+                else
+                {
+                    return $"You can only specify whether you want images only or not in the 2nd parameter with the keyword \"image\"";
+                }
+            }
+            if (args.Length >= 2)
             {
                 extensionUrl = $"r/{args[1]}/.json";
             }
@@ -63,7 +74,7 @@ namespace OrbisBot.Tasks
                 return $"The subreddit {args[1]} does not exist or does not have any posts";
             }
 
-            return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj);
+            return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj, imageOnly);
 
         }
     }

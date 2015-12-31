@@ -17,7 +17,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "UnmuteBot";
+            return "unmutebot";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -57,6 +57,11 @@ namespace OrbisBot.Tasks
         private string SyntaxStructure()
         {
             return $"{Constants.SYNTAX_INTRO} OPTIONAL Server. Type the word server after the command to unmute the entire server";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return "An error has occurred when trying to unmute the bot, the developers has been notified of this problem";
         }
     }
 }

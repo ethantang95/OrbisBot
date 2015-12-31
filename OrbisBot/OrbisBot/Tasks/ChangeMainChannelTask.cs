@@ -17,7 +17,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "SetMainChannel";
+            return "setmainchannel";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -35,6 +35,11 @@ namespace OrbisBot.Tasks
             Context.Instance.ChannelPermission.SetMainChannelForServer(messageSource.Server.Id, messageSource.Channel.Id);
 
             return $"Successfully changed the main channel to {messageSource.Channel.Name}";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return "An error has occurred when trying to change the main channel, the developers has been notified of this problem";
         }
     }
 }
