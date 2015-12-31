@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
+using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {

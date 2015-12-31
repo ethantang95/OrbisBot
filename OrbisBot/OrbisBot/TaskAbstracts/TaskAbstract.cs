@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OrbisBot.Tasks
+namespace OrbisBot.TaskAbstracts
 {
     abstract class TaskAbstract : IComparable<TaskAbstract>
     {

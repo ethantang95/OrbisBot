@@ -1,5 +1,6 @@
 ﻿using Discord;
 using OrbisBot.Permission;
+using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.Tasks;
 using System;
@@ -69,6 +70,7 @@ namespace OrbisBot
             AddTask(new CutePictureTask());
             AddTask(new RedditTask());
             AddTask(new ExceptionThrowingTask());
+            AddTask(new AutoRoleAssignTask());
         }
 
         private void PopulateCustomTasks()

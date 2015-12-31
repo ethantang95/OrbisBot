@@ -85,6 +85,7 @@
     <Compile Include="Permission\CommandPermission.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskAbstracts\DiscretePermissionTaskAbstract.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandBuilder.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandFileHandler.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandForm.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
     <Compile Include="Tasks\AboutTask.cs" />
     <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
+    <Compile Include="Tasks\AutoRoleAssignTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
     <Compile Include="Tasks\ChangeMainChannelTask.cs" />
     <Compile Include="Tasks\CreateCustomTask.cs" />

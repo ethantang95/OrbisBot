@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrbisBot.Tasks
+namespace OrbisBot.TaskAbstracts
 {
     abstract class FilePermissionTaskAbstract : TaskAbstract
     {

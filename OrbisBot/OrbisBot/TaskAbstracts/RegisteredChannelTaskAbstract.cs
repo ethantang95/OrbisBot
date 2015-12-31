@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 
-namespace OrbisBot.Tasks { 
+namespace OrbisBot.TaskAbstracts
+{ 
 
     //this class exists for tasks that belongs to a registered channel
-    abstract class RegisterChannelTaskAbstract : TaskAbstract
+    abstract class RegisteredChannelTaskAbstract : TaskAbstract
     {
         public override PermissionLevel GetCommandPermissionForChannel(long channelId)
         {

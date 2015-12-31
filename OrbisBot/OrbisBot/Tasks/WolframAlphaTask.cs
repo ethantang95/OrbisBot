@@ -12,6 +12,7 @@ using System.Drawing.Imaging;
 using Amazon.S3.Model;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.WolframAlpha;
+using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
+using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {
@@ -80,6 +81,10 @@ namespace OrbisBot.Tasks
 
         public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
         {
+            if (ex.GetType() == typeof(NotSupportedException))
+            {
+                return ex.Message;
+            }
             return "An error has occurred when trying to change the command's permission, the developers has been notified of this problem";
         }
     }

@@ -10,6 +10,7 @@ using System.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OrbisBot.TaskHelpers.Reddit;
+using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {

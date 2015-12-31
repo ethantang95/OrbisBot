@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
+using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {
-    class CustomTask : RegisterChannelTaskAbstract
+    class CustomTask : RegisteredChannelTaskAbstract
     {
         private string _commandText;
         private Dictionary<long, CustomCommandForm> _customCommands; 
