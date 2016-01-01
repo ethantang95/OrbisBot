@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Discord;
+using OrbisBot.TaskHelpers.UserFinder;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,12 +13,14 @@ namespace OrbisBot.TaskHelpers.CustomCommands
         private string _baseCommand;
         private string[] _args;
         private string _userName;
+        private IEnumerable<User> _users;
 
-        public CustomCommandBuilder(string baseCommand, string[] args, string userName)
+        public CustomCommandBuilder(string baseCommand, string[] args, string userName, IEnumerable<User> users)
         {
             _baseCommand = baseCommand;
             _args = args;
             _userName = userName;
+            _users = users;
         }
 
         public void ReplaceIndependents()
@@ -25,6 +29,10 @@ namespace OrbisBot.TaskHelpers.CustomCommands
             _baseCommand = _baseCommand.Replace("%u", _userName);
             for (int i = 0; i < _args.Length; i++)
             {
+                //first, we replace the user strings, if they are not found, replace it with norm strings
+                var replaceUserString = "%" + (i + 1) + "u";
+                var userToReplace = UserFinderUtil.FindUser(_users, _args[i]);
+                _baseCommand = _baseCommand.Replace(replaceUserString, userToReplace);
                 var replaceString = "%" + (i + 1);
                 _baseCommand = _baseCommand.Replace(replaceString, _args[i]);
             }

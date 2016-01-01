@@ -14,7 +14,7 @@ namespace OrbisBot.Tasks
     {
         public override string AboutText()
         {
-            return "Allows you to create a custom task with its customized message. " + HelpText();
+            return HelpText();
         }
 
         public override string CommandText()
@@ -63,7 +63,7 @@ namespace OrbisBot.Tasks
             foreach (var customReturn in customReturns)
             {
                 var fakeParams = Enumerable.Repeat("1", maxParams).ToArray();
-                var validationBuilder = new CustomCommandBuilder(customReturn, fakeParams, messageSource.User.Name);
+                var validationBuilder = new CustomCommandBuilder(customReturn, fakeParams, messageSource.User.Name, messageSource.Channel.Members);
                 var result = validationBuilder.GenerateString();
             }
 
@@ -89,7 +89,7 @@ namespace OrbisBot.Tasks
 
         private string HelpText()
         {
-            return "Allows you to create a custom command, currently still in development";
+            return $"{Constants.SYNTAX_INTRO} <command name> <max number of params> [\"<possible return strings>\"]. \nFor the return strings, you can use tokens as placeholders to replace it with content. \n%u represents the user that called this command. \n%n where n is an integer like %1 represent the nth parameter for it to replace it with, starting with 1. Optionally, you can add a u after the number in %n for it to explicitly search for a member in the parameter, like %1u";
         }
     }
 }

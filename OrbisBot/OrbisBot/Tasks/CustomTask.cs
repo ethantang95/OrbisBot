@@ -51,9 +51,13 @@ namespace OrbisBot.Tasks
 
             var command = _customCommands[messageSource.Channel.Id];
 
-            if (args.Length != command.MaxArgs + 1)
+            if (args.Length < command.MaxArgs + 1)
             {
                 return $"Not enough parameters was supplied for this command, it requires {command.MaxArgs} parameters.";
+            }
+            else if (args.Length > command.MaxArgs + 1)
+            {
+                return $"Too many parameters are supplied to this command. If you are trying to input a name or a statement, surround it with \". This command requires {command.MaxArgs} parameters ";
             }
 
             var mentioned = messageSource.Message.MentionedUsers;
@@ -65,7 +69,7 @@ namespace OrbisBot.Tasks
 
             var commandArgs = args.Skip(1).ToArray();
 
-            var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name);
+            var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Members);
 
             //set the time for when the command was last triggered
             _lastTriggered[messageSource.Channel.Id] = DateTime.Now;

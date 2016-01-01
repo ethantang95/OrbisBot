@@ -91,6 +91,7 @@
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandForm.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandUtils.cs" />
     <Compile Include="TaskHelpers\Reddit\RedditRandomHelper.cs" />
+    <Compile Include="TaskHelpers\UserFinder\UserFinderUtil.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
     <Compile Include="Tasks\AboutTask.cs" />
