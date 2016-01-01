@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskHelpers.UserFinder;
 
 namespace OrbisBot.Tasks
 {
@@ -29,7 +30,7 @@ namespace OrbisBot.Tasks
 
             if (args.Length == 2)
             {
-                targetUser = messageSource.Server.Members.FirstOrDefault(s => s.Name == args[1]);
+                targetUser = UserFinderUtil.FindUser(messageSource.Server.Members, args[1]);
                 if (targetUser == null)
                 {
                     return "The user you are trying to find does not exist in this server";

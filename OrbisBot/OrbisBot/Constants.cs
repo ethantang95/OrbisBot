@@ -43,6 +43,7 @@ namespace OrbisBot
         public const string REDDIT_FILE = "Reddit.txt";
         public const string EXCEPTION_TEST_FILE = "ExceptionTest.txt";
         public const string BOT_MENTION_FILE = "BotMention.txt";
+        public const string FIFTY_SHADES_FIC_FILE = "FiftyShadesFic.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
@@ -51,7 +52,7 @@ namespace OrbisBot
         public const string LOGGING_CHANNEL = "LoggingChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.1.6";
+        public const string APP_VERSION = "0.1.7";
 
         public const string SYNTAX_INTRO = "This command's sytnax is:";
 

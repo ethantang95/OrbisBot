@@ -73,6 +73,7 @@ namespace OrbisBot
             AddTask(new AutoRoleAssignTask());
             AddTask(new RestartContextTask());
             AddTask(new BotMentionTask());
+            AddTask(new FiftyShadeFicTask());
         }
 
         private void PopulateCustomTasks()

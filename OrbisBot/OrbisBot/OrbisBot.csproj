@@ -48,6 +48,10 @@
       <HintPath>..\packages\Discord.Net.0.8.1-beta2\lib\net45\Discord.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -105,6 +109,7 @@
     <Compile Include="TaskAbstracts\FilePermissionTaskAbstract.cs" />
     <Compile Include="Tasks\CutePictureTask.cs" />
     <Compile Include="Tasks\ExceptionThrowingTask.cs" />
+    <Compile Include="Tasks\FiftyShadeFicTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\MuteBotTask.cs" />

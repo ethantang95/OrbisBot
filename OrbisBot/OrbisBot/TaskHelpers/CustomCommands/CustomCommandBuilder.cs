@@ -31,7 +31,7 @@ namespace OrbisBot.TaskHelpers.CustomCommands
             {
                 //first, we replace the user strings, if they are not found, replace it with norm strings
                 var replaceUserString = "%" + (i + 1) + "u";
-                var userToReplace = UserFinderUtil.FindUser(_users, _args[i]);
+                var userToReplace = UserFinderUtil.FindUserMention(_users, _args[i]);
                 _baseCommand = _baseCommand.Replace(replaceUserString, userToReplace);
                 var replaceString = "%" + (i + 1);
                 _baseCommand = _baseCommand.Replace(replaceString, _args[i]);

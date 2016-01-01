@@ -9,7 +9,7 @@ namespace OrbisBot.TaskHelpers.UserFinder
 {
     class UserFinderUtil
     {
-        public static string FindUser(IEnumerable<User> users, string username)
+        public static string FindUserMention(IEnumerable<User> users, string username)
         {
             //see if it's already a mention string
             if (username[0] == '<' && username[1] == '@' && username[username.Length - 1] == '>')
@@ -20,12 +20,19 @@ namespace OrbisBot.TaskHelpers.UserFinder
             {
                 return username;
             }
+
+            var user = FindUser(users, username);
+
+            return user == null ? username : Mention.User(user);
+        }
+        public static User FindUser(IEnumerable<User> users, string username)
+        {
             //first, find by direct match
             var userToReturn = users.FirstOrDefault(s => s.Name == username);
 
             if (userToReturn != null)
             {
-                return GetMentionString(userToReturn);
+                return userToReturn;
             }
 
             //if it is null
@@ -33,15 +40,10 @@ namespace OrbisBot.TaskHelpers.UserFinder
 
             if (userToReturn != null)
             {
-                return GetMentionString(userToReturn);
+                return userToReturn;
             }
 
-            return username; //cannot find the user
-        }
-
-        public static string GetMentionString(User user)
-        {
-            return Mention.User(user);
+            return null; //cannot find the user
         }
     }
 }
