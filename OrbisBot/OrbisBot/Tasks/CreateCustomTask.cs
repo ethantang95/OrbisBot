@@ -75,7 +75,7 @@ namespace OrbisBot.Tasks
             {
                 var task = (CustomTask)Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
                 task.AddContent(customCommand);
-                return $"The command {customCommand.CommandName} has been added";
+                return $"The command {task.CommandTrigger()} has been added";
             }
 
             var newTask = new CustomTask(args[1], new List<CustomCommandForm> { customCommand });
