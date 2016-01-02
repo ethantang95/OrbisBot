@@ -92,14 +92,23 @@ namespace OrbisBot.TaskAbstracts
             PublishTask();
         }
 
-        private void PublishTask()
+        private async void PublishTask()
         {
             if (_taskResult == "" || _taskResult == String.Empty)
             {
                 return;
             }
             var discordClient = Context.Instance.Client;
-            discordClient.SendMessage(_messageSource.Channel, _taskResult);
+            try
+            {
+                var result = await discordClient.SendMessage(_messageSource.Channel, _taskResult);
+            }
+            catch (Exception ex)
+            {
+                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
+
+                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
+            }
         }
 
         public string CommandTrigger()

@@ -14,7 +14,7 @@ namespace OrbisBot.Tasks
     {
         public override string AboutText()
         {
-            return HelpText();
+            return "Create a custom command, for more information, try the command out";
         }
 
         public override string CommandText()

@@ -36,8 +36,10 @@ namespace OrbisBot.Tasks
             {
                 var availableTasks = availableCommands.Select(s => s.Value).ToList();
                 availableTasks.Sort();
-                availableTasks.ForEach(s => returnMessage.AppendLine($"{s.CommandTrigger()} - {s.AboutText()}"));
+                availableTasks.ForEach(s => returnMessage.AppendLine($"{s.CommandTrigger()}"));
             }
+
+            returnMessage.AppendLine("Type about after a command to see what it does.");
 
             return returnMessage.ToString();
         }
