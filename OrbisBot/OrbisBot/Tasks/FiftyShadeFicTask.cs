@@ -56,7 +56,7 @@ namespace OrbisBot.Tasks
             }
             else
             {
-                _lastTriggered.Add(messageSource.Channel.Id, DateTime.Now);
+                _lastTriggered.Add(messageSource.Channel.Id, new DateTime(0));
             }
 
             if (args.Length != 3)
