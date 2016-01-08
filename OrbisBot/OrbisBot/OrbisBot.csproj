@@ -110,6 +110,7 @@
     <Compile Include="Tasks\CutePictureTask.cs" />
     <Compile Include="Tasks\ExceptionThrowingTask.cs" />
     <Compile Include="Tasks\FiftyShadeFicTask.cs" />
+    <Compile Include="Tasks\InsultTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MetaInfoTask.cs" />
     <Compile Include="Tasks\MuteBotTask.cs" />

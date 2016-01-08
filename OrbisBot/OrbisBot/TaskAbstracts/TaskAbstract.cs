@@ -58,7 +58,7 @@ namespace OrbisBot.TaskAbstracts
             return proceed;
         }
 
-        private void ExecuteTask()
+        private async void ExecuteTask()
         {
             try
             {
@@ -80,7 +80,7 @@ namespace OrbisBot.TaskAbstracts
 
                     var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
 
-                    Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {e.ToString()} \n Stacktrace is: {e.StackTrace}");
+                    var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {e.ToString()}");
                 }
                 catch (Exception ex)
                 {
