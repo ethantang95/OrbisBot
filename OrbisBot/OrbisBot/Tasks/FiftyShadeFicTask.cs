@@ -109,7 +109,7 @@ namespace OrbisBot.Tasks
             content = content.Replace(" My ", " " + person1.Name + "'s ");
 
             //we will not replace the 2nd person since it's always in quotes
-
+            
             content = content.Replace(" he ", " " + person2.Name + " ");
             content = content.Replace(" He ", " " + person2.Name + " ");
             content = content.Replace(" he's ", " " + person2.Name + " is ");
