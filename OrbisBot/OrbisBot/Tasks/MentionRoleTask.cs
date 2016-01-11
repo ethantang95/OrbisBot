@@ -43,6 +43,10 @@ namespace OrbisBot.Tasks
             {
                 return $"The role *{args[1]}* cannot be found";
             }
+            else if (role.Members.ToList().Count > 40)
+            {
+                return $"There are too many people that has this role, a mention of over 40 people will cause too many disruption, please try and create smaller roles";
+            }
             else if (role.IsEveryone)
             {
                 return $"This command is filtered from an everyone mention";
