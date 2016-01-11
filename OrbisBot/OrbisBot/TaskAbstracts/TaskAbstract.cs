@@ -107,7 +107,7 @@ namespace OrbisBot.TaskAbstracts
             {
                 var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
 
-                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publising intermeditate message in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
+                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publising intermeditate message in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {ex.ToString()}");
             }
         }
 

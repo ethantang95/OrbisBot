@@ -45,6 +45,7 @@ namespace OrbisBot
         public const string BOT_MENTION_FILE = "BotMention.txt";
         public const string FIFTY_SHADES_FIC_FILE = "FiftyShadesFic.txt";
         public const string INSULT_FILE = "Insult.txt";
+        public const string ROLE_MENTION_FILE = "RoleMention.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
