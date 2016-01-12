@@ -49,7 +49,9 @@ namespace OrbisBot.TaskHelpers.UserFinder
             //if it is null, we will deploy fuzzy search
             var candidates = users.Where(s => s.Name.ToLowerInvariant().Contains(username.ToLowerInvariant()));
 
-            var sortedList = candidates.Select(s => new UserRank(s, s.Name.ToLowerInvariant().IndexOf(username.ToLowerInvariant()), s.Name.Length)).ToList();
+            var sortedList = candidates.Select(s => new UserRank(s, s.Name.ToLowerInvariant().IndexOf(username.ToLowerInvariant()), s.Name.Length,
+                s.Name.Length - s.Name.ToLowerInvariant().IndexOf(username.ToLowerInvariant()) == username.Length)) //to determine if it matches at the back
+                .ToList();
 
             sortedList.Sort();
 
@@ -84,17 +86,33 @@ namespace OrbisBot.TaskHelpers.UserFinder
         public User User { get; private set; }
         public int SearchPosition { get; private set; }
         public int NameSize { get; private set; }
+        public bool BackMatch { get; private set; }
 
-        public UserRank(User user, int searchPosition, int nameSize)
+        public UserRank(User user, int searchPosition, int nameSize, bool backMatch)
         {
             this.User = user;
             this.SearchPosition = searchPosition;
             this.NameSize = nameSize;
+            this.BackMatch = backMatch;
         }
 
         public int CompareTo(UserRank other)
         {
-            return this.SearchPosition == other.SearchPosition ? this.NameSize.CompareTo(other.NameSize) : this.SearchPosition.CompareTo(other.SearchPosition);
+            if (this.SearchPosition == 0 && other.SearchPosition == 0) //first match rules all
+            {
+                return this.NameSize.CompareTo(other.NameSize);
+            }
+            else if (this.BackMatch && other.BackMatch) //if both have a back match
+            {
+                return this.NameSize.CompareTo(other.NameSize);
+            }
+            else if (this.BackMatch || other.BackMatch)
+            {
+                return other.BackMatch.CompareTo(this.BackMatch);//a matching in the back will preceed size comparison
+            }
+            return this.SearchPosition == other.SearchPosition ?
+                    this.NameSize.CompareTo(other.NameSize) :
+                    this.SearchPosition.CompareTo(other.SearchPosition);
         }
     }
 }

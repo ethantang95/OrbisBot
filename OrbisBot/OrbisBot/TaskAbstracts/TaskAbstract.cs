@@ -65,7 +65,7 @@ namespace OrbisBot.TaskAbstracts
                 //check if it is for about, or if it's for activating the test
                 if (_args.Length > 1 && _args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    _taskResult = $"{CommandText()} - {AboutText()}";
+                    _taskResult = $"{CommandText()} - {AboutText()}. Permission level for this channel: {GetCommandPermissionForChannel(_messageSource.Channel.Id)}";
                 }
                 else
                 {

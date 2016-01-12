@@ -43,7 +43,7 @@ namespace OrbisBot.Tasks
 
             var targetUserRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
                 targetUser.Id);
-
+            returnText.AppendLine($"User Name: {targetUser.Name}");
             returnText.AppendLine($"User ID: {targetUser.Id}")
                 .AppendLine(
                     $"User Role In Current Channel: {targetUserRole}")

@@ -54,7 +54,7 @@ namespace OrbisBot
         public const string LOGGING_CHANNEL = "LoggingChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.1.7";
+        public const string APP_VERSION = "0.1.8";
 
         public const string SYNTAX_INTRO = "This command's sytnax is:";
 
