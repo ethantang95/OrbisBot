@@ -222,5 +222,16 @@ namespace OrbisBot
                 throw e;
             }
         }
+        public static void RemoveFile(string fileName)
+        {
+            try
+            {
+                File.Delete(GetProgramSaveLocation(fileName));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

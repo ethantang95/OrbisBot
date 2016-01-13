@@ -28,6 +28,7 @@ namespace OrbisBot
         public const string PERMISSION_LEVEL = "PermissionLevel";
         public const string RETURN_TEXT = "ReturnText";
 
+        //permission setting files
         public const string WOLFRAMALPHA_SETTINGS_FILE = "WolframAlphaSettings.txt";
         public const string ABOUT_SETTINGS_FILE = "OrbisAbout.txt";
         public const string ADJUST_PERMISSION_FILE = "AdjustPermission.txt";

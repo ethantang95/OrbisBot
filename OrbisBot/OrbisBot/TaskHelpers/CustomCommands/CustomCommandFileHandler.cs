@@ -63,5 +63,10 @@ namespace OrbisBot.TaskHelpers.CustomCommands
 
             return toReturn;
         }
+
+        public static void RemoveTaskFile(string taskFile)
+        {
+            FileHelper.RemoveFile(Path.Combine(Constants.CUSTOM_COMMANDS_FOLDER, taskFile));
+        }
     }
 }

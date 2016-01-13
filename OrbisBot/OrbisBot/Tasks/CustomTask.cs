@@ -96,6 +96,15 @@ namespace OrbisBot.Tasks
         {
             _customCommands.Remove(channelId);
             _commandPermission.ChannelPermissionLevel.Remove(channelId);
+            if (_customCommands.Count == 0)
+            {
+                CustomCommandFileHandler.RemoveTaskFile(_commandText + ".txt");
+                Context.Instance.Tasks.Remove(this.CommandTrigger());
+            }
+            else
+            {
+                CustomCommandFileHandler.SaveCustomTask(ToFileOutput());
+            }
         }
 
         public List<string> ToFileOutput()
