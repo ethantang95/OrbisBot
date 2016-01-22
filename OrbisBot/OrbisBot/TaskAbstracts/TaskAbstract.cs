@@ -13,9 +13,6 @@ namespace OrbisBot.TaskAbstracts
 {
     abstract class TaskAbstract : IComparable<TaskAbstract>
     {
-        private string _taskResult;
-        private string[] _args;
-        private MessageEventArgs _messageSource;
         protected CommandPermission _commandPermission;
 
         public TaskAbstract()
@@ -37,10 +34,7 @@ namespace OrbisBot.TaskAbstracts
                 return;
             }
 
-            _args = args;
-            _messageSource = messageEventArgs;
-            //do consider using a threadpool in the future to prevent request bombs
-            Task.Run(() => ExecuteTask());
+            Task.Run(() => ExecuteTask(args, messageEventArgs));
         }
 
         private bool ProceedWithCommand(MessageEventArgs messageEventArgs)
@@ -58,29 +52,41 @@ namespace OrbisBot.TaskAbstracts
             return proceed;
         }
 
-        private async void ExecuteTask()
+        private async void ExecuteTask(string[] args, MessageEventArgs messageSource)
         {
+            string taskResult;
             try
             {
                 //check if it is for about, or if it's for activating the test
-                if (_args.Length > 1 && _args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
+                if (args.Length > 1 && args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    _taskResult = $"{CommandText()} - {AboutText()}. Permission level for this channel: {GetCommandPermissionForChannel(_messageSource.Channel.Id)}";
+                    taskResult = $"{CommandText()} - {AboutText()}. Permission level for this channel: {GetCommandPermissionForChannel(messageSource.Channel.Id)}";
+                }
+                else if (args.Length > 1 && args[1].Equals("usage", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    taskResult = $"{CommandText()} {UsageText()}";
                 }
                 else
                 {
-                    _taskResult = TaskComponent(_args, _messageSource);
+                    if (CheckArgs(args))
+                    {
+                        taskResult = TaskComponent(args, messageSource);
+                    }
+                    else
+                    {
+                        taskResult = $"{Constants.USAGE_INTRO} {CommandText()} {UsageText()}";
+                    }
                 }
             }
             catch (Exception e)
             {
                 try
                 {
-                    _taskResult = ExceptionMessage(e, _messageSource);
+                    taskResult = ExceptionMessage(e, messageSource);
 
-                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
+                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
 
-                    var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {e.ToString()}");
+                    var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {e.ToString()}");
                 }
                 catch (Exception ex)
                 {
@@ -89,10 +95,10 @@ namespace OrbisBot.TaskAbstracts
                     return;
                 }
             }
-            PublishTask();
+            PublishTask(taskResult, messageSource);
         }
 
-        protected async void PublishIntermeditate(string message)
+        protected async void PublishIntermeditate(string message, MessageEventArgs messageSource)
         {
             if (message == "" || message == String.Empty)
             {
@@ -101,32 +107,32 @@ namespace OrbisBot.TaskAbstracts
             var discordClient = Context.Instance.Client;
             try
             {
-                var result = await discordClient.SendMessage(_messageSource.Channel, message);
+                var result = await discordClient.SendMessage(messageSource.Channel, message);
             }
             catch (Exception ex)
             {
-                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
+                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
 
-                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publising intermeditate message in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {ex.ToString()}");
+                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publising intermeditate message in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {ex.ToString()}");
             }
         }
 
-        private async void PublishTask()
+        private async void PublishTask(string message, MessageEventArgs messageSource)
         {
-            if (_taskResult == "" || _taskResult == String.Empty)
+            if (message == "" || message == String.Empty)
             {
                 return;
             }
             var discordClient = Context.Instance.Client;
             try
             {
-                var result = await discordClient.SendMessage(_messageSource.Channel, _taskResult);
+                var result = await discordClient.SendMessage(messageSource.Channel, message);
             }
             catch (Exception ex)
             {
-                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
+                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
 
-                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publishing task in channel {_messageSource.Channel.Name} in server {_messageSource.Server.Name} with the message: {_messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
+                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publishing task in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
             }
         }
 
@@ -140,6 +146,8 @@ namespace OrbisBot.TaskAbstracts
             return _commandPermission.OverrideMuting;
         }
 
+        public abstract bool CheckArgs(string[] args);
+
         public abstract string TaskComponent(string[] args, MessageEventArgs messageSource);
 
         public abstract CommandPermission DefaultCommandPermission();
@@ -147,6 +155,8 @@ namespace OrbisBot.TaskAbstracts
         public abstract string CommandText();
 
         public abstract string AboutText();
+
+        public abstract string UsageText();
 
         public abstract string ExceptionMessage(Exception ex, MessageEventArgs eventArgs);
 

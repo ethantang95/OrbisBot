@@ -59,5 +59,15 @@ namespace OrbisBot.Tasks
         {
             return "Registers yourself and the server to help with permissions and roles";
         }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return true;
+        }
+
+        public override string UsageText()
+        {
+            return Constants.NO_PARAMS_USAGE;
+        }
     }
 }

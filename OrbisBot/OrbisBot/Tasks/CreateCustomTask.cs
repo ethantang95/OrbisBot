@@ -17,9 +17,15 @@ namespace OrbisBot.Tasks
             return "Create a custom command, for more information, try the command out";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            int maxParams;
+            return !(args.Length != 4 || !Int32.TryParse(args[2], out maxParams)) ;
+        }
+
         public override string CommandText()
         {
-            return "createcommand";
+            return "commands-create";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -44,12 +50,8 @@ namespace OrbisBot.Tasks
             //%?(%ea op %eb)(a : b) represents a boolean evaluation where a or b are the return results
             //%e(eval) represents an evaluation of a mathematical expression
             //%u represents self
-            int maxParams = 0;
 
-            if (args.Length != 4 || !Int32.TryParse(args[2], out maxParams))
-            {
-                return HelpText();
-            }
+            int maxParams = Int32.Parse(args[2]);
 
             if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]) && Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]].GetType() != typeof(CustomTask))
             {
@@ -64,7 +66,7 @@ namespace OrbisBot.Tasks
             {
                 var fakeParams = Enumerable.Repeat("1", maxParams).ToArray();
                 var validationBuilder = new CustomCommandBuilder(customReturn, fakeParams, messageSource.User.Name, messageSource.Channel.Members);
-                var result = validationBuilder.GenerateString();
+                var result = validationBuilder.GenerateCustomMessage();
             }
 
 
@@ -87,9 +89,9 @@ namespace OrbisBot.Tasks
             return $"The command {newTask.CommandTrigger()} has been added";
         }
 
-        private string HelpText()
+        public override string UsageText()
         {
-            return $"{Constants.SYNTAX_INTRO} <command name> <max number of params> [\"<possible return strings>\"]. \nFor the return strings, you can use tokens as placeholders to replace it with content. \n%u represents the user that called this command. \n%n where n is an integer like %1 represent the nth parameter for it to replace it with, starting with 1. Optionally, you can add a u after the number in %n for it to explicitly search for a member in the parameter, like %1u. \nYou can also have a random number generator between a range with the token %r(a-b) where a and b are integers.";
+            return " (command name) (max number of params) [\"(possible return strings)\"]. \nFor the return strings, you can use tokens as placeholders to replace it with content. \n%u represents the user that called this command. \n%n where n is an integer like %1 represent the nth parameter for it to replace it with, starting with 1. Optionally, you can add a u after the number in %n for it to explicitly search for a member in the parameter, like %1u. \nYou can also have a random number generator between a range with the token %r(a-b) where a and b are integers.";
         }
     }
 }

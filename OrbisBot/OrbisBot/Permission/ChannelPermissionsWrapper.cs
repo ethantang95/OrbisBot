@@ -161,5 +161,14 @@ namespace OrbisBot.Permission
             }
             return ChannelPermissions[channelId].UserPermissions[userId];
         }
+
+        public bool IsDeveloper(long channelId, long userId)
+        {
+            if (!ContainsChannel(channelId))
+            {
+                return false;
+            }
+            return GetUserPermission(channelId, userId) == PermissionLevel.Developer;
+        }
     }
 }

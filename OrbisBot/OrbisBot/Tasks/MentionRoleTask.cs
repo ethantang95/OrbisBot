@@ -16,6 +16,11 @@ namespace OrbisBot.Tasks
             return "Sends a notification with a message to everyone with the given role";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length == 2 || args.Length == 3;
+        }
+
         public override string CommandText()
         {
             return "mentionrole";
@@ -35,7 +40,7 @@ namespace OrbisBot.Tasks
         {
             if (args.Length < 2 || args.Length > 3)
             {
-                return $"{Constants.SYNTAX_INTRO} \"<role name>\" \"<OPTIONAL (message)>\"";
+                return $"{Constants.USAGE_INTRO} \"<role name>\" \"<OPTIONAL (message)>\"";
             }
             var role = messageSource.Server.Roles.FirstOrDefault(s => args[1].Equals(s.Name, StringComparison.InvariantCultureIgnoreCase));
 
@@ -63,6 +68,11 @@ namespace OrbisBot.Tasks
 
             return returnMessage.ToString();
             
+        }
+
+        public override string UsageText()
+        {
+            return "(\"role\") OPTIONAL(\"message\")";
         }
     }
 }

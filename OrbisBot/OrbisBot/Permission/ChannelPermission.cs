@@ -26,7 +26,7 @@ namespace OrbisBot.Permission
 
         public Dictionary<string, string> toFileOutput()
         {
-            Dictionary<string, string> toReturn = new Dictionary<string, string>();
+            var toReturn = new Dictionary<string, string>();
             toReturn.Add(Constants.MAIN_CHANNEL_ID, MainChannelId.ToString());
             toReturn.Add(Constants.CHANNEL_ID, ChannelId.ToString());
             toReturn.Add(Constants.SERVER_ID, ServerId.ToString());

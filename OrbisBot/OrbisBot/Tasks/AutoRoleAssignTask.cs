@@ -16,6 +16,19 @@ namespace OrbisBot.Tasks
             return "Automatically assign the roles for this bot based on the permission given to the users in this channel. Type commit as a parameter to actually assign the roles";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            if (args.Length > 2)
+            {
+                return false;
+            }
+            else if (!args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public override string CommandText()
         {
             return "autorole";
@@ -28,11 +41,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length > 2)
-            {
-                return $"{Constants.SYNTAX_INTRO} OPTIONAL(commit), commit must be the first parameter for it to assign roles";
-            }
-
             var users = messageSource.Channel.Members.ToList();
 
             var newRoles = new Dictionary<User, PermissionLevel>();
@@ -42,15 +50,11 @@ namespace OrbisBot.Tasks
 
             newRoles = newRoles.Where(s => s.Value != PermissionLevel.User).ToDictionary(s => s.Key, s => s.Value);
 
-            if (args.Length > 1 && args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
+            if (args.Length == 2)
             {
                 newRoles.ToList().ForEach(s => Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, s.Key.Id, s.Value));
 
                 return "roles has been successfully automatically assigned";
-            }
-            else if (args.Length > 1)
-            {
-                return "The first parameter can only be commit";
             }
             else
             {
@@ -59,6 +63,11 @@ namespace OrbisBot.Tasks
                 messageBuilder.AppendLine("type \"-AutoRole commit\" to assign these roles");
                 return messageBuilder.ToString();
             }
+        }
+
+        public override string UsageText()
+        {
+            return "OPTIONAL<commit>";
         }
 
         private PermissionLevel DeterminePermissionLevelFromPermissions(ServerPermissions permissions)

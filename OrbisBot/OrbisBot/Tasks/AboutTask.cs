@@ -33,7 +33,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.RestrictedUser, false);
+            return new CommandPermission(false, PermissionLevel.User, false);
         }
 
         public override string CommandText()
@@ -44,6 +44,16 @@ namespace OrbisBot.Tasks
         public override string AboutText()
         {
             return "Shows information about OrbisBot";
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return true;
+        }
+
+        public override string UsageText()
+        {
+            return Constants.NO_PARAMS_USAGE;
         }
     }
 }

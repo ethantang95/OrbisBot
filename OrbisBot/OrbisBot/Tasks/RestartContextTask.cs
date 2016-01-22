@@ -17,6 +17,11 @@ namespace OrbisBot.Tasks
             return "Recreate the context object... not even sure if this works";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            return true;
+        }
+
         public override string CommandText()
         {
             return "restartcontext";
@@ -34,6 +39,11 @@ namespace OrbisBot.Tasks
             Context.Instance.Initalize();
 
             return "Context has successfully reinitalized itself";
+        }
+
+        public override string UsageText()
+        {
+            return "You should not have access to this command";
         }
     }
 }

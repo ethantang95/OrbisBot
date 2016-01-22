@@ -23,6 +23,7 @@ namespace OrbisBot
 
             CheckAndCreateFolders(Constants.CUSTOM_COMMANDS_FOLDER);
             CheckAndCreateFolders(Constants.CHANNELS_OPTIONS_FOLDER);
+            CheckAndCreateFolders(Constants.SERVER_OPTIONS_FOLDER);
 
             var app = Context.Instance;
         }

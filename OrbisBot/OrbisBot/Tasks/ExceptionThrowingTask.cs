@@ -16,6 +16,11 @@ namespace OrbisBot.Tasks
             return "Throws an exception, used for debugging";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            return true;
+        }
+
         public override string CommandText()
         {
             return "crash";
@@ -34,6 +39,11 @@ namespace OrbisBot.Tasks
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             throw new ArgumentException("This is an exception");
+        }
+
+        public override string UsageText()
+        {
+            return "This command is not intended for you to use";
         }
     }
 }

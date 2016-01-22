@@ -16,6 +16,11 @@ namespace OrbisBot.Tasks
             return "Short intro to the bot when it is mentioned";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            return true;
+        }
+
         public override string CommandText()
         {
             return "botmention";
@@ -34,6 +39,11 @@ namespace OrbisBot.Tasks
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             return $"Hello {messageSource.User.Name}, I am OrbisBot, type -About to learn more about me";
+        }
+
+        public override string UsageText()
+        {
+            return Constants.NO_PARAMS_USAGE;
         }
     }
 }

@@ -28,6 +28,11 @@ namespace OrbisBot.Tasks
             return "Generates a fifty shades like lewd for 2 lucky people";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length == 3;
+        }
+
         public override string CommandText()
         {
             return "generatelewd"; //should change to something better later or nah... lol
@@ -61,7 +66,7 @@ namespace OrbisBot.Tasks
 
             if (args.Length != 3)
             {
-                return $"{Constants.SYNTAX_INTRO} \"<person 1>\" \"<person 2>\"";
+                return $"{Constants.USAGE_INTRO} \"<person 1>\" \"<person 2>\"";
             }
 
             var person1 = UserFinderUtil.FindUser(messageSource.Server.Members, args[1]);
@@ -113,18 +118,23 @@ namespace OrbisBot.Tasks
             content = content.Replace(" he ", " " + person2.Name + " ");
             content = content.Replace(" He ", " " + person2.Name + " ");
             content = content.Replace(" he's ", " " + person2.Name + " is ");
-            content = content.Replace(" He's ", " " + person2.Name + " is ");
+            content = content.Replace("He's ", " " + person2.Name + " is ");
             content = content.Replace(" his ", " " + person2.Name + "'s ");
-            content = content.Replace(" His ", " " + person2.Name + "'s ");
+            content = content.Replace("His ", " " + person2.Name + "'s ");
             content = content.Replace(" he'll ", " " + person2.Name + " will ");
-            content = content.Replace(" He'll ", " " + person2.Name + " will ");
+            content = content.Replace("He'll ", " " + person2.Name + " will ");
             content = content.Replace(" him ", " " + person2.Name + " ");
-            content = content.Replace(" Him ", " " + person2.Name + " ");
+            content = content.Replace("Him ", " " + person2.Name + " ");
 
             //add to the timer dictionary
             _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
 
             return content;
+        }
+
+        public override string UsageText()
+        {
+            return "(\"person 1\") (\"person 2\")";
         }
     }
 }

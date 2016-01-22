@@ -10,21 +10,18 @@ using OrbisBot.TaskHelpers.UserFinder;
 
 namespace OrbisBot.Tasks
 {
-    class MetaInfoTask : FilePermissionTaskAbstract
+    class UserInfoTask : FilePermissionTaskAbstract
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             if (args.Length > 2)
             {
-                return $"{Constants.SYNTAX_INTRO} OPTIONAL \"<user's name>\"";
+                return $"{Constants.USAGE_INTRO} OPTIONAL \"<user's name>\"";
             }
 
             var mainChannel = messageSource.Server.Channels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
 
-            var returnText = new StringBuilder().AppendLine($"Channel ID: {messageSource.Channel.Id}")
-                .AppendLine($"Main Channel: {mainChannel?.Name}")
-                .AppendLine($"Server ID: {messageSource.Server.Id}")
-                .AppendLine($"Server Owner: {messageSource.Server.Owner.Name}");
+            var returnText = new StringBuilder();
 
             User targetUser;
 
@@ -41,12 +38,20 @@ namespace OrbisBot.Tasks
                 targetUser = messageSource.User;
             }
 
-            var targetUserRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
-                targetUser.Id);
-            returnText.AppendLine($"User Name: {targetUser.Name}");
-            returnText.AppendLine($"User ID: {targetUser.Id}")
+            var targetUserRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, targetUser.Id);
+
+            if (Context.Instance.ChannelPermission.IsDeveloper(messageSource.Channel.Id, messageSource.User.Id))
+            {
+                returnText.AppendLine($"Channel ID: {messageSource.Channel.Id}")
+                .AppendLine($"Main Channel: {mainChannel?.Name}")
+                .AppendLine($"Server ID: {messageSource.Server.Id}")
+                .AppendLine($"Server Owner: {messageSource.Server.Owner.Name}")
+                .AppendLine($"User ID: {targetUser.Id}");
+            }
+
+            returnText.AppendLine($"User Name: {targetUser.Name}")
                 .AppendLine(
-                    $"User Role In Current Channel: {targetUserRole}")
+                    $"User role for bot: {targetUserRole}")
                 .AppendLine($"User Avatar: {Constants.DISCORD_API_ENDPOINT}{targetUser.AvatarUrl}");
 
             return returnText.ToString();
@@ -69,7 +74,17 @@ namespace OrbisBot.Tasks
 
         public override string AboutText()
         {
-            return "Shows information about the channel, server, and user, if user is not specified, it will display information about yourself";
+            return "Shows information about the user, if user is not specified, it will display information about yourself";
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length <= 2;
+        }
+
+        public override string UsageText()
+        {
+            return "OPTIONAL(name)";
         }
     }
 }

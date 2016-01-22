@@ -25,6 +25,11 @@ namespace OrbisBot.Tasks
             return "Insults a person of your choice";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length == 2;
+        }
+
         public override string CommandText()
         {
             return "insult";
@@ -57,7 +62,7 @@ namespace OrbisBot.Tasks
 
             if (args.Length != 2)
             {
-                return $"{Constants.SYNTAX_INTRO} \"<target>\"";
+                return $"{Constants.USAGE_INTRO} \"<target>\"";
             }
 
             var person1 = UserFinderUtil.FindUser(messageSource.Server.Members, args[1]);
@@ -81,6 +86,11 @@ namespace OrbisBot.Tasks
             _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
 
             return content;
+        }
+
+        public override string UsageText()
+        {
+            return "(\"person\")";
         }
     }
 }

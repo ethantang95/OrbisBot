@@ -13,11 +13,7 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length != 3)
-            {
-                return new StringBuilder().AppendLine($"{Constants.SYNTAX_INTRO} !<command's name> <permission level>")
-                    .AppendLine("Where as permission levels are: Owner, Admin, Moderator, User, RestrictedUser").ToString();
-            }
+            args[1] = "-" + args[1];
 
             //first, check to see if the command exists
             if (!Context.Instance.Tasks.ContainsKey(args[1]))
@@ -71,7 +67,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "changecommandpermission";
+            return "permissions-command";
         }
 
         public override string AboutText()
@@ -86,6 +82,16 @@ namespace OrbisBot.Tasks
                 return ex.Message;
             }
             return "An error has occurred when trying to change the command's permission, the developers has been notified of this problem";
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length == 3;
+        }
+
+        public override string UsageText()
+        {
+            return "(command) (role) \nThe ranks are Owner, Admin, Moderator, User, RestrictedUser";
         }
     }
 }

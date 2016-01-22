@@ -13,12 +13,6 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length != 3)
-            {
-                return new StringBuilder().AppendLine($"{Constants.SYNTAX_INTRO} \"@<user's name>\" <user's new rank>")
-                    .AppendLine("Where as ranks are: Admin, Moderator, User, RestrictedUser").ToString();
-            }
-
             //remove the @ sign
             var name = args[1].Substring(1);
 
@@ -80,7 +74,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "changeuserpermission";
+            return "permissions-user";
         }
 
         public override string AboutText()
@@ -91,6 +85,16 @@ namespace OrbisBot.Tasks
         public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
         {
             return "An error has occurred when trying to change the person's permission, the developers has been notified of this problem";
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length == 3;
+        }
+
+        public override string UsageText()
+        {
+            return $"\"@(user's name)\" (rank) \nThe ranks are Admin, Moderator, User, RestrictedUser";
         }
     }
 }

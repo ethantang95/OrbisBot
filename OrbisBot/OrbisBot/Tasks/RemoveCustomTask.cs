@@ -18,7 +18,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "removecustomcommand";
+            return "commands-remove";
         }
 
         public override CommandPermission DefaultCommandPermission()
@@ -33,11 +33,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length != 2)
-            {
-                return $"{Constants.SYNTAX_INTRO} <Command's Name>";
-            }
-
             if (!Context.Instance.Tasks.ContainsKey(args[1]))
             {
                 return $"Cannot find command {args[1]}, did you forget the - infront of the command?";
@@ -63,6 +58,16 @@ namespace OrbisBot.Tasks
         public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
         {
             return "An error has occured while trying to delete the command";
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return args.Length == 2;
+        }
+
+        public override string UsageText()
+        {
+            return "(command)";
         }
     }
 }

@@ -39,7 +39,7 @@ namespace OrbisBot.Tasks
                 availableTasks.ForEach(s => returnMessage.AppendLine($"{s.CommandTrigger()}"));
             }
 
-            returnMessage.AppendLine("Type about after a command to see what it does.");
+            returnMessage.AppendLine("Type about after a command to see what it does or usage to see how to use it.");
 
             return returnMessage.ToString();
         }
@@ -62,6 +62,16 @@ namespace OrbisBot.Tasks
         public override string AboutText()
         {
             return "Lists all the commands you have access to in this server and its information";
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            return true;
+        }
+
+        public override string UsageText()
+        {
+            return Constants.NO_PARAMS_USAGE;
         }
     }
 }

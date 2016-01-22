@@ -67,7 +67,7 @@ namespace OrbisBot.TaskHelpers.CustomCommands
             }
         }
 
-        public string GenerateString()
+        public string GenerateCustomMessage()
         {
             ReplaceIndependents();
             EvaluateTokens();

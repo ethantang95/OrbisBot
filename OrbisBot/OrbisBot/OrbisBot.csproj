@@ -89,7 +89,10 @@
     <Compile Include="Permission\CommandPermission.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerSettings\ServerSettingsWrapper.cs" />
+    <Compile Include="ServerSettings\ServerSettings.cs" />
     <Compile Include="TaskAbstracts\DiscretePermissionTaskAbstract.cs" />
+    <Compile Include="TaskHelpers\AdminUtils\GeneralAdminUtils.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandBuilder.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandFileHandler.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandForm.cs" />
@@ -113,8 +116,9 @@
     <Compile Include="Tasks\InsultTask.cs" />
     <Compile Include="Tasks\ListCommandsTask.cs" />
     <Compile Include="Tasks\MentionRoleTask.cs" />
-    <Compile Include="Tasks\MetaInfoTask.cs" />
-    <Compile Include="Tasks\MuteBotTask.cs" />
+    <Compile Include="Tasks\ServerWelcomeSettingsTask.cs" />
+    <Compile Include="Tasks\UserInfoTask.cs" />
+    <Compile Include="Tasks\BotMuteTask.cs" />
     <Compile Include="Tasks\RandomNumberTask.cs" />
     <Compile Include="Tasks\RedditTask.cs" />
     <Compile Include="Tasks\RegisterSelfTask.cs" />
@@ -122,7 +126,6 @@
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />
     <Compile Include="Tasks\RemoveCustomTask.cs" />
     <Compile Include="Tasks\RestartContextTask.cs" />
-    <Compile Include="Tasks\UnmuteBotTask.cs" />
     <Compile Include="Tasks\WolframAlphaTask.cs" />
   </ItemGroup>
   <ItemGroup>

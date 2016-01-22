@@ -74,7 +74,7 @@ namespace OrbisBot.Tasks
             //set the time for when the command was last triggered
             _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
 
-            return builder.GenerateString();
+            return builder.GenerateCustomMessage();
         }
 
         public void AddContent(CustomCommandForm toAdd)
@@ -121,6 +121,18 @@ namespace OrbisBot.Tasks
             });
 
             return toReturn;
+        }
+
+        public override bool CheckArgs(string[] args)
+        {
+            //for this command, it is too dynamic to determine if the amount of args are enough
+            //have it inside the actual task to check for arguments
+            return true;
+        }
+
+        public override string UsageText()
+        {
+            return "This is a custom command created for your channel, the usage might vary";
         }
     }
 }

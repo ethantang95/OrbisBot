@@ -21,6 +21,19 @@ namespace OrbisBot.Tasks
             return "Sends back a cute picture";
         }
 
+        public override bool CheckArgs(string[] args)
+        {
+            if (args.Length > 2)
+            {
+                return false;
+            }
+
+            bool isSupportAnimal = false;
+            isSupportAnimal |= args[1].Equals("cat", StringComparison.InvariantCultureIgnoreCase);
+
+            return isSupportAnimal;
+        }
+
         public override string CommandText()
         {
             return "aww";
@@ -40,7 +53,7 @@ namespace OrbisBot.Tasks
         {
             if (args.Length > 2)
             {
-                return $"{Constants.SYNTAX_INTRO} OPTIONAL(Cat). Use cat as a parameter for specifically a cat picture, no parameter will serve a random picture from Reddit.com/r/aww/rising";
+                return $"{Constants.USAGE_INTRO} OPTIONAL(Cat). Use cat as a parameter for specifically a cat picture, no parameter will serve a random picture from Reddit.com/r/aww/rising";
             }
 
             if (args.Length == 2 && args[1].Equals("Cat", StringComparison.InvariantCultureIgnoreCase))
@@ -54,7 +67,7 @@ namespace OrbisBot.Tasks
 
                 return response.ResponseUri.AbsoluteUri;
             }
-            else if (args.Length == 1)
+            else if (args[1].Equals("cat", StringComparison.InvariantCultureIgnoreCase))
             {
                 var client = new RestClient("http://reddit.com");
                 var request = new RestRequest("r/aww/rising/.json", Method.GET);
@@ -65,10 +78,13 @@ namespace OrbisBot.Tasks
 
                 return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj, true);
             }
-            else
-            {
-                return $"This command does not currently support {args[1]} right now";
-            }
+
+            throw new NotSupportedException($"The parameter {args[1]} managed to bypass the args checking filter"); //args checking should've caught everything
+        }
+
+        public override string UsageText()
+        {
+            return "OPTIONAL<cat>";
         }
     }
 }

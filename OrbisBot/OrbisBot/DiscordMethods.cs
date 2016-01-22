@@ -39,7 +39,7 @@ namespace OrbisBot
                     await Context.Instance.Client.SendMessage(eventArgs.Channel,
                         $"Error occurred, Exception: {ex.Message}; Message Received {eventArgs.Message.Text}");
 
-                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.LOGGING_CHANNEL]));
+                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
 
                     await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
                 }

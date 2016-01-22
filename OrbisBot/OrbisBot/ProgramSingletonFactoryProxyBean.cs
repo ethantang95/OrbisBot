@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OrbisBot.ServerSettings;
 
 namespace OrbisBot
 {
@@ -18,6 +19,8 @@ namespace OrbisBot
         public DiscordClient Client { get; private set; }
         public Dictionary<string, TaskAbstract> Tasks { get; private set; }
         public ChannelPermissionsWrapper ChannelPermission { get; private set; }
+        //in the future, maybe add a wrapper if it gets too big
+        public ServerSettingsWrapper ServerSettings { get; private set; }
         public Dictionary<string, string> OAuthKeys { get; set; }
 
         private static Context _context;
@@ -48,6 +51,7 @@ namespace OrbisBot
             Tasks = new Dictionary<string, TaskAbstract>();
             OAuthKeys = new Dictionary<string, string>();
             ChannelPermission = new ChannelPermissionsWrapper();
+            ServerSettings = new ServerSettingsWrapper();
             PopulateTaskDictionary();
             PopulateCustomTasks();
             SetUpDiscordClient();
@@ -61,12 +65,11 @@ namespace OrbisBot
             AddTask(new AdjustUserPermissionTask());
             AddTask(new ChangeCommandPermissionTask());
             AddTask(new ListCommandsTask());
-            AddTask(new MetaInfoTask());
+            AddTask(new UserInfoTask());
             AddTask(new CreateCustomTask());
             AddTask(new RandomNumberTask());
             AddTask(new ChangeMainChannelTask());
-            AddTask(new MuteBotTask());
-            AddTask(new UnmuteBotTask());
+            AddTask(new BotMuteTask());
             AddTask(new CutePictureTask());
             AddTask(new RedditTask());
             AddTask(new ExceptionThrowingTask());
@@ -77,6 +80,7 @@ namespace OrbisBot
             AddTask(new InsultTask());
             AddTask(new MentionRoleTask());
             AddTask(new RemovveCustomTask());
+            AddTask(new ServerWelcomeSettingsTask());
         }
 
         private void PopulateCustomTasks()
