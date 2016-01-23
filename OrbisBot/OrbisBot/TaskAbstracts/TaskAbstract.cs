@@ -74,9 +74,10 @@ namespace OrbisBot.TaskAbstracts
                     if (CheckArgs(args))
                     {
                         int lastUsed = SecondsFromLastUsed(messageSource.Channel.Id);
-                        if (GetCoolDownTime(messageSource.Channel.Id) - lastUsed <= 0)
+                        if (lastUsed <= -1 || GetCoolDownTime(messageSource.Channel.Id) - lastUsed <= 0)
                         {
                             taskResult = TaskComponent(args, messageSource);
+                            UpdateCoolDown(messageSource.Channel.Id);
                         }
                         else
                         {

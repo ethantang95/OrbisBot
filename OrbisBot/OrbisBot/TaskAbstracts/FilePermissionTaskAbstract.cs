@@ -21,12 +21,20 @@ namespace OrbisBot.TaskAbstracts
             {
                 var permission = FileHelper.GetObjectFromFile<CommandPermission>(PermissionFileSource());
 
-                _commandPermission = permission;
+                if (permission == null)
+                {
+                    FileHelper.WriteObjectToFile(PermissionFileSource(), DefaultCommandPermission());
+                    _commandPermission = DefaultCommandPermission();
+                }
+                else
+                {
+                    _commandPermission = permission;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Problem parsing the settings file, creating default");
-                FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
+                FileHelper.WriteObjectToFile(PermissionFileSource(), DefaultCommandPermission());
             }
         }
 

@@ -16,12 +16,8 @@ namespace OrbisBot.Tasks
 {
     class FiftyShadeFicTask : FilePermissionTaskAbstract
     {
-        private Dictionary<long, DateTime> _lastTriggered;
 
-        public FiftyShadeFicTask()
-        {
-            _lastTriggered = new Dictionary<long, DateTime>();
-        }
+        public FiftyShadeFicTask() { }
 
         public override string AboutText()
         {
@@ -50,25 +46,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-
-            if (_lastTriggered.ContainsKey(messageSource.Channel.Id))
-            {
-                var commandLastTriggered = _lastTriggered[messageSource.Channel.Id];
-                if ((DateTime.Now - commandLastTriggered).TotalSeconds < 180)
-                {
-                    return string.Format("The bot is still too busy being aroused by its magnificant work, try again in {0:0.00} seconds", (180 - (DateTime.Now - commandLastTriggered).TotalSeconds));
-                }
-            }
-            else
-            {
-                _lastTriggered.Add(messageSource.Channel.Id, new DateTime(0));
-            }
-
-            if (args.Length != 3)
-            {
-                return $"{Constants.USAGE_INTRO} \"<person 1>\" \"<person 2>\"";
-            }
-
             var person1 = UserFinderUtil.FindUser(messageSource.Server.Members, args[1]);
 
             if (person1 == null)
@@ -125,9 +102,6 @@ namespace OrbisBot.Tasks
             content = content.Replace("He'll ", " " + person2.Name + " will ");
             content = content.Replace(" him ", " " + person2.Name + " ");
             content = content.Replace("Him ", " " + person2.Name + " ");
-
-            //add to the timer dictionary
-            _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
 
             return content;
         }

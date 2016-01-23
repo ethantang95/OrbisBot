@@ -14,13 +14,11 @@ namespace OrbisBot.Tasks
     {
         private string _commandText;
         private Dictionary<long, CustomCommandForm> _customCommands;
-        private Dictionary<long, DateTime> _lastTriggered;
         public CustomTask(string commandName, List<CustomCommandForm> commands)
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
             commands.ForEach(s => _commandPermission.ChannelPermission.Add(s.Channel, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, DefaultCommandPermission().DefaultCoolDown)));
-            _lastTriggered = commands.ToDictionary(s => s.Channel, s => new DateTime(0));
         }
         public override string AboutText()
         {
@@ -39,16 +37,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            //first, get the appropriate form... keys should be contained because if not, it will be
-            //denied access to this component
-
-            //check the time of last triggered
-            var commandLastTriggered = _lastTriggered[messageSource.Channel.Id];
-            if ((DateTime.Now - commandLastTriggered).TotalSeconds < 20)
-            {
-                return string.Format("The current command is on cooldown right now, try again in {0:0.00} seconds", (20 - (DateTime.Now - commandLastTriggered).TotalSeconds));
-            }
-
             var command = _customCommands[messageSource.Channel.Id];
 
             if (args.Length < command.MaxArgs + 1)
@@ -71,9 +59,6 @@ namespace OrbisBot.Tasks
 
             var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Members);
 
-            //set the time for when the command was last triggered
-            _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
-
             return builder.GenerateCustomMessage();
         }
 
@@ -82,7 +67,6 @@ namespace OrbisBot.Tasks
             if (!_customCommands.ContainsKey(toAdd.Channel))
             {
                 _customCommands.Add(toAdd.Channel, toAdd);
-                _lastTriggered.Add(toAdd.Channel, new DateTime(0));
                 _commandPermission.ChannelPermission.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
             }
             else

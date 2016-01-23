@@ -14,11 +14,6 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length > 2)
-            {
-                return $"{Constants.USAGE_INTRO} OPTIONAL \"<user's name>\"";
-            }
-
             var mainChannel = messageSource.Server.Channels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
 
             var returnText = new StringBuilder();

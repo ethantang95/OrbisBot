@@ -122,7 +122,7 @@
     <Compile Include="Tasks\BotMuteTask.cs" />
     <Compile Include="Tasks\RandomNumberTask.cs" />
     <Compile Include="Tasks\RedditTask.cs" />
-    <Compile Include="Tasks\RegisterSelfTask.cs" />
+    <Compile Include="Tasks\RegisterTask.cs" />
     <Compile Include="TaskAbstracts\RegisteredChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />
     <Compile Include="Tasks\RemoveCustomTask.cs" />
