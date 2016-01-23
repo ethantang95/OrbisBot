@@ -21,7 +21,7 @@ namespace OrbisBot.TaskAbstracts
             //to ensure non-nullability, we will always start the command permissions to start with default
             _commandPermission = DefaultCommandPermission();
             _lastUsed = new Dictionary<long, DateTime>();
-            _commandPermission.ChannelPermissionLevel.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
+            _commandPermission.ChannelPermission.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
         }
 
         public bool IsCommandDisabled()
@@ -122,18 +122,6 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        private int GetCoolDownTime(long channelId)
-        {
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
-            {
-                return _commandPermission.ChannelPermissionLevel[channelId].CoolDown;
-            }
-            else
-            {
-                return DefaultCommandPermission().DefaultCoolDown;
-            }
-        }
-
         private void UpdateCoolDown(long channelId)
         {
             if (_lastUsed.ContainsKey(channelId))
@@ -143,6 +131,25 @@ namespace OrbisBot.TaskAbstracts
             else
             {
                 _lastUsed.Add(channelId, DateTime.Now);
+            }
+        }
+
+        private async void PublishTask(string message, MessageEventArgs messageSource)
+        {
+            if (message == "" || message == String.Empty)
+            {
+                return;
+            }
+            var discordClient = Context.Instance.Client;
+            try
+            {
+                var result = await discordClient.SendMessage(messageSource.Channel, message);
+            }
+            catch (Exception ex)
+            {
+                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+
+                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publishing task in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
             }
         }
 
@@ -165,22 +172,15 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        private async void PublishTask(string message, MessageEventArgs messageSource)
+        public int GetCoolDownTime(long channelId)
         {
-            if (message == "" || message == String.Empty)
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                return;
+                return _commandPermission.ChannelPermission[channelId].CoolDown;
             }
-            var discordClient = Context.Instance.Client;
-            try
+            else
             {
-                var result = await discordClient.SendMessage(messageSource.Channel, message);
-            }
-            catch (Exception ex)
-            {
-                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
-                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publishing task in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
+                return DefaultCommandPermission().DefaultCoolDown;
             }
         }
 
@@ -218,6 +218,8 @@ namespace OrbisBot.TaskAbstracts
         public abstract PermissionLevel GetCommandPermissionForChannel(long channelId);
 
         public abstract void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel);
+
+        public abstract void SetCoolDownForChannel(long channelId, int cooldown);
 
         public int CompareTo(TaskAbstract other)
         {

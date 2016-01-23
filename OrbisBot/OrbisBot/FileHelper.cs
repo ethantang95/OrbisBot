@@ -111,6 +111,7 @@ namespace OrbisBot
                 throw e;
             }
         }
+        
         public static bool WriteValuesToFile(Dictionary<string, string> toWrite, string fileName)
         {
             try

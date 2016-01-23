@@ -49,9 +49,9 @@ namespace OrbisBot.TaskAbstracts
 
         public override PermissionLevel GetCommandPermissionForChannel(long channelId)
         {
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                return _commandPermission.ChannelPermissionLevel[channelId].PermissionLevel;
+                return _commandPermission.ChannelPermission[channelId].PermissionLevel;
             }
             return _commandPermission.DefaultLevel;
         }
@@ -59,13 +59,26 @@ namespace OrbisBot.TaskAbstracts
         public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
         {
             //first check if such permissoin.
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermissionLevel[channelId].PermissionLevel = newPermissionLevel;
+                _commandPermission.ChannelPermission[channelId].PermissionLevel = newPermissionLevel;
             }
             else
             {
-                _commandPermission.ChannelPermissionLevel.Add(channelId, new ChannelPermissionSetting(newPermissionLevel, _commandPermission.DefaultCoolDown));
+                _commandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(newPermissionLevel, _commandPermission.DefaultCoolDown));
+            }
+            FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
+        }
+
+        public override void SetCoolDownForChannel(long channelId, int seconds)
+        {
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
+            {
+                _commandPermission.ChannelPermission[channelId].CoolDown = seconds;
+            }
+            else
+            {
+                _commandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, seconds));
             }
             FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
         }

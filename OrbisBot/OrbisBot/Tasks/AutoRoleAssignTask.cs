@@ -31,7 +31,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "bot-autorole";
+            return "user-autopermission";
         }
 
         public override CommandPermission DefaultCommandPermission()

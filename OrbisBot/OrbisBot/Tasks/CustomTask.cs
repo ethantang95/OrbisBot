@@ -19,7 +19,7 @@ namespace OrbisBot.Tasks
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
-            commands.ForEach(s => _commandPermission.ChannelPermissionLevel.Add(s.Channel, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, DefaultCommandPermission().DefaultCoolDown)));
+            commands.ForEach(s => _commandPermission.ChannelPermission.Add(s.Channel, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, DefaultCommandPermission().DefaultCoolDown)));
             _lastTriggered = commands.ToDictionary(s => s.Channel, s => new DateTime(0));
         }
         public override string AboutText()
@@ -83,7 +83,7 @@ namespace OrbisBot.Tasks
             {
                 _customCommands.Add(toAdd.Channel, toAdd);
                 _lastTriggered.Add(toAdd.Channel, new DateTime(0));
-                _commandPermission.ChannelPermissionLevel.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
+                _commandPermission.ChannelPermission.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
             }
             else
             {
@@ -95,7 +95,7 @@ namespace OrbisBot.Tasks
         public void RemoveCommand(long channelId)
         {
             _customCommands.Remove(channelId);
-            _commandPermission.ChannelPermissionLevel.Remove(channelId);
+            _commandPermission.ChannelPermission.Remove(channelId);
             if (_customCommands.Count == 0)
             {
                 CustomCommandFileHandler.RemoveTaskFile(_commandText + ".txt");
@@ -124,6 +124,16 @@ namespace OrbisBot.Tasks
         public override string UsageText()
         {
             return "This is a custom command created for your channel, the usage might vary";
+        }
+
+        public override void SaveSettings(CommandPermission commandPermission)
+        {
+            foreach (var channelPermission in commandPermission.ChannelPermission)
+            {
+                _customCommands[channelPermission.Key].PermissionLevel = channelPermission.Value.PermissionLevel;
+                _customCommands[channelPermission.Key].CoolDown = channelPermission.Value.CoolDown;
+            }
+            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
     }
 }

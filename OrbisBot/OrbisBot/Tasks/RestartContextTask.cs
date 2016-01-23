@@ -24,7 +24,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "restartcontext";
+            return "bot-restart";
         }
 
         public override CommandPermission DefaultCommandPermission()

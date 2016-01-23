@@ -79,8 +79,7 @@ namespace OrbisBot.Permission
             foreach (var channel in channels)
             {
                 channel.Value.MainChannelId = channelId;
-                FileHelper.WriteValuesToFile(channel.Value.toFileOutput(),
-                    Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channel.Key.ToString()));
+                FileHelper.WriteObjectToFile(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channel.Key.ToString()), channel.Value.toFileOutput());
             }
         }
 
@@ -107,8 +106,7 @@ namespace OrbisBot.Permission
                 channel.UserPermissions.Add(userId, level);
             }
 
-            FileHelper.WriteValuesToFile(channel.toFileOutput(),
-                Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()), channel.toFileOutput());
         }
 
         public void SetChannelMuting(long serverId, long channelId, bool muted)
@@ -116,8 +114,7 @@ namespace OrbisBot.Permission
             CheckAndCreateChannel(serverId, channelId);
             var channel = ChannelPermissions[channelId];
             channel.Muted = muted;
-            FileHelper.WriteValuesToFile(channel.toFileOutput(),
-                Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()), channel.toFileOutput());
         }
 
         public bool ContainsChannel(long channelId)
