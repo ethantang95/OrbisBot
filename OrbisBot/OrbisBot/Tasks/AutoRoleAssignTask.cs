@@ -31,12 +31,12 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "autorole";
+            return "bot-autorole";
         }
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Owner, true);
+            return new CommandPermission(false, PermissionLevel.Owner, true, 1);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

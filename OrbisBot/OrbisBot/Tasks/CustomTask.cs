@@ -19,7 +19,7 @@ namespace OrbisBot.Tasks
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
-            commands.ForEach(s => _commandPermission.ChannelPermissionLevel.Add(s.Channel, s.PermissionLevel));
+            commands.ForEach(s => _commandPermission.ChannelPermissionLevel.Add(s.Channel, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, DefaultCommandPermission().DefaultCoolDown)));
             _lastTriggered = commands.ToDictionary(s => s.Channel, s => new DateTime(0));
         }
         public override string AboutText()
@@ -34,7 +34,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -83,13 +83,13 @@ namespace OrbisBot.Tasks
             {
                 _customCommands.Add(toAdd.Channel, toAdd);
                 _lastTriggered.Add(toAdd.Channel, new DateTime(0));
-                _commandPermission.ChannelPermissionLevel.Add(toAdd.Channel, toAdd.PermissionLevel);
+                _commandPermission.ChannelPermissionLevel.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
             }
             else
             {
                 _customCommands[toAdd.Channel] = toAdd;
             }
-            CustomCommandFileHandler.SaveCustomTask(ToFileOutput());
+            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
 
         public void RemoveCommand(long channelId)
@@ -103,22 +103,13 @@ namespace OrbisBot.Tasks
             }
             else
             {
-                CustomCommandFileHandler.SaveCustomTask(ToFileOutput());
+                CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
             }
         }
 
-        public List<string> ToFileOutput()
+        public List<CustomCommandForm> GetCustomCommands()
         {
-            var toReturn = new List<string>();
-            //the command will be the name of the file
-            toReturn.Add($"{Constants.COMMAND_NAME}:{_commandText}");
-            _customCommands.Select(s => s.Value).ToList().ForEach(s =>
-            {
-                toReturn.Add($"{Constants.MAX_ARGS}:{s.MaxArgs.ToString()}");
-                toReturn.Add($"{Constants.CHANNEL_ID}:{s.Channel.ToString()}");
-                toReturn.Add($"{Constants.PERMISSION_LEVEL}:{s.PermissionLevel.ToString()}");
-                s.ReturnValues.ForEach(r => toReturn.Add($"{Constants.RETURN_TEXT}:{r}"));
-            });
+            var toReturn = _customCommands.Values.ToList();
 
             return toReturn;
         }

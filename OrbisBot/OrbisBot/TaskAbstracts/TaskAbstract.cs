@@ -14,11 +14,14 @@ namespace OrbisBot.TaskAbstracts
     abstract class TaskAbstract : IComparable<TaskAbstract>
     {
         protected CommandPermission _commandPermission;
+        private Dictionary<long, DateTime> _lastUsed;
 
         public TaskAbstract()
         {
             //to ensure non-nullability, we will always start the command permissions to start with default
             _commandPermission = DefaultCommandPermission();
+            _lastUsed = new Dictionary<long, DateTime>();
+            _commandPermission.ChannelPermissionLevel.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
         }
 
         public bool IsCommandDisabled()
@@ -70,7 +73,15 @@ namespace OrbisBot.TaskAbstracts
                 {
                     if (CheckArgs(args))
                     {
-                        taskResult = TaskComponent(args, messageSource);
+                        int lastUsed = SecondsFromLastUsed(messageSource.Channel.Id);
+                        if (GetCoolDownTime(messageSource.Channel.Id) - lastUsed <= 0)
+                        {
+                            taskResult = TaskComponent(args, messageSource);
+                        }
+                        else
+                        {
+                            taskResult = $"{CoolDownMesasgePrefix()} {GetCoolDownTime(messageSource.Channel.Id) - lastUsed} seconds remaining.";
+                        }
                     }
                     else
                     {
@@ -96,6 +107,43 @@ namespace OrbisBot.TaskAbstracts
                 }
             }
             PublishTask(taskResult, messageSource);
+        }
+
+        private int SecondsFromLastUsed(long channelId)
+        {
+            //first, check the last used
+            if (_lastUsed.ContainsKey(channelId))
+            {
+                return (DateTime.Now - _lastUsed[channelId]).Seconds;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        private int GetCoolDownTime(long channelId)
+        {
+            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
+            {
+                return _commandPermission.ChannelPermissionLevel[channelId].CoolDown;
+            }
+            else
+            {
+                return DefaultCommandPermission().DefaultCoolDown;
+            }
+        }
+
+        private void UpdateCoolDown(long channelId)
+        {
+            if (_lastUsed.ContainsKey(channelId))
+            {
+                _lastUsed[channelId] = DateTime.Now;
+            }
+            else
+            {
+                _lastUsed.Add(channelId, DateTime.Now);
+            }
         }
 
         protected async void PublishIntermeditate(string message, MessageEventArgs messageSource)
@@ -144,6 +192,11 @@ namespace OrbisBot.TaskAbstracts
         public bool OverrideMuting()
         {
             return _commandPermission.OverrideMuting;
+        }
+
+        public string CoolDownMesasgePrefix()
+        {
+            return "This command is currently in cooldown.";
         }
 
         public abstract bool CheckArgs(string[] args);

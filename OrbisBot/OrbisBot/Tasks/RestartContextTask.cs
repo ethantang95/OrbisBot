@@ -29,7 +29,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Developer, true);
+            return new CommandPermission(false, PermissionLevel.Developer, true, 1);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

@@ -30,31 +30,12 @@ namespace OrbisBot.Permission
 
         private void SetChannelPermission(long channelId)
         {
-            var channelSettings = FileHelper.GetValuesFromFile(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
+            var channelSettings = FileHelper.GetObjectFromFile<ChannelPermission>(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
 
             //The file will contain the channel ID, then the server ID, then is it muted or not
             //Rest will be individual's permission levels
 
-            if (channelSettings == null)
-            {
-                return;
-            }
-
-            var channelPermission = new ChannelPermission(Int64.Parse(channelSettings[Constants.MAIN_CHANNEL_ID]), 
-                Int64.Parse(channelSettings[Constants.CHANNEL_ID]),
-                Int64.Parse(channelSettings[Constants.SERVER_ID]),
-                bool.Parse(channelSettings[Constants.CHANNEL_MUTED]));
-
-            channelSettings.Remove(Constants.MAIN_CHANNEL_ID);
-            channelSettings.Remove(Constants.CHANNEL_ID);
-            channelSettings.Remove(Constants.SERVER_ID);
-            channelSettings.Remove(Constants.CHANNEL_MUTED);
-
-            var permissionList = channelSettings.ToDictionary(s => Int64.Parse(s.Key), s => PermissionEnumMethods.ParseString(s.Value));
-
-            channelPermission.UserPermissions = permissionList;
-
-            ChannelPermissions.Add(channelId, channelPermission);
+            ChannelPermissions.Add(channelId, channelSettings);
         }
 
         private void CheckAndCreateChannel(long serverId, long channelId)

@@ -19,24 +19,14 @@ namespace OrbisBot.TaskAbstracts
         {
             try
             {
-                var permissionListRaw = FileHelper.GetValuesFromFile(PermissionFileSource());
+                var permission = FileHelper.GetObjectFromFile<CommandPermission>(PermissionFileSource());
 
-                _commandPermission = new CommandPermission(bool.Parse(permissionListRaw[Constants.COMMAND_DISABLED]),
-                            PermissionEnumMethods.ParseString(permissionListRaw[Constants.COMMAND_DEFAULT]),
-                            bool.Parse(permissionListRaw[Constants.COMMAND_OVERRIDE]));
-
-                permissionListRaw.Remove(Constants.COMMAND_DISABLED);
-                permissionListRaw.Remove(Constants.COMMAND_DEFAULT);
-                permissionListRaw.Remove(Constants.COMMAND_OVERRIDE);
-
-                var permissionList = permissionListRaw.ToDictionary(s => long.Parse(s.Key), s => PermissionEnumMethods.ParseString(s.Value));
-
-                _commandPermission.ChannelPermissionLevel = permissionList;
+                _commandPermission = permission;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Problem parsing the settings file, creating default");
-                FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
+                FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
             }
         }
 
@@ -61,7 +51,7 @@ namespace OrbisBot.TaskAbstracts
         {
             if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
             {
-                return _commandPermission.ChannelPermissionLevel[channelId];
+                return _commandPermission.ChannelPermissionLevel[channelId].PermissionLevel;
             }
             return _commandPermission.DefaultLevel;
         }
@@ -71,13 +61,13 @@ namespace OrbisBot.TaskAbstracts
             //first check if such permissoin.
             if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermissionLevel[channelId] = newPermissionLevel;
+                _commandPermission.ChannelPermissionLevel[channelId].PermissionLevel = newPermissionLevel;
             }
             else
             {
-                _commandPermission.ChannelPermissionLevel.Add(channelId, newPermissionLevel);
+                _commandPermission.ChannelPermissionLevel.Add(channelId, new ChannelPermissionSetting(newPermissionLevel, _commandPermission.DefaultCoolDown));
             }
-            FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
+            FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
         }
 
         private PermissionLevel GetUserPermission(MessageEventArgs messageEventArgs)

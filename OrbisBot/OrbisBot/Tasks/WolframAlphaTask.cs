@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Discord;
-using WolframAlphaNET;
 using Amazon.S3.Transfer;
 using Amazon.S3;
 using System.IO;
@@ -20,7 +15,7 @@ namespace OrbisBot.Tasks
     {
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string CommandText()
@@ -60,8 +55,7 @@ namespace OrbisBot.Tasks
             using (var fileToUpload = new MemoryStream())
             {
                 image.Save(fileToUpload, ImageFormat.Png);
-                fileTransferUtility.Upload(fileToUpload,
-                                            "orbis-bot-s3", args[1] + "-WARequest.png");
+                fileTransferUtility.Upload(fileToUpload, "orbis-bot-s3", args[1] + "-WARequest.png");
             }
 
             GetPreSignedUrlRequest request1 = new GetPreSignedUrlRequest()

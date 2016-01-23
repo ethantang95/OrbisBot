@@ -69,7 +69,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Moderator, true);
+            return new CommandPermission(false, PermissionLevel.Moderator, true, 1);
         }
 
         public override string CommandText()

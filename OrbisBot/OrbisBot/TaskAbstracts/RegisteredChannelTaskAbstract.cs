@@ -17,7 +17,7 @@ namespace OrbisBot.TaskAbstracts
             //basically, restrict anything that is not on the permission list
             if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
             {
-                return _commandPermission.ChannelPermissionLevel[channelId];
+                return _commandPermission.ChannelPermissionLevel[channelId].PermissionLevel;
             }
             return PermissionLevel.UsageDenied;
         }
@@ -28,7 +28,7 @@ namespace OrbisBot.TaskAbstracts
             {
                 throw new UnauthorizedAccessException("You cannot change the permission for this command as your channel do not have access to this command");
             }
-            _commandPermission.ChannelPermissionLevel[channelId] = newPermissionLevel;
+            _commandPermission.ChannelPermissionLevel[channelId].PermissionLevel = newPermissionLevel;
         }
 
         public override bool AllowTaskExecution(MessageEventArgs messageEventArgs)

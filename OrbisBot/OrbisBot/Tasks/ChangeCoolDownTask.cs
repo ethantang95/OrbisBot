@@ -1,49 +1,49 @@
-﻿using System;
+﻿using OrbisBot.TaskAbstracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
-using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {
-    class ExceptionThrowingTask : FilePermissionTaskAbstract
+    class ChangeCoolDownTask : FilePermissionTaskAbstract
     {
         public override string AboutText()
         {
-            return "Throws an exception, used for debugging";
+            throw new NotImplementedException();
         }
 
         public override bool CheckArgs(string[] args)
         {
-            return true;
+            throw new NotImplementedException();
         }
 
         public override string CommandText()
         {
-            return "bot-crash";
+            throw new NotImplementedException();
         }
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Developer, false, 1);
+            throw new NotImplementedException();
         }
 
         public override string PermissionFileSource()
         {
-            return Constants.EXCEPTION_TEST_FILE;
+            throw new NotImplementedException();
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            throw new ArgumentException("This is an exception");
+            throw new NotImplementedException();
         }
 
         public override string UsageText()
         {
-            return "This command is not intended for you to use";
+            throw new NotImplementedException();
         }
     }
 }
