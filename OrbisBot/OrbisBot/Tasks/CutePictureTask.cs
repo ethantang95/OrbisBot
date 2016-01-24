@@ -28,6 +28,11 @@ namespace OrbisBot.Tasks
                 return false;
             }
 
+            if (args.Length == 1)
+            {
+                return true;
+            }
+
             bool isSupportAnimal = false;
             isSupportAnimal |= args[1].Equals("cat", StringComparison.InvariantCultureIgnoreCase);
 

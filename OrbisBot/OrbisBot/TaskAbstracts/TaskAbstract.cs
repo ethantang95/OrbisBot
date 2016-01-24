@@ -115,7 +115,8 @@ namespace OrbisBot.TaskAbstracts
             //first, check the last used
             if (_lastUsed.ContainsKey(channelId))
             {
-                return (DateTime.Now - _lastUsed[channelId]).Seconds;
+                var difference = (DateTime.Now - _lastUsed[channelId]);
+                return (int)difference.TotalSeconds;
             }
             else
             {
