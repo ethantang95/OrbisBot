@@ -22,7 +22,7 @@ namespace OrbisBot.Tasks
             {
                 return false;
             }
-            else if (!args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
+            else if (args.Length == 2 && !args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
             {
                 return false;
             }

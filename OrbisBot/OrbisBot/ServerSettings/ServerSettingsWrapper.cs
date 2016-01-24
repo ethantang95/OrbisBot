@@ -71,6 +71,18 @@ namespace OrbisBot.ServerSettings
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server.toFileOutput());
         }
 
+        public ServerSetting GetServerSettings(long serverId)
+        {
+            if (ServerSettings.ContainsKey(serverId))
+            {
+                return ServerSettings[serverId];
+            }
+            else
+            {
+                return new ServerSetting(0, false, string.Empty);
+            }
+        }
+
         public string GetWelcomeMessage(long serverId)
         {
             CheckAndCreateServer(serverId);
