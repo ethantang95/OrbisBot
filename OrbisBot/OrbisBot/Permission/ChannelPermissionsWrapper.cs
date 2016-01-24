@@ -32,9 +32,6 @@ namespace OrbisBot.Permission
         {
             var channelSettings = FileHelper.GetObjectFromFile<ChannelPermission>(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
 
-            //The file will contain the channel ID, then the server ID, then is it muted or not
-            //Rest will be individual's permission levels
-
             ChannelPermissions.Add(channelId, channelSettings);
         }
 
