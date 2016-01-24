@@ -23,17 +23,5 @@ namespace OrbisBot.Permission
             Muted = muted;
             UserPermissions = new Dictionary<long, PermissionLevel>();
         }
-
-        public Dictionary<string, string> toFileOutput()
-        {
-            var toReturn = new Dictionary<string, string>();
-            toReturn.Add(Constants.MAIN_CHANNEL_ID, MainChannelId.ToString());
-            toReturn.Add(Constants.CHANNEL_ID, ChannelId.ToString());
-            toReturn.Add(Constants.SERVER_ID, ServerId.ToString());
-            toReturn.Add(Constants.CHANNEL_MUTED, Muted.ToString());
-            UserPermissions.ToList().ForEach(s => toReturn.Add(s.Key.ToString(), s.Value.ToString()));
-
-            return toReturn;
-        }
     }
 }

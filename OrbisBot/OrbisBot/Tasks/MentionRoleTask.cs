@@ -23,12 +23,12 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "mentionrole";
+            return "role-mention";
         }
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Moderator, false);
+            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
         }
 
         public override string PermissionFileSource()
@@ -38,10 +38,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length < 2 || args.Length > 3)
-            {
-                return $"{Constants.USAGE_INTRO} \"<role name>\" \"<OPTIONAL (message)>\"";
-            }
             var role = messageSource.Server.Roles.FirstOrDefault(s => args[1].Equals(s.Name, StringComparison.InvariantCultureIgnoreCase));
 
             if (role == null)

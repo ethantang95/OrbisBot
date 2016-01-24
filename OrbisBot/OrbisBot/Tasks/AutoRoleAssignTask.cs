@@ -22,7 +22,7 @@ namespace OrbisBot.Tasks
             {
                 return false;
             }
-            else if (!args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
+            else if (args.Length == 2 && !args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
             {
                 return false;
             }
@@ -31,12 +31,12 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "autorole";
+            return "user-autopermission";
         }
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Owner, true);
+            return new CommandPermission(false, PermissionLevel.Owner, true, 1);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -60,7 +60,7 @@ namespace OrbisBot.Tasks
             {
                 var messageBuilder = new StringBuilder().AppendLine("The following roles will be assigned if you commit:");
                 newRoles.ToList().ForEach(s => messageBuilder.AppendLine($"{s.Key.Name} => {s.Value}"));
-                messageBuilder.AppendLine("type \"-AutoRole commit\" to assign these roles");
+                messageBuilder.AppendLine($"type \"{CommandTrigger()} commit\" to assign these roles");
                 return messageBuilder.ToString();
             }
         }

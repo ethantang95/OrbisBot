@@ -14,54 +14,16 @@ namespace OrbisBot.TaskHelpers.CustomCommands
         //this class will handle the values from the file and create the appropriate Custom Commands class
         //however, the custom commands class will handle its own output
 
-        public static void SaveCustomTask(List<string> toSave)
+        public static void SaveCustomTask(List<CustomCommandForm> toSave)
         {
-            var commandName = toSave[0].Split(':');
-            FileHelper.WriteToFile(toSave, Path.Combine(Constants.CUSTOM_COMMANDS_FOLDER, commandName[1] + ".txt"));
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.CUSTOM_COMMANDS_FOLDER, toSave[0].CommandName + ".txt"), toSave);
         }
 
         public static List<CustomCommandForm> GetCustomTaskFromFile(string taskFile)
         {
-            var fileContents = FileHelper.GetContentFromFile(Path.Combine(Constants.CUSTOM_COMMANDS_FOLDER, taskFile));
+            var fileContents = FileHelper.GetObjectFromFile<List<CustomCommandForm>>(Path.Combine(Constants.CUSTOM_COMMANDS_FOLDER, taskFile));
 
-            List<CustomCommandForm> toReturn = new List<CustomCommandForm>();
-
-            var taskName = fileContents[0].Split(':')[1];
-
-            int maxArgs = 0;
-            long channelID = 0;
-            PermissionLevel level = PermissionLevel.Restricted;
-            List<string> returnValue = new List<string>();
-            //we will just iterate through this
-            for (int i = 0; i < fileContents.Count; i++)
-            {
-                var line = fileContents[i].Split(new char[] { ':' }, 2);
-                if (line[0] == Constants.MAX_ARGS) //well, every entry is at least 4 lines
-                {
-                    if (i > 2)
-                    {
-                        toReturn.Add(new CustomCommandForm(taskName, maxArgs, channelID, level, returnValue));
-                        returnValue = new List<string>();
-                    }
-                    maxArgs = Int32.Parse(line[1]);
-                }
-                else if (line[0] == Constants.CHANNEL_ID)
-                {
-                    channelID = Int64.Parse(line[1]);
-                }
-                else if (line[0] == Constants.PERMISSION_LEVEL)
-                {
-                    level = PermissionEnumMethods.ParseString(line[1]);
-                }
-                else if (line[0] == Constants.RETURN_TEXT)
-                {
-                    returnValue.Add(line[1]);
-                }
-            }
-            //if edge case for the last one
-            toReturn.Add(new CustomCommandForm(taskName, maxArgs, channelID, level, returnValue));
-
-            return toReturn;
+            return fileContents;
         }
 
         public static void RemoveTaskFile(string taskFile)

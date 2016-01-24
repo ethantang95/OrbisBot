@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -110,6 +111,7 @@ namespace OrbisBot
                 throw e;
             }
         }
+        
         public static bool WriteValuesToFile(Dictionary<string, string> toWrite, string fileName)
         {
             try
@@ -141,6 +143,54 @@ namespace OrbisBot
                     {
                         writer.WriteLine(entry);
                     }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong while writing {0} file", fileName);
+                Console.WriteLine(e.ToString());
+                return false;
+            }
+        }
+
+        public static T GetObjectFromFile<T>(string fileName)
+        {
+            try
+            {
+                var content = "";
+                using (var reader = new StreamReader(GetProgramSaveLocation(fileName)))
+                {
+                    string line;
+                    while (((line = reader.ReadLine()) != null))
+                    {
+                        content = content + line;
+                    }
+                }
+                var obj = JsonConvert.DeserializeObject<T>(content);
+                return obj;
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("The file {0} was not found", fileName);
+                return default(T);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong when trying to read file {0}", fileName);
+                Console.WriteLine(e.ToString());
+                throw e;
+            }
+        }
+
+        public static bool WriteObjectToFile(string fileName, object obj)
+        {
+            try
+            {
+                var content = JsonConvert.SerializeObject(obj);
+                using (var writer = new StreamWriter(GetProgramSaveLocation(fileName)))
+                {
+                    writer.WriteLine(content);
                 }
                 return true;
             }

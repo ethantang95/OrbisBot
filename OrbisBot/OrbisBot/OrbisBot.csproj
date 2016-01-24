@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -106,6 +107,7 @@
     <Compile Include="Tasks\AutoRoleAssignTask.cs" />
     <Compile Include="Tasks\BotMentionTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
+    <Compile Include="Tasks\ChangeCoolDownTask.cs" />
     <Compile Include="Tasks\ChangeMainChannelTask.cs" />
     <Compile Include="Tasks\CreateCustomTask.cs" />
     <Compile Include="Tasks\CustomTask.cs" />
@@ -121,7 +123,7 @@
     <Compile Include="Tasks\BotMuteTask.cs" />
     <Compile Include="Tasks\RandomNumberTask.cs" />
     <Compile Include="Tasks\RedditTask.cs" />
-    <Compile Include="Tasks\RegisterSelfTask.cs" />
+    <Compile Include="Tasks\RegisterTask.cs" />
     <Compile Include="TaskAbstracts\RegisteredChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />
     <Compile Include="Tasks\RemoveCustomTask.cs" />

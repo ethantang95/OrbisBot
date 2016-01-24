@@ -4,6 +4,7 @@ using Discord;
 using System.Configuration;
 using System.Threading.Tasks;
 using OrbisBot.Tasks;
+using OrbisBot.TaskHelpers.CustomCommands;
 
 namespace OrbisBot
 {
@@ -29,7 +30,7 @@ namespace OrbisBot
                     }
                     else if (eventArgs.Message.IsMentioningMe && !eventArgs.Message.MentionedRoles.Contains(eventArgs.Server.EveryoneRole))
                     {
-                        var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "botmention"];
+                        var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "bot-mention"];
                         aboutTask.RunTask(new string[] {"dummy"}, eventArgs);
                         //pass in a dummy string to bypass the NPE
                     }
@@ -52,9 +53,34 @@ namespace OrbisBot
 
             var channel = eventArgs.Server.TextChannels.FirstOrDefault(s => s.Id == mainChannelID);
 
-            if (channel != null)
+            if (channel == null)
             {
-                await Context.Instance.Client.SendMessage(channel, $"Welcome {eventArgs.User.Name} to server {eventArgs.Server.Name}.");
+                return;
+            }
+
+            var server = Context.Instance.ServerSettings.GetServerSettings(eventArgs.Server.Id);
+
+            if (server.EnableWelcome)
+            {
+                try
+                {
+                    var commandBuilder = new CustomCommandBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User.Name, eventArgs.Server.Members);
+
+                    var result = await Context.Instance.Client.SendMessage(channel, commandBuilder.GenerateCustomMessage());
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+
+                        var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.WelcomeMsg}. \n The exception details are: {e.ToString()}");
+                    }
+                    catch (Exception ex)
+                    {
+                        return;
+                    }
+                }
             }
         }
     }

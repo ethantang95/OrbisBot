@@ -11,7 +11,7 @@ using OrbisBot.TaskAbstracts;
 namespace OrbisBot.Tasks
 {
     //really a task to make the other ones easier... mostly to register admins
-    class RegisterSelfTask : FilePermissionTaskAbstract
+    class RegisterTask : FilePermissionTaskAbstract
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
@@ -25,7 +25,7 @@ namespace OrbisBot.Tasks
             if (messageSource.Server.Owner.Id == messageSource.User.Id)
             {
                 Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, messageSource.User.Id, PermissionLevel.Owner);
-                return "You were detected as the owner of this channel, you have been granted the permission level of owner. Try the command -AutoRole to automatically assign members to their proper role for this bot based on their server permissions";
+                return "You were detected as the owner of this channel, you have been granted the permission level of owner. Try the command -user-autopermission to automatically assign members to their proper role for this bot based on their server permissions";
             }
 
             if (Context.Instance.ChannelPermission.ContainsChannel(messageSource.Channel.Id) &&
@@ -36,7 +36,6 @@ namespace OrbisBot.Tasks
 
             Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, messageSource.User.Id, PermissionLevel.User);
 
-            Context.Instance.ChannelPermission.ChannelPermissions[messageSource.Channel.Id].toFileOutput();
             return "Thank you for registering with this channel";
         }
 
@@ -47,7 +46,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.RestrictedUser, true);
+            return new CommandPermission(false, PermissionLevel.RestrictedUser, true, 1);
         }
 
         public override string CommandText()

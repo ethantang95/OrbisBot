@@ -14,12 +14,7 @@ namespace OrbisBot.Tasks
     class InsultTask : FilePermissionTaskAbstract
     {
 
-        private Dictionary<long, DateTime> _lastTriggered;
-
-        public InsultTask()
-        {
-            _lastTriggered = new Dictionary<long, DateTime>();
-        }
+        public InsultTask() { }
         public override string AboutText()
         {
             return "Insults a person of your choice";
@@ -37,7 +32,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string PermissionFileSource()
@@ -47,24 +42,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (_lastTriggered.ContainsKey(messageSource.Channel.Id))
-            {
-                var commandLastTriggered = _lastTriggered[messageSource.Channel.Id];
-                if ((DateTime.Now - commandLastTriggered).TotalSeconds < 30)
-                {
-                    return string.Format("The bot is still amazed at itself spitting out hotfiya, try again in {0:0.00} seconds", (30 - (DateTime.Now - commandLastTriggered).TotalSeconds));
-                }
-            }
-            else
-            {
-                _lastTriggered.Add(messageSource.Channel.Id, new DateTime(0));
-            }
-
-            if (args.Length != 2)
-            {
-                return $"{Constants.USAGE_INTRO} \"<target>\"";
-            }
-
             var person1 = UserFinderUtil.FindUser(messageSource.Server.Members, args[1]);
 
             if (person1 == null)
@@ -81,9 +58,6 @@ namespace OrbisBot.Tasks
             var pNodes = doc.DocumentNode.Descendants("strong");
 
             content = content + " - " + pNodes.First().FirstChild.InnerText;
-
-            //add to the timer dictionary
-            _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
 
             return content;
         }

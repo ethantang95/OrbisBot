@@ -19,24 +19,22 @@ namespace OrbisBot.TaskAbstracts
         {
             try
             {
-                var permissionListRaw = FileHelper.GetValuesFromFile(PermissionFileSource());
+                var permission = FileHelper.GetObjectFromFile<CommandPermission>(PermissionFileSource());
 
-                _commandPermission = new CommandPermission(bool.Parse(permissionListRaw[Constants.COMMAND_DISABLED]),
-                            PermissionEnumMethods.ParseString(permissionListRaw[Constants.COMMAND_DEFAULT]),
-                            bool.Parse(permissionListRaw[Constants.COMMAND_OVERRIDE]));
-
-                permissionListRaw.Remove(Constants.COMMAND_DISABLED);
-                permissionListRaw.Remove(Constants.COMMAND_DEFAULT);
-                permissionListRaw.Remove(Constants.COMMAND_OVERRIDE);
-
-                var permissionList = permissionListRaw.ToDictionary(s => long.Parse(s.Key), s => PermissionEnumMethods.ParseString(s.Value));
-
-                _commandPermission.ChannelPermissionLevel = permissionList;
+                if (permission == null)
+                {
+                    FileHelper.WriteObjectToFile(PermissionFileSource(), DefaultCommandPermission());
+                    _commandPermission = DefaultCommandPermission();
+                }
+                else
+                {
+                    _commandPermission = permission;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Problem parsing the settings file, creating default");
-                FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
+                FileHelper.WriteObjectToFile(PermissionFileSource(), DefaultCommandPermission());
             }
         }
 
@@ -59,9 +57,9 @@ namespace OrbisBot.TaskAbstracts
 
         public override PermissionLevel GetCommandPermissionForChannel(long channelId)
         {
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                return _commandPermission.ChannelPermissionLevel[channelId];
+                return _commandPermission.ChannelPermission[channelId].PermissionLevel;
             }
             return _commandPermission.DefaultLevel;
         }
@@ -69,15 +67,28 @@ namespace OrbisBot.TaskAbstracts
         public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
         {
             //first check if such permissoin.
-            if (_commandPermission.ChannelPermissionLevel.ContainsKey(channelId))
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermissionLevel[channelId] = newPermissionLevel;
+                _commandPermission.ChannelPermission[channelId].PermissionLevel = newPermissionLevel;
             }
             else
             {
-                _commandPermission.ChannelPermissionLevel.Add(channelId, newPermissionLevel);
+                _commandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(newPermissionLevel, _commandPermission.DefaultCoolDown));
             }
-            FileHelper.WriteValuesToFile(_commandPermission.toFileOutput(), PermissionFileSource());
+            FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
+        }
+
+        public override void SetCoolDownForChannel(long channelId, int seconds)
+        {
+            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
+            {
+                _commandPermission.ChannelPermission[channelId].CoolDown = seconds;
+            }
+            else
+            {
+                _commandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, seconds));
+            }
+            FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
         }
 
         private PermissionLevel GetUserPermission(MessageEventArgs messageEventArgs)

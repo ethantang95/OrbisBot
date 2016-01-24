@@ -14,13 +14,11 @@ namespace OrbisBot.Tasks
     {
         private string _commandText;
         private Dictionary<long, CustomCommandForm> _customCommands;
-        private Dictionary<long, DateTime> _lastTriggered;
         public CustomTask(string commandName, List<CustomCommandForm> commands)
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
-            commands.ForEach(s => _commandPermission.ChannelPermissionLevel.Add(s.Channel, s.PermissionLevel));
-            _lastTriggered = commands.ToDictionary(s => s.Channel, s => new DateTime(0));
+            commands.ForEach(s => _commandPermission.ChannelPermission.Add(s.Channel, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, DefaultCommandPermission().DefaultCoolDown)));
         }
         public override string AboutText()
         {
@@ -34,21 +32,11 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            //first, get the appropriate form... keys should be contained because if not, it will be
-            //denied access to this component
-
-            //check the time of last triggered
-            var commandLastTriggered = _lastTriggered[messageSource.Channel.Id];
-            if ((DateTime.Now - commandLastTriggered).TotalSeconds < 20)
-            {
-                return string.Format("The current command is on cooldown right now, try again in {0:0.00} seconds", (20 - (DateTime.Now - commandLastTriggered).TotalSeconds));
-            }
-
             var command = _customCommands[messageSource.Channel.Id];
 
             if (args.Length < command.MaxArgs + 1)
@@ -71,9 +59,6 @@ namespace OrbisBot.Tasks
 
             var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Members);
 
-            //set the time for when the command was last triggered
-            _lastTriggered[messageSource.Channel.Id] = DateTime.Now;
-
             return builder.GenerateCustomMessage();
         }
 
@@ -82,20 +67,19 @@ namespace OrbisBot.Tasks
             if (!_customCommands.ContainsKey(toAdd.Channel))
             {
                 _customCommands.Add(toAdd.Channel, toAdd);
-                _lastTriggered.Add(toAdd.Channel, new DateTime(0));
-                _commandPermission.ChannelPermissionLevel.Add(toAdd.Channel, toAdd.PermissionLevel);
+                _commandPermission.ChannelPermission.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
             }
             else
             {
                 _customCommands[toAdd.Channel] = toAdd;
             }
-            CustomCommandFileHandler.SaveCustomTask(ToFileOutput());
+            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
 
         public void RemoveCommand(long channelId)
         {
             _customCommands.Remove(channelId);
-            _commandPermission.ChannelPermissionLevel.Remove(channelId);
+            _commandPermission.ChannelPermission.Remove(channelId);
             if (_customCommands.Count == 0)
             {
                 CustomCommandFileHandler.RemoveTaskFile(_commandText + ".txt");
@@ -103,22 +87,13 @@ namespace OrbisBot.Tasks
             }
             else
             {
-                CustomCommandFileHandler.SaveCustomTask(ToFileOutput());
+                CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
             }
         }
 
-        public List<string> ToFileOutput()
+        public List<CustomCommandForm> GetCustomCommands()
         {
-            var toReturn = new List<string>();
-            //the command will be the name of the file
-            toReturn.Add($"{Constants.COMMAND_NAME}:{_commandText}");
-            _customCommands.Select(s => s.Value).ToList().ForEach(s =>
-            {
-                toReturn.Add($"{Constants.MAX_ARGS}:{s.MaxArgs.ToString()}");
-                toReturn.Add($"{Constants.CHANNEL_ID}:{s.Channel.ToString()}");
-                toReturn.Add($"{Constants.PERMISSION_LEVEL}:{s.PermissionLevel.ToString()}");
-                s.ReturnValues.ForEach(r => toReturn.Add($"{Constants.RETURN_TEXT}:{r}"));
-            });
+            var toReturn = _customCommands.Values.ToList();
 
             return toReturn;
         }
@@ -133,6 +108,16 @@ namespace OrbisBot.Tasks
         public override string UsageText()
         {
             return "This is a custom command created for your channel, the usage might vary";
+        }
+
+        public override void SaveSettings(CommandPermission commandPermission)
+        {
+            foreach (var channelPermission in commandPermission.ChannelPermission)
+            {
+                _customCommands[channelPermission.Key].PermissionLevel = channelPermission.Value.PermissionLevel;
+                _customCommands[channelPermission.Key].CoolDown = channelPermission.Value.CoolDown;
+            }
+            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
     }
 }

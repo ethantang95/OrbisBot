@@ -28,16 +28,14 @@ namespace OrbisBot.ServerSettings
 
         private void SetServerSettings(long serverId)
         {
-            var serverFile = FileHelper.GetValuesFromFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()));
+            var serverSetting = FileHelper.GetObjectFromFile<ServerSetting>(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()));
 
-            if (serverFile == null)
+            if (serverSetting == null)
             {
                 return;
             }
 
-            var serverSettings = new ServerSetting(Int64.Parse(serverFile[Constants.SERVER_ID]), bool.Parse(serverFile[Constants.ENABLE_WELCOME]), serverFile[Constants.WELCOME_MSG]);
-
-            ServerSettings.Add(serverId, serverSettings);
+            ServerSettings.Add(serverId, serverSetting);
         }
 
         private void CheckAndCreateServer(long serverId)
@@ -62,7 +60,7 @@ namespace OrbisBot.ServerSettings
             CheckAndCreateServer(serverId);
             var server = ServerSettings[serverId];
             server.EnableWelcome = welcomeEnable;
-            FileHelper.WriteValuesToFile(server.toFileOutput(), Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()));
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
         public void SetWelcomeMessage(long serverId, string welcomeMessage)
@@ -70,7 +68,19 @@ namespace OrbisBot.ServerSettings
             CheckAndCreateServer(serverId);
             var server = ServerSettings[serverId];
             server.WelcomeMsg = welcomeMessage;
-            FileHelper.WriteValuesToFile(server.toFileOutput(), Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()));
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
+        }
+
+        public ServerSetting GetServerSettings(long serverId)
+        {
+            if (ServerSettings.ContainsKey(serverId))
+            {
+                return ServerSettings[serverId];
+            }
+            else
+            {
+                return new ServerSetting(0, false, string.Empty);
+            }
         }
 
         public string GetWelcomeMessage(long serverId)

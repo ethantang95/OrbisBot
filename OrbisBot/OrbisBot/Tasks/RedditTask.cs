@@ -21,7 +21,7 @@ namespace OrbisBot.Tasks
 
         public override bool CheckArgs(string[] args)
         {
-            if (args.Length < 2 || args.Length > 3)
+            if (args.Length > 3)
             {
                 return false;
             }
@@ -39,7 +39,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string PermissionFileSource()
@@ -87,7 +87,7 @@ namespace OrbisBot.Tasks
 
         public override string UsageText()
         {
-            return "(subreddit) OPTIONAL<image>";
+            return "OPTIONAL(subreddit) OPTIONAL<image>";
         }
     }
 }

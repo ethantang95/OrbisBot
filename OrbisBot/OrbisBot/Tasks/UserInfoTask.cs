@@ -14,11 +14,6 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length > 2)
-            {
-                return $"{Constants.USAGE_INTRO} OPTIONAL \"<user's name>\"";
-            }
-
             var mainChannel = messageSource.Server.Channels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
 
             var returnText = new StringBuilder();
@@ -64,12 +59,12 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, true);
+            return new CommandPermission(false, PermissionLevel.User, true, 15);
         }
 
         public override string CommandText()
         {
-            return "userinfo";
+            return "user-info";
         }
 
         public override string AboutText()

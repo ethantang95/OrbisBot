@@ -23,12 +23,12 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "crash";
+            return "bot-crash";
         }
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Developer, false);
+            return new CommandPermission(false, PermissionLevel.Developer, false, 1);
         }
 
         public override string PermissionFileSource()

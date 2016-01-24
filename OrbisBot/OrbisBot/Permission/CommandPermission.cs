@@ -39,26 +39,29 @@ namespace OrbisBot.Permission
     {
         public bool Disabled { get; set; }
         public bool OverrideMuting { get; private set; }
+        public int DefaultCoolDown { get; private set; }
         public PermissionLevel DefaultLevel { get; set; }
-        public Dictionary<long, PermissionLevel> ChannelPermissionLevel { get; set; }
+        public Dictionary<long, ChannelPermissionSetting> ChannelPermission { get; set; }
 
-        public CommandPermission(bool disabled, PermissionLevel defaultLevel, bool overrideMuting)
+        public CommandPermission(bool disabled, PermissionLevel defaultLevel, bool overrideMuting, int defaultCoolDown)
         {
             Disabled = disabled;
             DefaultLevel = defaultLevel;
             OverrideMuting = overrideMuting;
-            ChannelPermissionLevel = new Dictionary<long, PermissionLevel>();
+            DefaultCoolDown = defaultCoolDown;
+            ChannelPermission = new Dictionary<long, ChannelPermissionSetting>();
         }
+    }
 
-        public Dictionary<string, string> toFileOutput()
+    class ChannelPermissionSetting
+    {
+        public PermissionLevel PermissionLevel { get; set; }
+        public int CoolDown { get; set; }
+
+        public ChannelPermissionSetting(PermissionLevel permissionLevel, int coolDown)
         {
-            Dictionary<string, string> toReturn = new Dictionary<string, string>();
-            toReturn.Add(Constants.COMMAND_DISABLED, Disabled.ToString());
-            toReturn.Add(Constants.COMMAND_DEFAULT, DefaultLevel.ToString());
-            toReturn.Add(Constants.COMMAND_OVERRIDE, OverrideMuting.ToString());
-            ChannelPermissionLevel.ToList().ForEach(s => toReturn.Add(s.Key.ToString(), s.Value.ToString()));
-
-            return toReturn;
+            PermissionLevel = permissionLevel;
+            CoolDown = coolDown;
         }
     }
 }

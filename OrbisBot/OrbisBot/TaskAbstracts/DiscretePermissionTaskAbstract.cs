@@ -29,6 +29,11 @@ namespace OrbisBot.TaskAbstracts
             throw new NotSupportedException("The permission level of this task cannot be changed");
         }
 
+        public override void SetCoolDownForChannel(long channelId, int cooldown)
+        {
+            throw new NotSupportedException("The cooldown of this task cannot be changed");
+        }
+
         private PermissionLevel GetUserPermission(MessageEventArgs messageEventArgs)
         {
             return Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id,

@@ -37,7 +37,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 1);
         }
 
         public override string PermissionFileSource()
@@ -47,13 +47,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            //args can be either one word, coin or dice following, or 1 number representing max
-            //or 2 numbers representing range
-            if (args.Length < 2 || args.Length > 3)
-            {
-                return $"{Constants.USAGE_INTRO} coin/dice/<max number> or it can be \n {Constants.USAGE_INTRO} <min number> <max number>";
-            }
-
             if (args.Length == 2)
             {
                 var number = 0;

@@ -30,7 +30,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.Moderator, false);
+            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
         }
 
         public override string PermissionFileSource()
@@ -71,7 +71,7 @@ namespace OrbisBot.Tasks
 
 
             //here, the command successfully validates, because otherwise, we would've gotten an exception
-            var customCommand = new CustomCommandForm(args[1], maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList());
+            var customCommand = new CustomCommandForm(args[1], maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList(), 30);
 
             if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))
             {
@@ -84,7 +84,7 @@ namespace OrbisBot.Tasks
 
             Context.Instance.AddTask(newTask);
 
-            CustomCommandFileHandler.SaveCustomTask(newTask.ToFileOutput());
+            CustomCommandFileHandler.SaveCustomTask(newTask.GetCustomCommands());
 
             return $"The command {newTask.CommandTrigger()} has been added";
         }

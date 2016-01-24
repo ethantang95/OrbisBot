@@ -61,7 +61,7 @@ namespace OrbisBot
         {
             AddTask(new WolframAlphaTask());
             AddTask(new AboutTask());
-            AddTask(new RegisterSelfTask());
+            AddTask(new RegisterTask());
             AddTask(new AdjustUserPermissionTask());
             AddTask(new ChangeCommandPermissionTask());
             AddTask(new ListCommandsTask());

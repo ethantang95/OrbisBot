@@ -28,6 +28,11 @@ namespace OrbisBot.Tasks
                 return false;
             }
 
+            if (args.Length == 1)
+            {
+                return true;
+            }
+
             bool isSupportAnimal = false;
             isSupportAnimal |= args[1].Equals("cat", StringComparison.InvariantCultureIgnoreCase);
 
@@ -41,7 +46,7 @@ namespace OrbisBot.Tasks
 
         public override CommandPermission DefaultCommandPermission()
         {
-            return new CommandPermission(false, PermissionLevel.User, false);
+            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string PermissionFileSource()
@@ -51,23 +56,8 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (args.Length > 2)
-            {
-                return $"{Constants.USAGE_INTRO} OPTIONAL(Cat). Use cat as a parameter for specifically a cat picture, no parameter will serve a random picture from Reddit.com/r/aww/rising";
-            }
 
-            if (args.Length == 2 && args[1].Equals("Cat", StringComparison.InvariantCultureIgnoreCase))
-            {
-                var client = new RestClient("http://thecatapi.com");
-                var request = new RestRequest("api/images/get", Method.GET);
-                request.AddParameter("format", "src");
-                request.AddParameter("type", "jpg");
-
-                var response = client.Execute(request);
-
-                return response.ResponseUri.AbsoluteUri;
-            }
-            else if (args[1].Equals("cat", StringComparison.InvariantCultureIgnoreCase))
+            if (args.Length == 1)
             {
                 var client = new RestClient("http://reddit.com");
                 var request = new RestRequest("r/aww/rising/.json", Method.GET);
@@ -77,6 +67,17 @@ namespace OrbisBot.Tasks
                 var redditObj = JObject.Parse(response.Content);
 
                 return RedditRandomHelper.GetRandomLinkFromRedditSource(redditObj, true);
+            }
+            else if (args[1].Equals("Cat", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var client = new RestClient("http://thecatapi.com");
+                var request = new RestRequest("api/images/get", Method.GET);
+                request.AddParameter("format", "src");
+                request.AddParameter("type", "jpg");
+
+                var response = client.Execute(request);
+
+                return response.ResponseUri.AbsoluteUri;
             }
 
             throw new NotSupportedException($"The parameter {args[1]} managed to bypass the args checking filter"); //args checking should've caught everything
