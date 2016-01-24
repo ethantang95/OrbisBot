@@ -36,7 +36,6 @@ namespace OrbisBot.Tasks
 
             Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, messageSource.User.Id, PermissionLevel.User);
 
-            Context.Instance.ChannelPermission.ChannelPermissions[messageSource.Channel.Id].toFileOutput();
             return "Thank you for registering with this channel";
         }
 

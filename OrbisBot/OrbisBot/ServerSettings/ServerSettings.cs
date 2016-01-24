@@ -18,15 +18,5 @@ namespace OrbisBot.ServerSettings
             this.EnableWelcome = enableWelcome;
             this.WelcomeMsg = welcomeMsg;
         }
-
-        public Dictionary<string, string> toFileOutput()
-        {
-            var toReturn = new Dictionary<string, string>();
-            toReturn.Add(Constants.SERVER_ID, ServerId.ToString());
-            toReturn.Add(Constants.ENABLE_WELCOME, EnableWelcome.ToString());
-            toReturn.Add(Constants.WELCOME_MSG, WelcomeMsg);
-
-            return toReturn;   
-        }
     }
 }

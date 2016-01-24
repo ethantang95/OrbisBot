@@ -60,7 +60,7 @@ namespace OrbisBot.ServerSettings
             CheckAndCreateServer(serverId);
             var server = ServerSettings[serverId];
             server.EnableWelcome = welcomeEnable;
-            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server.toFileOutput());
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
         public void SetWelcomeMessage(long serverId, string welcomeMessage)
@@ -68,7 +68,7 @@ namespace OrbisBot.ServerSettings
             CheckAndCreateServer(serverId);
             var server = ServerSettings[serverId];
             server.WelcomeMsg = welcomeMessage;
-            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server.toFileOutput());
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
         public ServerSetting GetServerSettings(long serverId)
