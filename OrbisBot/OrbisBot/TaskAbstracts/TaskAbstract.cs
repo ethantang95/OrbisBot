@@ -3,10 +3,7 @@ using OrbisBot.Permission;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OrbisBot.TaskAbstracts
@@ -92,22 +89,11 @@ namespace OrbisBot.TaskAbstracts
             }
             catch (Exception e)
             {
-                try
-                {
-                    taskResult = ExceptionMessage(e, messageSource);
+                taskResult = ExceptionMessage(e, messageSource);
 
-                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
-                    var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {e.ToString()}");
-                }
-                catch (Exception ex)
-                {
-                    //I'm about my wits end.. in case stuff screws up even harder
-                    //prolly just return is better
-                    return;
-                }
+                DiscordMethods.OnMessageFailure(e, messageSource);
             }
-            PublishTask(taskResult, messageSource);
+            await PublishTask(taskResult, messageSource);
         }
 
         private int SecondsFromLastUsed(long channelId)
@@ -136,7 +122,7 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        private async void PublishTask(string message, MessageEventArgs messageSource)
+        private async Task PublishTask(string message, MessageEventArgs messageSource)
         {
             if (message == "" || message == String.Empty)
             {
@@ -149,9 +135,7 @@ namespace OrbisBot.TaskAbstracts
             }
             catch (Exception ex)
             {
-                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
-                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publishing task in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
+                DiscordMethods.OnMessageFailure(ex, messageSource);
             }
         }
 
@@ -168,9 +152,21 @@ namespace OrbisBot.TaskAbstracts
             }
             catch (Exception ex)
             {
-                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+                DiscordMethods.OnMessageFailure(ex, messageSource);
+            }
+        }
 
-                await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred publising intermeditate message in channel {messageSource.Channel.Name} in server {messageSource.Server.Name} with the message: {messageSource.Message.Text}. \n The exception details are: {ex.ToString()}");
+        protected async void PublishPrivateMessage(string message, MessageEventArgs messageSource)
+        {
+            var client = Context.Instance.Client;
+
+            try
+            {
+                var result = await client.SendPrivateMessage(messageSource.User, message);
+            }
+            catch (Exception ex)
+            {
+                DiscordMethods.OnMessageFailure(ex, messageSource);
             }
         }
 

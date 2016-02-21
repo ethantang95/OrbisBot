@@ -15,34 +15,70 @@ namespace OrbisBot
             Console.WriteLine($"[{eventArgs.Severity}] {eventArgs.Source}: {eventArgs.Message}");
         }
 
+        public static async void OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
+        {
+            try
+            {
+                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+
+                var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occurred when trying to log message. {e.ToString()}");
+            }
+        }
+
+        public static bool SendPrivateMessage(long userId, string message)
+        {
+            var client = Context.Instance.Client;
+
+            var user = client.GetUser(client.AllServers.First(s => client.GetUser(s, userId) != null), userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var result = client.SendPrivateMessage(user, message);
+
+            return true;
+        }
+
         public static async void OnMessageReceived(object o, MessageEventArgs eventArgs)
         {
+            var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+
             if (!eventArgs.Message.IsAuthor)
             {
                 try
                 {
-                    var commandSplitted = eventArgs.Message.Text.Split(' ');
-                    if (Context.Instance.Tasks.ContainsKey(commandSplitted[0].ToLower()))
+                    if (eventArgs.Channel.IsPrivate)
                     {
-                        var task = Context.Instance.Tasks[commandSplitted[0].ToLower()];
-                        var args = CommandParser.ParseCommand(eventArgs.Message.Text);
-                        task.RunTask(args, eventArgs);
+                        //private message, forward it to the private inbox
+                            var result = await Context.Instance.Client.SendMessage(loggingChannel, $"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
+                        
                     }
-                    else if (eventArgs.Message.IsMentioningMe && !eventArgs.Message.MentionedRoles.Contains(eventArgs.Server.EveryoneRole))
+                    else
                     {
-                        var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "bot-mention"];
-                        aboutTask.RunTask(new string[] {"dummy"}, eventArgs);
-                        //pass in a dummy string to bypass the NPE
+                        var commandSplitted = eventArgs.Message.Text.Split(' ');
+                        if (Context.Instance.Tasks.ContainsKey(commandSplitted[0].ToLower()))
+                        {
+                            var task = Context.Instance.Tasks[commandSplitted[0].ToLower()];
+                            var args = CommandParser.ParseCommand(eventArgs.Message.Text);
+                            task.RunTask(args, eventArgs);
+                        }
+                        else if (eventArgs.Message.IsMentioningMe && !eventArgs.Message.MentionedRoles.Contains(eventArgs.Server.EveryoneRole))
+                        {
+                            var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "bot-mention"];
+                            aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
+                            //pass in a dummy string to bypass the NPE
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    await Context.Instance.Client.SendMessage(eventArgs.Channel,
-                        $"Error occurred, Exception: {ex.Message}; Message Received {eventArgs.Message.Text}");
-
-                    var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
-                    await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()} \n Stacktrace is: {ex.StackTrace}");
+                    OnMessageFailure(ex, eventArgs);
                 }
             }
         }

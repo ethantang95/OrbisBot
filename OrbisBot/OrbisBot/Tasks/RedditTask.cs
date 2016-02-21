@@ -9,6 +9,7 @@ using RestSharp;
 using Newtonsoft.Json.Linq;
 using OrbisBot.TaskHelpers.Reddit;
 using OrbisBot.TaskAbstracts;
+using Newtonsoft.Json;
 
 namespace OrbisBot.Tasks
 {
@@ -88,6 +89,18 @@ namespace OrbisBot.Tasks
         public override string UsageText()
         {
             return "OPTIONAL(subreddit) OPTIONAL<image>";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            if (typeof(JsonReaderException) == ex.GetType())
+            {
+                return "Attempting to fetch reddit contents is interrupted by a known and currently unsolvable bug that happens occasionally, please try the command again";
+            }
+            else
+            {
+                return base.ExceptionMessage(ex, eventArgs);
+            }
         }
     }
 }
