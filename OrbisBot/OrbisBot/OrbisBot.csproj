@@ -138,6 +138,7 @@
     </None>
     <Compile Include="FileHelper.cs" />
     <None Include="packages.config" />
+    <None Include="README.md" />
     <None Include="TemplateApp.config" />
   </ItemGroup>
   <ItemGroup>
