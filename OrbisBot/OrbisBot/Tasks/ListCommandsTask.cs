@@ -14,8 +14,7 @@ namespace OrbisBot.Tasks
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             //we will give back commands that are fit for the user's role
-            var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
-                messageSource.User.Id);
+            var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id);
 
             var channelMuted = Context.Instance.ChannelPermission.ContainsChannel(messageSource.Channel.Id) ? Context.Instance.ChannelPermission.ChannelPermissions[messageSource.Channel.Id].Muted : false;
 

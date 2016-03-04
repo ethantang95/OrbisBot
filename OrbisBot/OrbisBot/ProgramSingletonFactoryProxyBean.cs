@@ -122,7 +122,7 @@ namespace OrbisBot
 
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
-            //Client.UserJoined += DiscordMethods.OnUserJoinsServer;
+            Client.UserJoined += DiscordMethods.OnUserJoinsServer;
             //disabled until I manage to set server permissions and settings files
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects

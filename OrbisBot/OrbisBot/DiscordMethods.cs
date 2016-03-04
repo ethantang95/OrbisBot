@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using OrbisBot.Tasks;
 using OrbisBot.TaskHelpers.CustomCommands;
+using OrbisBot.Events;
 
 namespace OrbisBot
 {
@@ -22,6 +23,20 @@ namespace OrbisBot
                 var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
 
                 var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occurred when trying to log message. {e.ToString()}");
+            }
+        }
+
+        public static async void OnEventFailure(Exception ex, EventForm eventForm)
+        {
+            try
+            {
+                var loggingChannel = Context.Instance.Client.GetChannel(Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+
+                var result = await Context.Instance.Client.SendMessage(loggingChannel, $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.Message}, {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -57,7 +72,9 @@ namespace OrbisBot
                     {
                         //private message, forward it to the private inbox
                             var result = await Context.Instance.Client.SendMessage(loggingChannel, $"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
-                        
+
+                        var replyResult = await Context.Instance.Client.SendPrivateMessage(eventArgs.User, "Your message has been sent to a developer, he/she will get back to you shortly. The command trigger for the bot is '-'. To know more about the bot, try '-about'");
+
                     }
                     else
                     {

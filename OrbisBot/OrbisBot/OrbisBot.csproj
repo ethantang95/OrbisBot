@@ -83,6 +83,8 @@
   <ItemGroup>
     <Compile Include="CommandParser.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Events\EventDispatch.cs" />
+    <Compile Include="Events\EventForm.cs" />
     <Compile Include="ProgramSingletonFactoryProxyBean.cs" />
     <Compile Include="DiscordMethods.cs" />
     <Compile Include="Permission\ChannelPermission.cs" />

@@ -52,9 +52,9 @@ namespace OrbisBot
             }
         }
 
-        public static Dictionary<long, string> GetIDSettingsFromFile(string fileName)
+        public static Dictionary<string, string> GetIDSettingsFromFile(string fileName)
         {
-            var toReturn = new Dictionary<long, string>();
+            var toReturn = new Dictionary<string, string>();
             try
             {
                 using (var reader = new StreamReader(GetProgramSaveLocation(fileName)))
@@ -63,7 +63,7 @@ namespace OrbisBot
                     while (((line = reader.ReadLine()) != null) && (line != String.Empty))
                     {
                         var configLine = line.Split(':');
-                        toReturn.Add(Int64.Parse(configLine[0]), configLine[1]);
+                        toReturn.Add(configLine[0], configLine[1]);
                     }
                 }
                 return toReturn;
