@@ -61,7 +61,7 @@ namespace OrbisBot.TaskHelpers.CustomCommands
                 iterations++;
             }
 
-            if (iterations == 1000)
+            if (iterations >= 1000)
             {
                 throw new FormatException("The command you tried to use cannot construct a valid result. Please check the syntax and ensure there's no circular dependencies between the tokens.");
             }

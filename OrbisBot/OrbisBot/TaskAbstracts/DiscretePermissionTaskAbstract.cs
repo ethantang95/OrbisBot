@@ -19,17 +19,17 @@ namespace OrbisBot.TaskAbstracts
             return userPermission >= _commandPermission.DefaultLevel;
         }
 
-        public override PermissionLevel GetCommandPermissionForChannel(long channelId)
+        public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
             return _commandPermission.DefaultLevel;
         }
 
-        public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
+        public override void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel)
         {
             throw new NotSupportedException("The permission level of this task cannot be changed");
         }
 
-        public override void SetCoolDownForChannel(long channelId, int cooldown)
+        public override void SetCoolDownForChannel(ulong channelId, int cooldown)
         {
             throw new NotSupportedException("The cooldown of this task cannot be changed");
         }

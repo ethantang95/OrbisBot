@@ -17,7 +17,7 @@ namespace OrbisBot.TaskAbstracts
             return new CommandPermission(false, PermissionLevel.Developer, true, 1);
         }
 
-        public override PermissionLevel GetCommandPermissionForChannel(long channelId)
+        public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
             return PermissionLevel.Developer;
         }
@@ -27,7 +27,7 @@ namespace OrbisBot.TaskAbstracts
             return GeneralAdminUtils.IsCommandChannel(eventArgs.Channel.Id) && Context.Instance.ChannelPermission.IsDeveloper(eventArgs.Channel.Id, eventArgs.User.Id);
         }
 
-        public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
+        public override void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel)
         {
             throw new UnauthorizedAccessException("This should not be called for command tasks");
         }
@@ -37,7 +37,7 @@ namespace OrbisBot.TaskAbstracts
             return $"Message crashed with the exception {ex.ToString()}";
         }
 
-        public override void SetCoolDownForChannel(long channelId, int cooldown)
+        public override void SetCoolDownForChannel(ulong channelId, int cooldown)
         {
             throw new UnauthorizedAccessException("This should not be called for command tasks");
         }

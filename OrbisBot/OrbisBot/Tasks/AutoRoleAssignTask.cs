@@ -41,11 +41,11 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            var users = messageSource.Channel.Members.ToList();
+            var users = messageSource.Channel.Users.ToList();
 
             var newRoles = new Dictionary<User, PermissionLevel>();
 
-            users.ForEach(s => newRoles.Add(s, messageSource.Server.Owner.Id == s.Id ? PermissionLevel.Owner : DeterminePermissionLevelFromPermissions(s.GetServerPermissions()))  
+            users.ForEach(s => newRoles.Add(s, messageSource.Server.Owner.Id == s.Id ? PermissionLevel.Owner : DeterminePermissionLevelFromPermissions(s.ServerPermissions))  
             );
 
             newRoles = newRoles.Where(s => s.Value != PermissionLevel.User).ToDictionary(s => s.Key, s => s.Value);

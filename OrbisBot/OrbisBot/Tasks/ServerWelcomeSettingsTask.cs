@@ -85,14 +85,11 @@ namespace OrbisBot.Tasks
                     return $"The current welcome message is: {Context.Instance.ServerSettings.GetWelcomeMessage(messageSource.Server.Id)}";
                 }
             }
-           
-
-            return "Server welcome message is now enabled";
         }
 
         public override string UsageText()
         {
-            return "<enable|disable|message> OPTIONAL(\"welcome message\") \nThe message can use the tokens %s that is available from custom commands";
+            return "<enable|disable|message> OPTIONAL(\"welcome message\") \nThe message can use the tokens %u to reference the person that has joined the server";
         }
     }
 }

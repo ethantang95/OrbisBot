@@ -16,7 +16,7 @@ namespace OrbisBot.Tasks
             //remove the @ sign
             var name = args[1].Substring(1);
 
-            if (!messageSource.Server.Members.Any(s => s.Name == name))
+            if (!messageSource.Server.Users.Any(s => s.Name == name))
             {
                 return "The user you have tried to change permission for does not exist, did you forget the @?";
             }
@@ -40,7 +40,7 @@ namespace OrbisBot.Tasks
             var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
                 messageSource.User.Id);
 
-            var targetUser = messageSource.Server.Members.First(s => s.Name == name);
+            var targetUser = messageSource.Server.Users.First(s => s.Name == name);
             var targetPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
                 targetUser.Id);
 

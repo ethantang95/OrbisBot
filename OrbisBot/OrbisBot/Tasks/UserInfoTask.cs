@@ -14,7 +14,7 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            var mainChannel = messageSource.Server.Channels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
+            var mainChannel = messageSource.Server.TextChannels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
 
             var returnText = new StringBuilder();
 
@@ -22,7 +22,7 @@ namespace OrbisBot.Tasks
 
             if (args.Length == 2)
             {
-                targetUser = UserFinderUtil.FindUser(messageSource.Server.Members, args[1]);
+                targetUser = UserFinderUtil.FindUser(messageSource.Server.Users, args[1]);
                 if (targetUser == null)
                 {
                     return "The user you are trying to find does not exist in this server";
@@ -47,7 +47,7 @@ namespace OrbisBot.Tasks
             returnText.AppendLine($"User Name: {targetUser.Name}")
                 .AppendLine(
                     $"User role for bot: {targetUserRole}")
-                .AppendLine($"User Avatar: {Constants.DISCORD_API_ENDPOINT}{targetUser.AvatarUrl}");
+                .AppendLine($"User Avatar: {targetUser.AvatarUrl}");
 
             return returnText.ToString();
         }

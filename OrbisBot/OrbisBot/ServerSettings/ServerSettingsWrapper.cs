@@ -9,11 +9,11 @@ namespace OrbisBot.ServerSettings
 {
     class ServerSettingsWrapper
     {
-        public Dictionary<long, ServerSetting> ServerSettings { get; private set; }
+        public Dictionary<ulong, ServerSetting> ServerSettings { get; private set; }
 
         public ServerSettingsWrapper()
         {
-            ServerSettings = new Dictionary<long, ServerSetting>();
+            ServerSettings = new Dictionary<ulong, ServerSetting>();
             GetAllRegisteredServers();
         }
 
@@ -22,11 +22,11 @@ namespace OrbisBot.ServerSettings
             var servers = FileHelper.GetContentFromFile(Constants.REGISTERED_SERVER_FILE);
             if (servers != null)
             {
-                servers.ForEach(s => SetServerSettings(Int64.Parse(s)));
+                servers.ForEach(s => SetServerSettings(UInt64.Parse(s)));
             }
         }
 
-        private void SetServerSettings(long serverId)
+        private void SetServerSettings(ulong serverId)
         {
             var serverSetting = FileHelper.GetObjectFromFile<ServerSetting>(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()));
 
@@ -38,7 +38,7 @@ namespace OrbisBot.ServerSettings
             ServerSettings.Add(serverId, serverSetting);
         }
 
-        private void CheckAndCreateServer(long serverId)
+        private void CheckAndCreateServer(ulong serverId)
         {
             if (!ServerSettings.ContainsKey(serverId))
             {
@@ -55,7 +55,7 @@ namespace OrbisBot.ServerSettings
             FileHelper.WriteToFile(ServerSettings.Keys.Select(s => s.ToString()).ToList(), Constants.REGISTERED_SERVER_FILE);
         }
 
-        public void SetWelcomeEnable(long serverId, bool welcomeEnable)
+        public void SetWelcomeEnable(ulong serverId, bool welcomeEnable)
         {
             CheckAndCreateServer(serverId);
             var server = ServerSettings[serverId];
@@ -63,7 +63,7 @@ namespace OrbisBot.ServerSettings
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
-        public void SetWelcomeMessage(long serverId, string welcomeMessage)
+        public void SetWelcomeMessage(ulong serverId, string welcomeMessage)
         {
             CheckAndCreateServer(serverId);
             var server = ServerSettings[serverId];
@@ -71,7 +71,7 @@ namespace OrbisBot.ServerSettings
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
-        public ServerSetting GetServerSettings(long serverId)
+        public ServerSetting GetServerSettings(ulong serverId)
         {
             if (ServerSettings.ContainsKey(serverId))
             {
@@ -83,7 +83,7 @@ namespace OrbisBot.ServerSettings
             }
         }
 
-        public string GetWelcomeMessage(long serverId)
+        public string GetWelcomeMessage(ulong serverId)
         {
             CheckAndCreateServer(serverId);
             return ServerSettings[serverId].WelcomeMsg;
