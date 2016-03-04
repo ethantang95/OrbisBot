@@ -12,7 +12,7 @@ namespace OrbisBot.TaskAbstracts
     //this class exists for tasks that belongs to a registered channel
     abstract class RegisteredChannelTaskAbstract : TaskAbstract
     {
-        public override PermissionLevel GetCommandPermissionForChannel(long channelId)
+        public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
             //basically, restrict anything that is not on the permission list
             if (_commandPermission.ChannelPermission.ContainsKey(channelId))
@@ -22,7 +22,7 @@ namespace OrbisBot.TaskAbstracts
             return PermissionLevel.UsageDenied;
         }
 
-        public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
+        public override void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel)
         {
             if (!_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
@@ -32,7 +32,7 @@ namespace OrbisBot.TaskAbstracts
             SaveSettings(_commandPermission);
         }
 
-        public override void SetCoolDownForChannel(long channelId, int cooldown)
+        public override void SetCoolDownForChannel(ulong channelId, int cooldown)
         {
             if (!_commandPermission.ChannelPermission.ContainsKey(channelId))
             {

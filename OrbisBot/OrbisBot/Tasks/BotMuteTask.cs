@@ -38,7 +38,7 @@ namespace OrbisBot.Tasks
             {
                 if (args.Length == 3) //we short this becuase we know the param is "server"
                 {
-                    var serverIds = messageSource.Server.Channels.Select(s => s.Id).ToList();
+                    var serverIds = messageSource.Server.TextChannels.Select(s => s.Id).ToList();
                     serverIds.ForEach(s => Context.Instance.ChannelPermission.SetChannelMuting(messageSource.Server.Id, s, true));
 
                     return $"{messageSource.Server.Name} is now muted from OrbisBot.";
@@ -51,7 +51,7 @@ namespace OrbisBot.Tasks
             {
                 if (args.Length == 3) //we short this becuase we know the param is "server"
                 {
-                    var serverIds = messageSource.Server.Channels.Select(s => s.Id).ToList();
+                    var serverIds = messageSource.Server.TextChannels.Select(s => s.Id).ToList();
                     serverIds.ForEach(s => Context.Instance.ChannelPermission.SetChannelMuting(messageSource.Server.Id, s, false));
 
                     return $"{messageSource.Server.Name} is now unmuted from OrbisBot.";

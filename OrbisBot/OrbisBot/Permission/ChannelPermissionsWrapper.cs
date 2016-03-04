@@ -9,13 +9,13 @@ namespace OrbisBot.Permission
 {
     class ChannelPermissionsWrapper
     {
-        public Dictionary<long, ChannelPermission> ChannelPermissions { get; private set; }
+        public Dictionary<ulong, ChannelPermission> ChannelPermissions { get; private set; }
 
         //the format I will have the file is one master file that contains the id of all the channels
         //then the channels file will be name by the ID of that
         public ChannelPermissionsWrapper()
         {
-            ChannelPermissions = new Dictionary<long, ChannelPermission>();
+            ChannelPermissions = new Dictionary<ulong, ChannelPermission>();
             GetAllRegisteredChannel();
         }
 
@@ -24,11 +24,11 @@ namespace OrbisBot.Permission
             var channels = FileHelper.GetContentFromFile(Constants.REGISTERED_CHANNEL_FILE);
             if (channels != null)
             {
-                channels.ForEach(s => SetChannelPermission(Int64.Parse(s)));
+                channels.ForEach(s => SetChannelPermission(UInt64.Parse(s)));
             }
         }
 
-        private void SetChannelPermission(long channelId)
+        private void SetChannelPermission(ulong channelId)
         {
             var channelSettings = FileHelper.GetObjectFromFile<ChannelPermission>(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()));
 
@@ -38,14 +38,14 @@ namespace OrbisBot.Permission
             ChannelPermissions.Add(channelId, channelSettings);
         }
 
-        private void CheckAndCreateChannel(long serverId, long channelId)
+        private void CheckAndCreateChannel(ulong serverId, ulong channelId)
         {
             if (!ChannelPermissions.ContainsKey(channelId))
             {
                 //find other channels under the same server with a main channel id
                 var mainChannel = Context.Instance.ChannelPermission.ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId);
 
-                long mainChannelId;
+                ulong mainChannelId;
 
                 if (mainChannel.Value.Value == null) //this is a weird struct...
                 {
@@ -68,7 +68,7 @@ namespace OrbisBot.Permission
                 Constants.REGISTERED_CHANNEL_FILE);
         }
 
-        public void SetMainChannelForServer(long serverId, long channelId)
+        public void SetMainChannelForServer(ulong serverId, ulong channelId)
         {
             var channels = ChannelPermissions.Where(s => s.Value.ServerId == serverId).ToList();
             if (channels.Count == 0)// I am actually not even sure if this can be called
@@ -83,7 +83,7 @@ namespace OrbisBot.Permission
             }
         }
 
-        public long GetMainChannelForServer(long serverId)
+        public ulong GetMainChannelForServer(ulong serverId)
         {
             var channel = ChannelPermissions?.FirstOrDefault(s => s.Value.ServerId == serverId);
             if (channel.Value.Value == null)
@@ -93,7 +93,7 @@ namespace OrbisBot.Permission
             return channel.Value.Value.MainChannelId;
         }
 
-        public void SetUserPermission(long serverId, long channelId, long userId, PermissionLevel level)
+        public void SetUserPermission(ulong serverId, ulong channelId, ulong userId, PermissionLevel level)
         {
             CheckAndCreateChannel(serverId, channelId);
             var channel = ChannelPermissions[channelId];
@@ -109,7 +109,7 @@ namespace OrbisBot.Permission
             FileHelper.WriteObjectToFile(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()), channel);
         }
 
-        public void SetChannelMuting(long serverId, long channelId, bool muted)
+        public void SetChannelMuting(ulong serverId, ulong channelId, bool muted)
         {
             CheckAndCreateChannel(serverId, channelId);
             var channel = ChannelPermissions[channelId];
@@ -117,12 +117,12 @@ namespace OrbisBot.Permission
             FileHelper.WriteObjectToFile(Path.Combine(Constants.CHANNELS_OPTIONS_FOLDER, channelId.ToString()), channel);
         }
 
-        public bool ContainsChannel(long channelId)
+        public bool ContainsChannel(ulong channelId)
         {
             return ChannelPermissions.ContainsKey(channelId);
         }
 
-        public bool IsUserInChannel(long channelId, long userId)
+        public bool IsUserInChannel(ulong channelId, ulong userId)
         {
             if (!ContainsChannel(channelId))
             {
@@ -131,7 +131,7 @@ namespace OrbisBot.Permission
             return ChannelPermissions[channelId].UserPermissions.ContainsKey(userId);
         }
 
-        public PermissionLevel GetUserPermission(long channelId, long userId)
+        public PermissionLevel GetUserPermission(ulong channelId, ulong userId)
         {
             if (!IsUserInChannel(channelId, userId))
             {
@@ -140,7 +140,7 @@ namespace OrbisBot.Permission
             return ChannelPermissions[channelId].UserPermissions[userId];
         }
 
-        public bool IsDeveloper(long channelId, long userId)
+        public bool IsDeveloper(ulong channelId, ulong userId)
         {
             if (!ContainsChannel(channelId))
             {

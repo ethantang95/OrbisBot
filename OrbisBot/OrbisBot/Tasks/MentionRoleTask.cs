@@ -55,7 +55,7 @@ namespace OrbisBot.Tasks
 
             var returnMessage = new StringBuilder();
 
-            role.Members.ToList().ForEach(s => returnMessage.Append(Mention.User(s) + " " ));
+            role.Members.ToList().ForEach(s => returnMessage.Append(s.Mention + " " ));
 
             if (args.Length == 3)
             {

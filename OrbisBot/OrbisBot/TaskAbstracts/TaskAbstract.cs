@@ -11,13 +11,13 @@ namespace OrbisBot.TaskAbstracts
     abstract class TaskAbstract : IComparable<TaskAbstract>
     {
         protected CommandPermission _commandPermission;
-        private Dictionary<long, DateTime> _lastUsed;
+        private Dictionary<ulong, DateTime> _lastUsed;
 
         public TaskAbstract()
         {
             //to ensure non-nullability, we will always start the command permissions to start with default
             _commandPermission = DefaultCommandPermission();
-            _lastUsed = new Dictionary<long, DateTime>();
+            _lastUsed = new Dictionary<ulong, DateTime>();
             _commandPermission.ChannelPermission.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
         }
 
@@ -96,7 +96,7 @@ namespace OrbisBot.TaskAbstracts
             await PublishTask(taskResult, messageSource);
         }
 
-        private int SecondsFromLastUsed(long channelId)
+        private int SecondsFromLastUsed(ulong channelId)
         {
             //first, check the last used
             if (_lastUsed.ContainsKey(channelId))
@@ -110,7 +110,7 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        private void UpdateCoolDown(long channelId)
+        private void UpdateCoolDown(ulong channelId)
         {
             if (_lastUsed.ContainsKey(channelId))
             {
@@ -131,7 +131,7 @@ namespace OrbisBot.TaskAbstracts
             var discordClient = Context.Instance.Client;
             try
             {
-                var result = await discordClient.SendMessage(messageSource.Channel, message);
+                var result = await messageSource.Channel.SendMessage(message);
             }
             catch (Exception ex)
             {
@@ -148,7 +148,7 @@ namespace OrbisBot.TaskAbstracts
             var discordClient = Context.Instance.Client;
             try
             {
-                var result = await discordClient.SendMessage(messageSource.Channel, message);
+                var result = await messageSource.Channel.SendMessage(message);
             }
             catch (Exception ex)
             {
@@ -162,7 +162,7 @@ namespace OrbisBot.TaskAbstracts
 
             try
             {
-                var result = await client.SendPrivateMessage(messageSource.User, message);
+                var result = await messageSource.User.PrivateChannel.SendMessage(message);
             }
             catch (Exception ex)
             {
@@ -170,7 +170,7 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        public int GetCoolDownTime(long channelId)
+        public int GetCoolDownTime(ulong channelId)
         {
             if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
@@ -213,11 +213,11 @@ namespace OrbisBot.TaskAbstracts
 
         public abstract bool AllowTaskExecution(MessageEventArgs eventArgs);
 
-        public abstract PermissionLevel GetCommandPermissionForChannel(long channelId);
+        public abstract PermissionLevel GetCommandPermissionForChannel(ulong channelId);
 
-        public abstract void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel);
+        public abstract void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel);
 
-        public abstract void SetCoolDownForChannel(long channelId, int cooldown);
+        public abstract void SetCoolDownForChannel(ulong channelId, int cooldown);
 
         public int CompareTo(TaskAbstract other)
         {

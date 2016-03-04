@@ -9,9 +9,9 @@ namespace OrbisBot.TaskHelpers.AdminUtils
 {
     class GeneralAdminUtils
     {
-        public static bool IsCommandChannel(long id)
+        public static bool IsCommandChannel(ulong id)
         {
-            return Int64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]) == id;
+            return UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]) == id;
         }
     }
 }

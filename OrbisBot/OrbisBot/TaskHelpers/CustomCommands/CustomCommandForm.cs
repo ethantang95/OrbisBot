@@ -11,12 +11,12 @@ namespace OrbisBot.TaskHelpers.CustomCommands
     {
         public string CommandName { get; set; }
         public int MaxArgs { get; set; }
-        public long Channel { get; set; }
+        public ulong Channel { get; set; }
         public PermissionLevel PermissionLevel { get; set; }
         public List<string> ReturnValues { get; set; }
         public int CoolDown { get; set; }
 
-        public CustomCommandForm(string commandName, int maxArgs, long channel, PermissionLevel permissionLevel, List<string> returnValues, int coolDown)
+        public CustomCommandForm(string commandName, int maxArgs, ulong channel, PermissionLevel permissionLevel, List<string> returnValues, int coolDown)
         {
             CommandName = commandName;
             MaxArgs = maxArgs;

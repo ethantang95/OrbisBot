@@ -28,7 +28,7 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            var userID = Int64.Parse(args[1]);
+            var userID = UInt64.Parse(args[1]);
 
             var result = DiscordMethods.SendPrivateMessage(userID, args[2]);
 

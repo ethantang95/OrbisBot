@@ -55,7 +55,7 @@ namespace OrbisBot.TaskAbstracts
             return true;
         }
 
-        public override PermissionLevel GetCommandPermissionForChannel(long channelId)
+        public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
             if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {
@@ -64,7 +64,7 @@ namespace OrbisBot.TaskAbstracts
             return _commandPermission.DefaultLevel;
         }
 
-        public override void SetCommandPermissionForChannel(long channelId, PermissionLevel newPermissionLevel)
+        public override void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel)
         {
             //first check if such permissoin.
             if (_commandPermission.ChannelPermission.ContainsKey(channelId))
@@ -78,7 +78,7 @@ namespace OrbisBot.TaskAbstracts
             FileHelper.WriteObjectToFile(PermissionFileSource(), _commandPermission);
         }
 
-        public override void SetCoolDownForChannel(long channelId, int seconds)
+        public override void SetCoolDownForChannel(ulong channelId, int seconds)
         {
             if (_commandPermission.ChannelPermission.ContainsKey(channelId))
             {

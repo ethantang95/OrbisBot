@@ -13,7 +13,7 @@ namespace OrbisBot.Tasks
     class CustomTask : RegisteredChannelTaskAbstract
     {
         private string _commandText;
-        private Dictionary<long, CustomCommandForm> _customCommands;
+        private Dictionary<ulong, CustomCommandForm> _customCommands;
         public CustomTask(string commandName, List<CustomCommandForm> commands)
         {
             _commandText = commandName;
@@ -51,13 +51,13 @@ namespace OrbisBot.Tasks
             var mentioned = messageSource.Message.MentionedUsers;
 
             //we will first parse the args into mentioned
-            args = args.Select(s => s[0] == '@' && mentioned.FirstOrDefault(r => r.Name == s.Substring(1)) != null ? Mention.User(mentioned.First(r => r.Name == s.Substring(1))) : s).ToArray();
+            args = args.Select(s => s[0] == '@' && mentioned.FirstOrDefault(r => r.Name == s.Substring(1)) != null ? mentioned.First(r => r.Name == s.Substring(1)).Mention : s).ToArray();
             
             var selectedLine = command.ReturnValues[new Random().Next(0, command.ReturnValues.Count)]; //dammit, why the hell isn't it inclusive
 
             var commandArgs = args.Skip(1).ToArray();
 
-            var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Members);
+            var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Users);
 
             return builder.GenerateCustomMessage();
         }
@@ -76,7 +76,7 @@ namespace OrbisBot.Tasks
             CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
 
-        public void RemoveCommand(long channelId)
+        public void RemoveCommand(ulong channelId)
         {
             _customCommands.Remove(channelId);
             _commandPermission.ChannelPermission.Remove(channelId);

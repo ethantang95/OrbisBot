@@ -118,7 +118,7 @@ namespace OrbisBot
             Client = new DiscordClient();
 
             //Display all log messages in the console
-            Client.LogMessage += DiscordMethods.LogMessage;
+            Client.Log.Message += DiscordMethods.LogMessage;
 
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
@@ -126,7 +126,7 @@ namespace OrbisBot
             //disabled until I manage to set server permissions and settings files
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
-            Client.Run(async () =>
+            Client.ExecuteAndWait(async () =>
             {
                 //Connect to the Discord server using our email and password
                 var username = ConfigurationManager.AppSettings[Constants.DISCORD_USERNAME_KEY];

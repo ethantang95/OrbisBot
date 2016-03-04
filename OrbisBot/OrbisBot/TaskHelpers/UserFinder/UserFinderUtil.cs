@@ -23,7 +23,7 @@ namespace OrbisBot.TaskHelpers.UserFinder
 
             var user = FindUser(users, username);
 
-            return user == null ? username : Mention.User(user);
+            return user == null ? username : user.Mention;
         }
         public static User FindUser(IEnumerable<User> users, string username)
         {

@@ -8,11 +8,11 @@ namespace OrbisBot.ServerSettings
 {
     public class ServerSetting
     {
-        public long ServerId { get; private set; }
+        public ulong ServerId { get; private set; }
         public bool EnableWelcome { get; set; }
         public string WelcomeMsg { get; set; }
 
-        public ServerSetting(long serverID, bool enableWelcome, string welcomeMsg)
+        public ServerSetting(ulong serverID, bool enableWelcome, string welcomeMsg)
         {
             this.ServerId = serverID;
             this.EnableWelcome = enableWelcome;
