@@ -7,6 +7,7 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskHelpers.CustomMessages;
 
 namespace OrbisBot.Tasks
 {
@@ -65,8 +66,8 @@ namespace OrbisBot.Tasks
             foreach (var customReturn in customReturns)
             {
                 var fakeParams = Enumerable.Repeat("1", maxParams).ToArray();
-                var validationBuilder = new CustomCommandBuilder(customReturn, fakeParams, messageSource.User.Name, messageSource.Channel.Users);
-                var result = validationBuilder.GenerateCustomMessage();
+                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, messageSource.User.Name, messageSource.Channel.Users, messageSource.Server.Roles);
+                var result = validationBuilder.GenerateGeneralMessage();
             }
 
 

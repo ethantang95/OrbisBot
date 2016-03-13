@@ -7,6 +7,7 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskHelpers.CustomMessages;
 
 namespace OrbisBot.Tasks
 {
@@ -57,9 +58,9 @@ namespace OrbisBot.Tasks
 
             var commandArgs = args.Skip(1).ToArray();
 
-            var builder = new CustomCommandBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Users);
+            var builder = new CustomMessageBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Users, messageSource.Server.Roles);
 
-            return builder.GenerateCustomMessage();
+            return builder.GenerateGeneralMessage();
         }
 
         public void AddContent(CustomCommandForm toAdd)

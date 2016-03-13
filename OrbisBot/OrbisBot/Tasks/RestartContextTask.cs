@@ -34,11 +34,12 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
+            Context.Instance.SignalRestart();
             Context.Instance.DestorySelf();
             Thread.Sleep(2000);
-            Context.Instance.Initalize();
 
-            return "Context has successfully reinitalized itself";
+            //for some reason, it exceptons out when the result is returned
+            return String.Empty;
         }
 
         public override string UsageText()

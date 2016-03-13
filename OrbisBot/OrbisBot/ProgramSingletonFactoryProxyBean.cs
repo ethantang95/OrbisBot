@@ -22,6 +22,8 @@ namespace OrbisBot
         public ServerSettingsWrapper ServerSettings { get; private set; }
         public Dictionary<string, string> OAuthKeys { get; set; }
 
+        private bool _restartToken;
+
         private static Context _context;
 
         public static Context Instance
@@ -82,7 +84,7 @@ namespace OrbisBot
             AddTask(new InsultTask());
             AddTask(new MentionRoleTask());
 
-            AddTask(new RemovveCustomTask());
+            AddTask(new RemoveCustomTask());
             AddTask(new ServerWelcomeSettingsTask());
             AddTask(new ChangeCoolDownTask());
             AddTask(new ProxyPMTask());
@@ -104,17 +106,20 @@ namespace OrbisBot
             Tasks.Add(toAdd.CommandTrigger(), toAdd);
         }
 
+        public void SignalRestart()
+        {
+            _restartToken = true;
+        }
+
         public void DestorySelf()
         {
             Client.Disconnect();
-            Client = null;
-            Tasks = null;
-            ChannelPermission = null;
-            OAuthKeys = null;
         }
 
         private void SetUpDiscordClient()
         {
+            _restartToken = false;
+
             Client = new DiscordClient();
 
             //Display all log messages in the console
@@ -133,6 +138,16 @@ namespace OrbisBot
                 var password = ConfigurationManager.AppSettings[Constants.DISCORD_PASSWORD_KEY];
                 await Client.Connect(username, password);
             });
+
+            Client = null;
+            Tasks = null;
+            ChannelPermission = null;
+            OAuthKeys = null;
+
+            if (_restartToken)
+            {
+                Initalize();
+            }
         }
     }
 }

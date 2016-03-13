@@ -21,6 +21,7 @@ namespace OrbisBot.Tasks
                 .AppendLine("All my commands are activated with a dash, like \"-About\".")
                 .AppendLine("Type \"-Commands\" to see what I can do")
                 .AppendLine("You should also register yourself to me by typing \"-Register\".")
+                .AppendLine("If you have any questions, please pm me and I'll send your message to the developers")
                 .AppendLine("If you would like to see the source code, it is available at https://github.com/ethantang95/OrbisBot");
 
             return message.ToString();

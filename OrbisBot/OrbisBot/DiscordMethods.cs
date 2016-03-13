@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OrbisBot.Tasks;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.Events;
+using OrbisBot.TaskHelpers.CustomMessages;
 
 namespace OrbisBot
 {
@@ -14,6 +15,21 @@ namespace OrbisBot
         public static void LogMessage(object o, LogMessageEventArgs eventArgs)
         {
             Console.WriteLine($"[{eventArgs.Severity}] {eventArgs.Source}: {eventArgs.Message}");
+        }
+
+        public static User GetUserFromID(ulong id)
+        {
+            return Context.Instance.Client.Servers.FirstOrDefault(s => s.GetUser(id) != null)?.GetUser(id);
+        }
+
+        public static Channel GetChannelFromID(ulong id)
+        {
+            return Context.Instance.Client.GetChannel(id);
+        }
+
+        public static Server GetServerFromID(ulong id)
+        {
+            return Context.Instance.Client.Servers.FirstOrDefault(s => s.Id == id);
         }
 
         public static async void OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
@@ -117,9 +133,9 @@ namespace OrbisBot
             {
                 try
                 {
-                    var commandBuilder = new CustomCommandBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User.Name, eventArgs.Server.Users);
+                    var commandBuilder = new CustomMessageBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User.Name, eventArgs.Server.Users, eventArgs.Server.Roles);
 
-                    var result = channel.SendMessage(commandBuilder.GenerateCustomMessage());
+                    var result = channel.SendMessage(commandBuilder.GenerateGeneralMessage());
                 }
                 catch (Exception e)
                 {

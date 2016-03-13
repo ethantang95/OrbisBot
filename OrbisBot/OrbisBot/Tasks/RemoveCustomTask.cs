@@ -9,7 +9,7 @@ using OrbisBot.TaskAbstracts;
 
 namespace OrbisBot.Tasks
 {
-    class RemovveCustomTask : FilePermissionTaskAbstract
+    class RemoveCustomTask : FilePermissionTaskAbstract
     {
         public override string AboutText()
         {

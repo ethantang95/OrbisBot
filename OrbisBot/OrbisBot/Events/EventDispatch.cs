@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Discord;
+using OrbisBot.TaskHelpers.CustomMessages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,20 +55,74 @@ namespace OrbisBot.Events
             return true;
         }
 
+        private async Task PublishTask(string message, Channel channel)
+        {
+            if (message == "" || message == String.Empty)
+            {
+                return;
+            }
+
+            var result = await channel.SendMessage(message);
+            
+        }
+
         private void EventDispatcher(EventForm eventForm)
         {
             switch (eventForm.EventType)
             {
                 case EventType.ChannelEvent: DispatchChannelEvent(eventForm);
                     break;
+                case EventType.ServerEvent: DispatchServerEvent(eventForm);
+                    break;
+                case EventType.UserEvent: DispatchUserEvent(eventForm);
+                    break;
                 default: throw new NotImplementedException($"An event type of {eventForm.EventType} has been tried to be executed");
 
             }
         }
 
-        private void DispatchChannelEvent(EventForm eventForm)
+        private async void DispatchChannelEvent(EventForm eventForm)
         {
 
+            var channel = DiscordMethods.GetChannelFromID(eventForm.ChannelId);
+
+            var user = DiscordMethods.GetUserFromID(eventForm.UserId);
+
+            var server = DiscordMethods.GetServerFromID(eventForm.ServerId);
+
+            var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
+
+            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user.Name, mentionUsers, server.Roles);
+
+            var message = calloutList.GenerateCalloutMessage();
+
+            await PublishTask(message, channel);
+
+        }
+
+        private async void DispatchServerEvent(EventForm eventForm)
+        {
+            var user = DiscordMethods.GetUserFromID(eventForm.UserId);
+
+            var server = DiscordMethods.GetServerFromID(eventForm.ServerId);
+
+            var mainChannel = server.TextChannels.First(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(server.Id));
+
+            var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
+
+            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user.Name, mentionUsers, server.Roles);
+
+            var message = calloutList.GenerateCalloutMessage();
+
+            await PublishTask(message, mainChannel);
+        }
+
+        private async void DispatchUserEvent(EventForm eventForm)
+        {
+            //this will just pm the user
+            var user = DiscordMethods.GetUserFromID(eventForm.UserId);
+
+            await user.PrivateChannel.SendMessage($"Reminder: {eventForm.Message}");
         }
     }
 }

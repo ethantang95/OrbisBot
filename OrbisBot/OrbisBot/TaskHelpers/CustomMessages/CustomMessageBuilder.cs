@@ -6,24 +6,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrbisBot.TaskHelpers.CustomCommands
+namespace OrbisBot.TaskHelpers.CustomMessages
 {
-    class CustomCommandBuilder
+    class CustomMessageBuilder
     {
         private string _baseCommand;
         private string[] _args;
         private string _userName;
         private IEnumerable<User> _users;
+        private IEnumerable<Role> _roles;
 
-        public CustomCommandBuilder(string baseCommand, string[] args, string userName, IEnumerable<User> users)
+        public CustomMessageBuilder(string baseCommand, string[] args, string userName, IEnumerable<User> users, IEnumerable<Role> roles)
         {
             _baseCommand = baseCommand;
             _args = args;
             _userName = userName;
             _users = users;
+            _roles = roles;
         }
 
-        public void ReplaceIndependents()
+        private void UsersTokenInjection()
+        {
+            //%l will be where the list will be injected
+            var tokenReplacement = new StringBuilder();
+
+            var userCount = _users.ToList().Count;
+            for (int i = 1; i <= userCount; i++)
+            {
+                tokenReplacement.Append($"%{i}u");
+            }
+
+            _baseCommand = _baseCommand.Replace("%l", tokenReplacement.ToString());
+
+            var everyoneRole = _roles.First(s => s.IsEveryone);
+
+            _baseCommand = _baseCommand.Replace("%ev", everyoneRole.Mention);
+
+            _args = _users.Select(s => s.Id.ToString()).ToArray();
+        }
+
+        private void ReplaceIndependents()
         {
             //we know that %1...N and %u are constants to be replaced
             _baseCommand = _baseCommand.Replace("%u", _userName);
@@ -38,11 +60,11 @@ namespace OrbisBot.TaskHelpers.CustomCommands
             }
         }
 
-        public void EvaluateTokens()
+        private void EvaluateTokens()
         {
             int iterations = 0; //we are setting it to a max of 1000 iterations, if it hits that
             //it means there's a circular dependency problem... which sucks
-            while (CustomCommandUtils.ContainsTokens(_baseCommand) && iterations < 1000)
+            while (CustomMessageUtils.ContainsTokens(_baseCommand) && iterations < 1000)
             {
                 for (int i = 0; i < _baseCommand.Length - 1; i++) //bit hacky, but really to avoid IndexOutOfBounds as tokens are at least 2 chars in length
                 {
@@ -51,9 +73,9 @@ namespace OrbisBot.TaskHelpers.CustomCommands
                     {
                         if (_baseCommand[i + 1] == 'r') //token represents random
                         {
-                            var innerContent = CustomCommandUtils.ExtractInnerContent(_baseCommand, i);
-                            var generatedValue = CustomCommandUtils.GetRandomValueForToken(innerContent);
-                            _baseCommand = CustomCommandUtils.ReplaceTokenWithValue(_baseCommand, i, generatedValue);
+                            var innerContent = CustomMessageUtils.ExtractInnerContent(_baseCommand, i);
+                            var generatedValue = CustomMessageUtils.GetRandomValueForToken(innerContent);
+                            _baseCommand = CustomMessageUtils.ReplaceTokenWithValue(_baseCommand, i, generatedValue);
                             break;
                         }
                     }
@@ -67,10 +89,17 @@ namespace OrbisBot.TaskHelpers.CustomCommands
             }
         }
 
-        public string GenerateCustomMessage()
+        public string GenerateGeneralMessage()
         {
             ReplaceIndependents();
             EvaluateTokens();
+            return _baseCommand;
+        }
+
+        public string GenerateCalloutMessage()
+        {
+            UsersTokenInjection();
+            GenerateGeneralMessage();
             return _baseCommand;
         }
     }

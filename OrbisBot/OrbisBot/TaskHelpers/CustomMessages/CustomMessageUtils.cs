@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrbisBot.TaskHelpers.CustomCommands
+namespace OrbisBot.TaskHelpers.CustomMessages
 {
-    class CustomCommandUtils
+    class CustomMessageUtils
     {
         //position being the location where we will find the token indicated by %
         public static string ExtractInnerContent(string toExtract, int position)
