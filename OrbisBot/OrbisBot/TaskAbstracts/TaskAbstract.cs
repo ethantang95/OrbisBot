@@ -12,12 +12,14 @@ namespace OrbisBot.TaskAbstracts
     {
         protected CommandPermission _commandPermission;
         private Dictionary<ulong, DateTime> _lastUsed;
+        private Dictionary<ulong, Dictionary<string, object>> _varDictionary;
 
         public TaskAbstract()
         {
             //to ensure non-nullability, we will always start the command permissions to start with default
             _commandPermission = DefaultCommandPermission();
             _lastUsed = new Dictionary<ulong, DateTime>();
+            _varDictionary = new Dictionary<ulong, Dictionary<string, object>>();
             _commandPermission.ChannelPermission.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
         }
 
@@ -139,35 +141,69 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        protected async void PublishIntermeditate(string message, MessageEventArgs messageSource)
+        protected async Task<Message> PublishIntermeditate(string message, MessageEventArgs messageSource)
         {
             if (message == "" || message == String.Empty)
             {
-                return;
+                return null;
             }
             var discordClient = Context.Instance.Client;
             try
             {
-                var result = await messageSource.Channel.SendMessage(message);
+                return await messageSource.Channel.SendMessage(message);
             }
             catch (Exception ex)
             {
                 DiscordMethods.OnMessageFailure(ex, messageSource);
+                return null;
             }
         }
 
-        protected async void PublishPrivateMessage(string message, MessageEventArgs messageSource)
+        protected async Task<Message> PublishPrivateMessage(string message, MessageEventArgs messageSource)
         {
             var client = Context.Instance.Client;
 
             try
             {
-                var result = await messageSource.User.PrivateChannel.SendMessage(message);
+                return await messageSource.User.PrivateChannel.SendMessage(message);
             }
             catch (Exception ex)
             {
-                DiscordMethods.OnMessageFailure(ex, messageSource);
+                DiscordMethods.OnPrivateMessageFailure(ex, messageSource.User, message);
+                return null;
             }
+        }
+
+        protected void SetVariable(ulong channelId, string name, object obj)
+        {
+            if (!_varDictionary.ContainsKey(channelId))
+            {
+                _varDictionary.Add(channelId, new Dictionary<string, object>());
+            }
+
+            if (!_varDictionary[channelId].ContainsKey(name))
+            {
+                _varDictionary[channelId].Add(name, obj);
+            }
+            else
+            {
+                _varDictionary[channelId][name] = obj;
+            }
+        }
+
+        protected object GetVariable(ulong channelId, string name)
+        {
+            if (!_varDictionary.ContainsKey(channelId))
+            {
+                throw new KeyNotFoundException("The variable dictionary does not exist for this channel yet");
+            }
+
+            if (!_varDictionary[channelId].ContainsKey(name))
+            {
+                throw new KeyNotFoundException($"The key {name} is not found in the variable dictionary");
+            }
+
+            return _varDictionary[channelId][name];
         }
 
         public int GetCoolDownTime(ulong channelId)

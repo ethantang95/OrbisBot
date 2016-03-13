@@ -32,13 +32,28 @@ namespace OrbisBot
             return Context.Instance.Client.Servers.FirstOrDefault(s => s.Id == id);
         }
 
+        public static Channel GetCommandChannel()
+        {
+            return GetChannelFromID(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+        }
+
         public static async void OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
         {
             try
+            { 
+                var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+            }
+            catch (Exception e)
             {
-                var loggingChannel = Context.Instance.Client.GetChannel(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+                Console.WriteLine($"An error has occurred when trying to log message. {e.ToString()}");
+            }
+        }
 
-                var result = await loggingChannel.SendMessage($"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+        public static async void OnPrivateMessageFailure(Exception ex, User user, string message)
+        {
+            try
+            {
+                var result = await GetCommandChannel().SendMessage($"An exception has occurred in attempting to send private message to {user.Id} - {user.Name} with the message: {message}. \n The exception details are: {ex.Message}, {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -50,9 +65,7 @@ namespace OrbisBot
         {
             try
             {
-                var loggingChannel = Context.Instance.Client.GetChannel(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
-                var result = await loggingChannel.SendMessage( $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+                var result = await GetCommandChannel().SendMessage( $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.Message}, {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -70,16 +83,20 @@ namespace OrbisBot
             {
                 return false;
             }
-
-            var result = user.PrivateChannel.SendMessage(message);
+            try
+            {
+                var result = user.PrivateChannel.SendMessage(message);
+            }
+            catch (Exception e)
+            {
+                OnPrivateMessageFailure(e, user, message);
+            }
 
             return true;
         }
 
         public static async void OnMessageReceived(object o, MessageEventArgs eventArgs)
         {
-            var loggingChannel = Context.Instance.Client.GetChannel(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
             if (!eventArgs.Message.IsAuthor)
             {
                 try
@@ -87,7 +104,7 @@ namespace OrbisBot
                     if (eventArgs.Channel.IsPrivate)
                     {
                         //private message, forward it to the private inbox
-                            var result = await loggingChannel.SendMessage($"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
+                            var result = await GetCommandChannel().SendMessage($"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
 
                         var replyResult = await eventArgs.User.PrivateChannel.SendMessage("Your message has been sent to a developer, he/she will get back to you shortly. The command trigger for the bot is '-'. To know more about the bot, try '-about'");
 
@@ -141,13 +158,11 @@ namespace OrbisBot
                 {
                     try
                     {
-                        var loggingChannel = Context.Instance.Client.GetChannel(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
-
-                        var result = await loggingChannel.SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.WelcomeMsg}. \n The exception details are: {e.ToString()}");
+                        var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.WelcomeMsg}. \n The exception details are: {e.ToString()}");
                     }
                     catch (Exception ex)
                     {
-                        return;
+                        Console.WriteLine($"An error has occurred when trying to log message. {ex.ToString()}");
                     }
                 }
             }
