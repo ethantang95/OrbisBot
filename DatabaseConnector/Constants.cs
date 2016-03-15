@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace DatabaseConnector
 {
-    class Constants
+    static class Constants
     {
-
+        public const string DB_NAME = "OrbisBot.sqlite";
+        public const string ORBIS_BOT_NAME = "OrbisBot";
     }
 }

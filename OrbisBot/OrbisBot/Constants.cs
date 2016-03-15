@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot
 {
-    class Constants
+    static class Constants
     {
         public const string ORBIS_BOT_NAME = "OrbisBot";
         public const string COMMAND_DEFAULT = "Default";

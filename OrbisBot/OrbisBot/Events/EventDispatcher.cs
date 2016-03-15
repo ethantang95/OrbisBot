@@ -20,14 +20,12 @@ namespace OrbisBot.Events
     //an event object is not persistent as compared to tasks, it will get discarded after the
     //event has been executed
 
-    class EventDispatch
-    {
-        public EventDispatch()
-        { }
+    static class EventDispatcher
+    { 
 
         //maybe change this to a boolean in the future where an event failed to run, this way
         //it can saved and dispatched later
-        public void RunEvent(EventForm eventForm) 
+        public static void Dispatch(EventForm eventForm) 
         {
             if (!ProceedWithCommand(eventForm))
             {
@@ -35,7 +33,7 @@ namespace OrbisBot.Events
             }
             try
             {
-                EventDispatcher(eventForm);
+                EventDispatch(eventForm);
             }
             catch (Exception e)
             {
@@ -43,7 +41,7 @@ namespace OrbisBot.Events
             }
         }
 
-        private bool ProceedWithCommand(EventForm eventForm)
+        private static bool ProceedWithCommand(EventForm eventForm)
         {
             //we will take the channel Id and see that if it is muted or not
             //future permissions will take place also
@@ -55,7 +53,7 @@ namespace OrbisBot.Events
             return true;
         }
 
-        private async Task PublishTask(string message, Channel channel)
+        private static async Task PublishTask(string message, Channel channel)
         {
             if (message == "" || message == String.Empty)
             {
@@ -63,10 +61,9 @@ namespace OrbisBot.Events
             }
 
             var result = await channel.SendMessage(message);
-            
         }
 
-        private void EventDispatcher(EventForm eventForm)
+        private static void EventDispatch(EventForm eventForm)
         {
             switch (eventForm.EventType)
             {
@@ -81,9 +78,8 @@ namespace OrbisBot.Events
             }
         }
 
-        private async void DispatchChannelEvent(EventForm eventForm)
+        private static async void DispatchChannelEvent(EventForm eventForm)
         {
-
             var channel = DiscordMethods.GetChannelFromID(eventForm.ChannelId);
 
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
@@ -97,10 +93,9 @@ namespace OrbisBot.Events
             var message = calloutList.GenerateCalloutMessage();
 
             await PublishTask(message, channel);
-
         }
 
-        private async void DispatchServerEvent(EventForm eventForm)
+        private static async void DispatchServerEvent(EventForm eventForm)
         {
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
 
@@ -117,7 +112,7 @@ namespace OrbisBot.Events
             await PublishTask(message, mainChannel);
         }
 
-        private async void DispatchUserEvent(EventForm eventForm)
+        private static async void DispatchUserEvent(EventForm eventForm)
         {
             //this will just pm the user
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);

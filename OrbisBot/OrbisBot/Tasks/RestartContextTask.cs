@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace OrbisBot.Tasks
 {
-    class RestartContextTask : DiscretePermissionTaskAbstract
+    class RestartContextTask : CommandChannelTaskAbstract
     {
         public override string AboutText()
         {
@@ -27,14 +27,14 @@ namespace OrbisBot.Tasks
             return "bot-restart";
         }
 
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Developer, true, 1);
-        }
-
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             Context.Instance.SignalRestart();
+
+            DiscordMethods.SetGame("Bot Restarting...");
+
+            Thread.Sleep(5000);
+
             Context.Instance.DestorySelf();
             Thread.Sleep(2000);
 
@@ -44,7 +44,7 @@ namespace OrbisBot.Tasks
 
         public override string UsageText()
         {
-            return "You should not have access to this command";
+            return Constants.NO_PARAMS_USAGE;
         }
     }
 }

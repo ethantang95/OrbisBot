@@ -128,7 +128,6 @@ namespace OrbisBot
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
             Client.UserJoined += DiscordMethods.OnUserJoinsServer;
-            //disabled until I manage to set server permissions and settings files
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             Client.ExecuteAndWait(async () =>
@@ -137,6 +136,7 @@ namespace OrbisBot
                 var username = ConfigurationManager.AppSettings[Constants.DISCORD_USERNAME_KEY];
                 var password = ConfigurationManager.AppSettings[Constants.DISCORD_PASSWORD_KEY];
                 await Client.Connect(username, password);
+                Client.SetGame($"AWS EC2 - {Constants.APP_VERSION}");
             });
 
             Client = null;

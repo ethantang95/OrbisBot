@@ -7,7 +7,7 @@ using Discord;
 
 namespace OrbisBot.TaskHelpers.UserFinder
 {
-    class UserFinderUtil
+    static class UserFinderUtil
     {
         public static string FindUserMention(IEnumerable<User> users, string username)
         {

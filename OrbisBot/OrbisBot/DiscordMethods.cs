@@ -10,7 +10,7 @@ using OrbisBot.TaskHelpers.CustomMessages;
 
 namespace OrbisBot
 {
-    class DiscordMethods
+    static class DiscordMethods
     {
         public static void LogMessage(object o, LogMessageEventArgs eventArgs)
         {
@@ -35,6 +35,33 @@ namespace OrbisBot
         public static Channel GetCommandChannel()
         {
             return GetChannelFromID(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+        }
+
+        public static void SetGame(string game)
+        {
+            Context.Instance.Client.SetGame(game);
+        }
+
+        public static bool SendPrivateMessage(ulong userId, string message)
+        {
+            var client = Context.Instance.Client;
+
+            var user = client.Servers.First(s => s.GetUser(userId) != null).GetUser(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+            try
+            {
+                var result = user.PrivateChannel.SendMessage(message);
+            }
+            catch (Exception e)
+            {
+                OnPrivateMessageFailure(e, user, message);
+            }
+
+            return true;
         }
 
         public static async void OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
@@ -71,28 +98,6 @@ namespace OrbisBot
             {
                 Console.WriteLine($"An error has occurred when trying to log message. {e.ToString()}");
             }
-        }
-
-        public static bool SendPrivateMessage(ulong userId, string message)
-        {
-            var client = Context.Instance.Client;
-
-            var user = client.Servers.First(s => s.GetUser(userId) != null).GetUser(userId);
-
-            if (user == null)
-            {
-                return false;
-            }
-            try
-            {
-                var result = user.PrivateChannel.SendMessage(message);
-            }
-            catch (Exception e)
-            {
-                OnPrivateMessageFailure(e, user, message);
-            }
-
-            return true;
         }
 
         public static async void OnMessageReceived(object o, MessageEventArgs eventArgs)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.TaskHelpers.CustomCommands
 {
-    class CustomCommandFileHandler
+    static class CustomCommandFileHandler
     {
         //for custom commands, this will save the commands into a specific custom commands folder
         //this class will handle the values from the file and create the appropriate Custom Commands class

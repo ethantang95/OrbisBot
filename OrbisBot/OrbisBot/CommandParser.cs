@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot
 {
-    class CommandParser
+    static class CommandParser
     {
 
         public static string[] ParseCommand(string command)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.TaskHelpers.CustomMessages
 {
-    class CustomMessageUtils
+    static class CustomMessageUtils
     {
         //position being the location where we will find the token indicated by %
         public static string ExtractInnerContent(string toExtract, int position)
