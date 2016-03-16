@@ -73,6 +73,7 @@
     <Compile Include="DAO\DAOAbstract.cs" />
     <Compile Include="DAO\EventDAO.cs" />
     <Compile Include="DAO\IDAO.cs" />
+    <Compile Include="DBAccessor.cs" />
     <Compile Include="DBConnector.cs" />
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Program.cs" />

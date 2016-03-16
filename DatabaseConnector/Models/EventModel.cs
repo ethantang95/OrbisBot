@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseConnector.Models
 {
-    class EventModel
+    public class EventModel
     {
         public long ID { get; set; }
         public long UserID { get; set; }
@@ -14,9 +14,10 @@ namespace DatabaseConnector.Models
         public long ServerID { get; set; }
         public string Message { get; set; }
         public string TargetUsersJSON { get; set; }
+        public string TargetRole { get; set; }
         public bool TargetEveryone { get; set; }
-        public DateTime NextDispatch { get; set; }
-        public DateTime DispatchDelay { get; set; }
+        public long NextDispatch { get; set; }
+        public long DispatchDelay { get; set; }
         public string EventType { get; set; }
     }
 }

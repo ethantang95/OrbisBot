@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OrbisBot.ServerSettings;
+using DatabaseConnector;
 
 namespace OrbisBot
 {
@@ -20,7 +21,8 @@ namespace OrbisBot
         public Dictionary<string, TaskAbstract> Tasks { get; private set; }
         public ChannelPermissionsWrapper ChannelPermission { get; private set; }
         public ServerSettingsWrapper ServerSettings { get; private set; }
-        public Dictionary<string, string> OAuthKeys { get; set; }
+        public Dictionary<string, string> OAuthKeys { get; private set; }
+        public DBAccessor DB { get; private set; }
 
         private bool _restartToken;
 
@@ -53,6 +55,7 @@ namespace OrbisBot
             OAuthKeys = new Dictionary<string, string>();
             ChannelPermission = new ChannelPermissionsWrapper();
             ServerSettings = new ServerSettingsWrapper();
+            DB = DBAccessor.GetAccessor();
             PopulateTaskDictionary();
             PopulateCustomTasks();
             SetUpDiscordClient();

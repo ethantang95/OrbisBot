@@ -18,6 +18,7 @@ namespace DatabaseConnector
         public DBConnector(string dbName)
         {
             _database = dbName;
+            Initialize();
         }
 
         //Initialize values
@@ -51,7 +52,7 @@ namespace DatabaseConnector
         }
 
         public delegate List<T> ReaderParser<T>(SQLiteDataReader reader);
-        public List<T> ExecuteAndGetReader<T>(SQLiteCommand command, ReaderParser<T> parser) 
+        public List<T> ExecuteReader<T>(SQLiteCommand command, ReaderParser<T> parser) 
         {
             command.Connection = _connection;
             _connection.Open(); ;

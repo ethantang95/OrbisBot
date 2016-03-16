@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace DatabaseConnector.DAO
 {
-    interface IDAO<T>
+    public interface IDAO<T>
     {
-        
-        void CreateTable();
         bool InsertObject(T obj);
-        bool DeleteObject(T obj);
+        bool DeleteObject(long id);
         bool UpdateObject(T obj);
         T GetObjectById(long id);
 
