@@ -22,6 +22,7 @@ namespace DatabaseConnector.DAO
         {
             var sql = new StringBuilder($"CREATE TABLE IF NOT EXIST {TableName()} (")
                 .Append($"{Constants.ID_COLUMN} INT PRIMARY KEY,AUTOINCREMENT,")
+                .Append($"{Constants.EVENT_NAME} VARCHAR(255),")
                 .Append($"{Constants.USERID_COLUMN} BIGINT,")
                 .Append($"{Constants.CHANNELID_COLUMN} BIGINT,")
                 .Append($"{Constants.SERVERID_COLUMN} BIGINT,")
@@ -59,18 +60,21 @@ namespace DatabaseConnector.DAO
         public override bool InsertObject(EventModel obj)
         {
             var sql = new StringBuilder($"INSERT INTO {TableName()} (")
+                .Append($"{Constants.EVENT_NAME},")
                 .Append($"{Constants.USERID_COLUMN}, {Constants.CHANNELID_COLUMN},")
                 .Append($"{Constants.SERVERID_COLUMN}, {Constants.MESSAGE_COLUMN},")
                 .Append($"{Constants.TARGET_USER_JSON_COLUMN}, {Constants.TARGET_EVERYONE_COLUMN},")
                 .Append($"{Constants.NEXT_DISPATCH_COLUMN}, {Constants.DISPATCH_DELAY_COLUMN},")
                 .Append($"{Constants.EVENT_TYPE_COlUMN})")
                 .Append($"VALUES (")
+                .Append($"@{Constants.EVENT_NAME}")
                 .Append($"@{Constants.SERVERID_COLUMN}, @{Constants.MESSAGE_COLUMN},")
                 .Append($"@{Constants.TARGET_USER_JSON_COLUMN}, @{Constants.TARGET_EVERYONE_COLUMN},")
                 .Append($"@{Constants.NEXT_DISPATCH_COLUMN}, @{Constants.DISPATCH_DELAY_COLUMN},")
                 .Append($"@{Constants.EVENT_TYPE_COlUMN});");
 
             var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
+            sqlParams.Add(Constants.EVENT_NAME, new Tuple<DbType, object>(DbType.String, obj.Name));
             sqlParams.Add(Constants.USERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.UserID));
             sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ChannelID));
             sqlParams.Add(Constants.SERVERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ServerID));
@@ -100,6 +104,11 @@ namespace DatabaseConnector.DAO
 
             var sql = new StringBuilder($"UPDATE {TableName()} SET ");
             var sqlParams = CreateIDParam(obj.ID);
+            if (obj.Name != null && obj.Name != string.Empty)
+            {
+                sql.Append($"{Constants.EVENT_NAME} = @{Constants.EVENT_NAME},");
+                sqlParams.Add(Constants.EVENT_NAME, new Tuple<DbType, object>(DbType.String, obj.Name));
+            }
             if (obj.UserID != 0)
             {
                 sql.Append($"{Constants.USERID_COLUMN} = @{Constants.USERID_COLUMN},");
@@ -115,15 +124,20 @@ namespace DatabaseConnector.DAO
                 sql.Append($"{Constants.SERVERID_COLUMN} = @{Constants.SERVERID_COLUMN},");
                 sqlParams.Add(Constants.SERVERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ServerID));
             }
-            if (obj.Message == null || obj.Message == string.Empty)
+            if (obj.Message != null && obj.Message != string.Empty)
             {
                 sql.Append($"{Constants.MESSAGE_COLUMN} = @{Constants.MESSAGE_COLUMN},");
                 sqlParams.Add(Constants.MESSAGE_COLUMN, new Tuple<DbType, object>(DbType.String, obj.Message));
             }
-            if (obj.TargetUsersJSON == null || obj.TargetUsersJSON == string.Empty)
+            if (obj.TargetUsersJSON != null && obj.TargetUsersJSON != string.Empty)
             {
                 sql.Append($"{Constants.TARGET_USER_JSON_COLUMN} = @{Constants.TARGET_USER_JSON_COLUMN},");
                 sqlParams.Add(Constants.TARGET_USER_JSON_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetUsersJSON));
+            }
+            if (obj.TargetEveryone != null)
+            {
+                sql.Append($"{Constants.TARGET_EVERYONE_COLUMN} = @{Constants.TARGET_EVERYONE_COLUMN},");
+                sqlParams.Add(Constants.TARGET_EVERYONE_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetEveryone));
             }
             if (obj.NextDispatch != 0)
             {
@@ -135,18 +149,22 @@ namespace DatabaseConnector.DAO
                 sql.Append($"{Constants.DISPATCH_DELAY_COLUMN} = @{Constants.DISPATCH_DELAY_COLUMN},");
                 sqlParams.Add(Constants.DISPATCH_DELAY_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.DispatchDelay));
             }
-            if (obj.EventType == null || obj.EventType == string.Empty)
+            if (obj.EventType != null && obj.EventType != string.Empty)
             {
                 sql.Append($"{Constants.EVENT_TYPE_COlUMN} = @{Constants.EVENT_TYPE_COlUMN},");
                 sqlParams.Add(Constants.EVENT_TYPE_COlUMN, new Tuple<DbType, object>(DbType.String, obj.EventType));
             }
 
-            //since target everyone is a basic boolean... all value of it are considered
-            //therefore, we have no invalid values, and it will be updated every time
-            sql.Append($"{Constants.USERID_COLUMN} = @{Constants.USERID_COLUMN} ");
-            sqlParams.Add(Constants.TARGET_EVERYONE_COLUMN, new Tuple<DbType, object>(DbType.Boolean, obj.TargetEveryone));
+            //return if there's nothing to be set
+            if (sqlParams.Count == 0)
+            {
+                return false;
+            }
 
-            sql.Append($"WHERE {Constants.ID_COLUMN} = @{Constants.ID_COLUMN}");
+            //removing trailing comma
+            sql = new StringBuilder(sql.ToString().Remove(sql.ToString().Length-1));
+
+            sql.Append($" WHERE {Constants.ID_COLUMN} = @{Constants.ID_COLUMN};");
 
             var command = new SQLiteCommand(sql.ToString());
             command = CommandBuilder.AddParameters(sqlParams, command);
@@ -157,10 +175,73 @@ namespace DatabaseConnector.DAO
             
         }
 
-        public bool UpdateNextDispath(long id)
+        public bool UpdateNextDispath(long id, long delay)
         {
-            var sql = $"UPDATE {TableName()} SET {Constants.NEXT_DISPATCH_COLUMN}";
-            throw new NotImplementedException();
+            var delay_name = "Delay";
+            var sql = $"UPDATE {TableName()} SET {Constants.NEXT_DISPATCH_COLUMN} = {Constants.NEXT_DISPATCH_COLUMN} + @{delay_name} WHERE {Constants.ID_COLUMN} == @{Constants.ID_COLUMN};";
+
+            var sqlParams = CreateIDParam(id);
+            sqlParams.Add(delay_name, new Tuple<DbType, object>(DbType.Int64, delay));
+
+            var command = new SQLiteCommand(sql);
+            command = CommandBuilder.AddParameters(sqlParams, command);
+
+            var result = _connection.ExecuteNonQuery(command);
+
+            return result > 0;
+        }
+
+        public List<EventModel> FindObjectByName(string searchStr, long channelID)
+        {
+            var search_name = "Search";
+            var sql = $"SELECT * FROM {Constants.EVENT_TABLE_NAME} WHERE {Constants.EVENT_NAME} LIKE @{search_name} AND {Constants.CHANNELID_COLUMN} == @{Constants.CHANNELID_COLUMN};";
+
+            var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
+            sqlParams.Add(search_name, new Tuple<DbType, object>(DbType.String, $"%{searchStr}%"));
+            sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.Int64, channelID));
+
+            var command = new SQLiteCommand(sql);
+            command = CommandBuilder.AddParameters(sqlParams, command);
+
+            var result = _connection.ExecuteReader(command, ReaderParser);
+
+            return result;
+        }
+
+        public bool UpdateEventMessage(string message, long id)
+        {
+            var model = new EventModel();
+            model.ID = id;
+            model.Message = message;
+            model.TargetEveryone = null;
+            return UpdateObject(model);
+        }
+
+        public bool UpdateTarget(string targetUserJSON, bool targetEveryone, long id)
+        {
+            var model = new EventModel();
+            model.ID = id;
+            model.TargetUsersJSON = targetUserJSON;
+            model.TargetEveryone = targetEveryone;
+            return UpdateObject(model);
+        }
+
+        public bool UpdateNextDispatch(long nextDispatch, long id)
+        {
+            var model = new EventModel();
+            model.ID = id;
+            model.NextDispatch = nextDispatch;
+            model.TargetEveryone = null;
+            return UpdateObject(model);
+        }
+
+        public bool UpdateDispatchDelay(long dispatchDelay, long id)
+        {
+            var model = new EventModel();
+            model.ID = id;
+            model.DispatchDelay = dispatchDelay;
+            model.TargetEveryone = null;
+            return UpdateObject(model);
         }
 
         private Dictionary<string, Tuple<DbType, object>> CreateIDParam(long id)
@@ -178,6 +259,7 @@ namespace DatabaseConnector.DAO
             {
                 var model = new EventModel();
                 model.ID = (long)reader[Constants.ID_COLUMN];
+                model.Name = (string)reader[Constants.USERID_COLUMN];
                 model.UserID = (long)reader[Constants.USERID_COLUMN];
                 model.ChannelID = (long)reader[Constants.CHANNELID_COLUMN];
                 model.ServerID = (long)reader[Constants.SERVERID_COLUMN];

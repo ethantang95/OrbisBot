@@ -15,6 +15,7 @@ namespace DatabaseConnector
 
         //Events table
         public const string ID_COLUMN = "ID";
+        public const string EVENT_NAME = "Name";
         public const string USERID_COLUMN = "UserID";
         public const string CHANNELID_COLUMN = "ChannelID";
         public const string SERVERID_COLUMN = "ServerID";
