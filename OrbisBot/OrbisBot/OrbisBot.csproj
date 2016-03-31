@@ -11,6 +11,7 @@
     <AssemblyName>OrbisBot</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -99,6 +100,7 @@
   <ItemGroup>
     <Compile Include="CommandParser.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="EnumParser.cs" />
     <Compile Include="Events\EventDispatcher.cs" />
     <Compile Include="Events\EventAccessor.cs" />
     <Compile Include="Events\EventForm.cs" />

@@ -73,6 +73,7 @@ namespace OrbisBot.Events
                     break;
                 case EventType.UserEvent: DispatchUserEvent(eventForm);
                     break;
+                case EventType.InternalError: throw new InvalidOperationException($"{eventForm.EventId} has an undefined event type");
                 default: throw new NotImplementedException($"An event type of {eventForm.EventType} has been tried to be executed");
 
             }

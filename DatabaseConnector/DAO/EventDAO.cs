@@ -175,7 +175,7 @@ namespace DatabaseConnector.DAO
             
         }
 
-        public bool UpdateNextDispath(long id, long delay)
+        public bool SetNextDispatch(long id, long delay)
         {
             var delay_name = "Delay";
             var sql = $"UPDATE {TableName()} SET {Constants.NEXT_DISPATCH_COLUMN} = {Constants.NEXT_DISPATCH_COLUMN} + @{delay_name} WHERE {Constants.ID_COLUMN} == @{Constants.ID_COLUMN};";
@@ -227,7 +227,7 @@ namespace DatabaseConnector.DAO
             return result;
         }
 
-        public bool UpdateEventMessage(string message, long id)
+        public bool UpdateEventMessage(long id, string message)
         {
             var model = new EventModel();
             model.ID = id;
@@ -236,7 +236,7 @@ namespace DatabaseConnector.DAO
             return UpdateObject(model);
         }
 
-        public bool UpdateTarget(string targetUserJSON, bool targetEveryone, long id)
+        public bool UpdateTarget(long id, string targetUserJSON, bool targetEveryone)
         {
             var model = new EventModel();
             model.ID = id;
@@ -245,7 +245,7 @@ namespace DatabaseConnector.DAO
             return UpdateObject(model);
         }
 
-        public bool UpdateNextDispatch(long nextDispatch, long id)
+        public bool UpdateNextDispatch(long id, long nextDispatch)
         {
             var model = new EventModel();
             model.ID = id;
@@ -254,7 +254,7 @@ namespace DatabaseConnector.DAO
             return UpdateObject(model);
         }
 
-        public bool UpdateDispatchDelay(long dispatchDelay, long id)
+        public bool UpdateDispatchDelay(long id, long dispatchDelay)
         {
             var model = new EventModel();
             model.ID = id;

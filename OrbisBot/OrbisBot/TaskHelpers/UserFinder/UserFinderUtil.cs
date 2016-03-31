@@ -46,6 +46,22 @@ namespace OrbisBot.TaskHelpers.UserFinder
                 return userToReturn;
             }
 
+            //then try by id
+            userToReturn = users.FirstOrDefault(s => s.Id.ToString() == username);
+
+            if (userToReturn != null)
+            {
+                return userToReturn;
+            }
+
+            //by discriminator
+            userToReturn = users.FirstOrDefault(s => s.Discriminator.ToString() == username);
+
+            if (userToReturn != null)
+            {
+                return userToReturn;
+            }
+
             //if it is null, we will deploy fuzzy search
             var candidates = users.Where(s => s.Name.ToLowerInvariant().Contains(username.ToLowerInvariant()));
 
@@ -59,13 +75,6 @@ namespace OrbisBot.TaskHelpers.UserFinder
             {
                 userToReturn = sortedList.First().User;
             }
-
-            if (userToReturn != null)
-            {
-                return userToReturn;
-            }
-
-            userToReturn = users.FirstOrDefault(s => s.Id.ToString() == username);
 
             if (userToReturn != null)
             {

@@ -13,6 +13,8 @@ namespace OrbisBot.Tasks
     {
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
+            var listCustom = args.Length == 2;
+
             //we will give back commands that are fit for the user's role
             var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id);
 
@@ -33,11 +35,28 @@ namespace OrbisBot.Tasks
             }
             else
             {
-                var availableTasks = availableCommands.Select(s => s.Value).ToList();
+                var availableTasks = availableCommands.Select(s => s.Value).Where(s => (s is CustomTask) == listCustom).ToList();
                 availableTasks.Sort();
-                availableTasks.ForEach(s => returnMessage.AppendLine($"{s.CommandTrigger()}"));
+
+                var prevPrefix = "";
+
+                availableTasks.ForEach(s =>
+                {
+                    var prefix = s.CommandText().Split('-').First();
+                    if (prevPrefix == prefix)
+                    {
+                        returnMessage.Append($"{s.CommandTrigger()} ");
+                    }
+                    else
+                    {
+                        prevPrefix = prefix;
+                        returnMessage.AppendLine();
+                        returnMessage.Append($"{s.CommandTrigger()} ");
+                    }
+                });
             }
 
+            returnMessage.AppendLine();
             returnMessage.AppendLine("Type about after a command to see what it does or usage to see how to use it.");
 
             return returnMessage.ToString();
@@ -65,12 +84,12 @@ namespace OrbisBot.Tasks
 
         public override bool CheckArgs(string[] args)
         {
-            return true;
+            return args.Length == 1 || (args.Length == 2 && args[1].Equals("custom", StringComparison.InvariantCultureIgnoreCase));
         }
 
         public override string UsageText()
         {
-            return Constants.NO_PARAMS_USAGE;
+            return "OPTIONAL<custom>";
         }
     }
 }

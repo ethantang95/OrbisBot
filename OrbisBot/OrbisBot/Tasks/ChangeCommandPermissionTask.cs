@@ -26,7 +26,7 @@ namespace OrbisBot.Tasks
             PermissionLevel targetNewPermissionLevel;
             try
             {
-                targetNewPermissionLevel = PermissionEnumMethods.ParseString(args[2], true);
+                targetNewPermissionLevel = EnumParser.ParseString(args[2], true, PermissionLevel.User);
             }
             catch (Exception e)
             {

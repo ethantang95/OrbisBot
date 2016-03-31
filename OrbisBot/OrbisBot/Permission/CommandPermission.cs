@@ -10,30 +10,6 @@ namespace OrbisBot.Permission
     //restricted should be absolutely restricted, nothing should allow restricted
     //usageDenied is reserved for tasks that are denied to be executed due to permission... a bit hacky
 
-    public class PermissionEnumMethods
-    {
-        public static PermissionLevel ParseString(string toParse)
-        {
-            return ParseString(toParse, false);
-        }
-
-        public static PermissionLevel ParseString(string toParse, bool throwOnFail)
-        {
-            try
-            {
-                return (PermissionLevel)Enum.Parse(typeof(PermissionLevel), toParse);
-            }
-            catch (Exception e)
-            {
-                if (throwOnFail)
-                {
-                    throw e;
-                }
-                return PermissionLevel.User;
-            }
-        }
-    }
-
     //here, it contains the permission level of the command and its associated server. There will be a default value which is set remotely or something if the server name does not exist in here
     class CommandPermission
     {
