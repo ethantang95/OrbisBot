@@ -90,7 +90,7 @@ namespace OrbisBot.Events
 
             var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user.Name, mentionUsers, server.Roles);
 
-            var message = calloutList.GenerateCalloutMessage();
+            var message = calloutList.GenerateCalloutMessage().GetMessage();
 
             await PublishTask(message, channel);
         }
@@ -107,7 +107,7 @@ namespace OrbisBot.Events
 
             var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user.Name, mentionUsers, server.Roles);
 
-            var message = calloutList.GenerateCalloutMessage();
+            var message = calloutList.GenerateCalloutMessage().GetMessage();
 
             await PublishTask(message, mainChannel);
         }

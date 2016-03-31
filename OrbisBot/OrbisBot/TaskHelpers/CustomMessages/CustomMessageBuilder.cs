@@ -89,17 +89,44 @@ namespace OrbisBot.TaskHelpers.CustomMessages
             }
         }
 
-        public string GenerateGeneralMessage()
+        //can only be called outside
+        public CustomMessageBuilder EvaluateCommandTokens(MessageEventArgs messageEventArgs, int iterations = 0)
+        {
+            //command tokens are denoted by c, inside is the name of the command to be called including the dash
+            for (int i = 0; i < _baseCommand.Length; i++)
+            {
+                if (_baseCommand[i] == '%' && _baseCommand[i + 1] == 'c')
+                {
+                    var commandRaw = CustomMessageUtils.ExtractInnerContent(_baseCommand, i + 1);
+                    var commandList = CommandParser.ParseCommand(commandRaw);
+                    if (!Context.Instance.Tasks.ContainsKey(commandList[0].ToLower()))
+                    {
+                        throw new ArgumentException($"The command {commandList[0]} does not exist");
+                    }
+                    var task = Context.Instance.Tasks[commandList[0].ToLower()];
+                    var result = task.ExecuteTaskDirect(commandList, messageEventArgs, iterations);
+                    _baseCommand = CustomMessageUtils.ReplaceTokenWithValue(_baseCommand, i, result);
+                }
+            }
+            return this;
+        }
+
+        public CustomMessageBuilder GenerateGeneralMessage()
         {
             ReplaceIndependents();
             EvaluateTokens();
-            return _baseCommand;
+            return this;
         }
 
-        public string GenerateCalloutMessage()
+        public CustomMessageBuilder GenerateCalloutMessage()
         {
             UsersTokenInjection();
             GenerateGeneralMessage();
+            return this;
+        }
+
+        public string GetMessage()
+        {
             return _baseCommand;
         }
     }

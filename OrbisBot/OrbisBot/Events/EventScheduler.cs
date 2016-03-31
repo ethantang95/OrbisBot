@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.Events
 {
-    //specifically used for scheduling events that are obtained by 
+    //specifically used for scheduling events that are obtained by the manager
     class EventScheduler
     {
     }

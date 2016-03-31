@@ -208,6 +208,25 @@ namespace DatabaseConnector.DAO
             return result;
         }
 
+        public List<EventModel> GetEventByTimeRange(long startTime, long endTime)
+        {
+            var start_name = "Start";
+            var end_name = "end";
+
+            var sql = $"SELECT * FROM {Constants.EVENT_TABLE_NAME} WHERE {Constants.NEXT_DISPATCH_COLUMN} >= @{startTime} AND {Constants.NEXT_DISPATCH_COLUMN} <= @{endTime};";
+
+            var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
+            sqlParams.Add(start_name, new Tuple<DbType, object>(DbType.Int64, startTime));
+            sqlParams.Add(end_name, new Tuple<DbType, object>(DbType.Int64, endTime));
+
+            var command = new SQLiteCommand(sql);
+            command = CommandBuilder.AddParameters(sqlParams, command);
+
+            var result = _connection.ExecuteReader(command, ReaderParser);
+
+            return result;
+        }
+
         public bool UpdateEventMessage(string message, long id)
         {
             var model = new EventModel();

@@ -19,7 +19,14 @@ namespace OrbisBot.TaskAbstracts
 
         public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
-            return PermissionLevel.Developer;
+            if (GeneralAdminUtils.IsCommandChannel(channelId))
+            {
+                return PermissionLevel.Developer;
+            }
+            else
+            {
+                return PermissionLevel.Restricted;
+            }
         }
 
         public override bool AllowTaskExecution(MessageEventArgs eventArgs)

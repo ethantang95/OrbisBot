@@ -57,7 +57,7 @@ namespace OrbisBot.Tasks
                 }
                 else if (args[1].Equals("dice", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var roll = new Random().Next(7);
+                    var roll = new Random().Next(6)+1;
                     return $"{roll}";
                 }
                 else if (Int32.TryParse(args[1], out number))

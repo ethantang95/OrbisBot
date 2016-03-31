@@ -39,6 +39,26 @@ namespace OrbisBot.TaskAbstracts
             Task.Run(() => ExecuteTask(args, messageEventArgs));
         }
 
+        public string ExecuteTaskDirect(string[] args, MessageEventArgs messageEventArgs, int iterations = 0)
+        {
+            if (!ProceedWithCommand(messageEventArgs) || !AllowTaskExecution(messageEventArgs))
+            {
+                throw new InvalidOperationException("You do not have permission to execute this task");
+            }
+            if (!CheckArgs(args))
+            {
+                throw new ArgumentException("The arguments passed into this command is not correct");
+            }
+            if (iterations > 10)
+            {
+                throw new NotFiniteNumberException("The command is referencing itself back again");
+            }
+
+            SetVariable(messageEventArgs.Channel.Id, "iterations", iterations);
+
+            return TaskComponent(args, messageEventArgs);
+        }
+
         private bool ProceedWithCommand(MessageEventArgs messageEventArgs)
         {
             //in this context, TaskAbstract knows that such properties exists and knows how to handle it
@@ -189,6 +209,11 @@ namespace OrbisBot.TaskAbstracts
             {
                 _varDictionary[channelId][name] = obj;
             }
+        }
+
+        protected bool HasVariable(ulong channelId, string name)
+        {
+            return (_varDictionary.ContainsKey(channelId) && _varDictionary[channelId].ContainsKey(name));
         }
 
         protected object GetVariable(ulong channelId, string name)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DatabaseConnector.DAO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,12 @@ namespace OrbisBot.Events
     //it is responsible for initalizing fetching of new event from an event finder class
     class EventManager
     {
+        EventScheduler _scheduler;
+        EventManager(EventDAO dao)
+        {
+            _scheduler = new EventScheduler();
+        }
+
+
     }
 }

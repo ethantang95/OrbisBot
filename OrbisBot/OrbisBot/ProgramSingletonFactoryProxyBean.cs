@@ -91,6 +91,7 @@ namespace OrbisBot
             AddTask(new ServerWelcomeSettingsTask());
             AddTask(new ChangeCoolDownTask());
             AddTask(new ProxyPMTask());
+            AddTask(new UpdateCustomTask());
         }
 
         private void PopulateCustomTasks()

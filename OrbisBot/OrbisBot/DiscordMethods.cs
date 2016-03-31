@@ -157,7 +157,7 @@ namespace OrbisBot
                 {
                     var commandBuilder = new CustomMessageBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User.Name, eventArgs.Server.Users, eventArgs.Server.Roles);
 
-                    var result = channel.SendMessage(commandBuilder.GenerateGeneralMessage());
+                    var result = channel.SendMessage(commandBuilder.GenerateGeneralMessage().GetMessage());
                 }
                 catch (Exception e)
                 {

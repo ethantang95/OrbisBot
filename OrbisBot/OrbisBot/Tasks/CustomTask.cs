@@ -19,7 +19,7 @@ namespace OrbisBot.Tasks
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
-            commands.ForEach(s => _commandPermission.ChannelPermission.Add(s.Channel, new ChannelPermissionSetting(DefaultCommandPermission().DefaultLevel, DefaultCommandPermission().DefaultCoolDown)));
+            commands.ForEach(s => _commandPermission.ChannelPermission.Add(s.Channel, new ChannelPermissionSetting(s.PermissionLevel, s.CoolDown)));
         }
         public override string AboutText()
         {
@@ -60,7 +60,10 @@ namespace OrbisBot.Tasks
 
             var builder = new CustomMessageBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Users, messageSource.Server.Roles);
 
-            return builder.GenerateGeneralMessage();
+            var iterations = HasVariable(messageSource.Channel.Id, "iterations") ? (int)GetVariable(messageSource.Channel.Id, "iterations") : 0;
+
+            return builder.GenerateGeneralMessage().EvaluateCommandTokens(messageSource, iterations+1).GetMessage();
+            
         }
 
         public void AddContent(CustomCommandForm toAdd)
@@ -90,6 +93,24 @@ namespace OrbisBot.Tasks
             {
                 CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
             }
+        }
+
+        public void UpdateCommand(string[] newCommands, MessageEventArgs source)
+        {
+            var content = _customCommands[source.Channel.Id];
+
+            foreach (var customReturn in newCommands)
+            {
+                var fakeParams = Enumerable.Repeat("1", content.MaxArgs).ToArray();
+                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, source.User.Name, source.Channel.Users, source.Server.Roles);
+                var result = validationBuilder.GenerateGeneralMessage().EvaluateCommandTokens(source).GetMessage();
+            }
+
+            //validation complete here
+
+            content.ReturnValues.AddRange(newCommands);
+
+            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
 
         public List<CustomCommandForm> GetCustomCommands()

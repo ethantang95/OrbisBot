@@ -100,7 +100,7 @@
     <Compile Include="CommandParser.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Events\EventDispatcher.cs" />
-    <Compile Include="Events\EventFinder.cs" />
+    <Compile Include="Events\EventAccessor.cs" />
     <Compile Include="Events\EventForm.cs" />
     <Compile Include="Events\EventManager.cs" />
     <Compile Include="Events\EventScheduler.cs" />
@@ -142,6 +142,7 @@
     <Compile Include="Tasks\MentionRoleTask.cs" />
     <Compile Include="Tasks\ProxyPMTask.cs" />
     <Compile Include="Tasks\ServerWelcomeSettingsTask.cs" />
+    <Compile Include="Tasks\UpdateCustomTask.cs" />
     <Compile Include="Tasks\UserInfoTask.cs" />
     <Compile Include="Tasks\BotMuteTask.cs" />
     <Compile Include="Tasks\RandomNumberTask.cs" />

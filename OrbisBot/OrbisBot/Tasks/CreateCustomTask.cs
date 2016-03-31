@@ -67,7 +67,7 @@ namespace OrbisBot.Tasks
             {
                 var fakeParams = Enumerable.Repeat("1", maxParams).ToArray();
                 var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, messageSource.User.Name, messageSource.Channel.Users, messageSource.Server.Roles);
-                var result = validationBuilder.GenerateGeneralMessage();
+                var result = validationBuilder.GenerateGeneralMessage().EvaluateCommandTokens(messageSource).GetMessage();
             }
 
 
@@ -93,6 +93,11 @@ namespace OrbisBot.Tasks
         public override string UsageText()
         {
             return " (command name) (max number of params) [\"(possible return strings)\"]. \nFor the return strings, you can use tokens as placeholders to replace it with content. \n%u represents the user that called this command. \n%n where n is an integer like %1 represent the nth parameter for it to replace it with, starting with 1. Optionally, you can add a u after the number in %n for it to explicitly search for a member in the parameter, like %1u. \nYou can also have a random number generator between a range with the token %r(a-b) where a and b are integers.";
+        }
+
+        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return $"This command failed to be created due to {ex.Message}";
         }
     }
 }
