@@ -106,6 +106,7 @@
     <Compile Include="Events\EventForm.cs" />
     <Compile Include="Events\EventManager.cs" />
     <Compile Include="Events\EventScheduler.cs" />
+    <Compile Include="GlobalSettings\GlobalSetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramSingletonFactoryProxyBean.cs" />
     <Compile Include="DiscordMethods.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\AutoRoleAssignTask.cs" />
     <Compile Include="Tasks\BotMentionTask.cs" />
+    <Compile Include="Tasks\BotPrivacyTask.cs" />
     <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
     <Compile Include="Tasks\ChangeCoolDownTask.cs" />
     <Compile Include="Tasks\ChangeMainChannelTask.cs" />

@@ -42,7 +42,7 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            var person1 = UserFinderUtil.FindUser(messageSource.Server.Users, args[1]);
+            var person1 = UserFinderUtil.FindUser(messageSource.Server.Users, args[1], Context.Instance.GlobalSetting.HideList);
 
             if (person1 == null)
             {

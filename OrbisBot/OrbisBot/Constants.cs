@@ -16,8 +16,11 @@ namespace OrbisBot
         public const string SERVER_OPTIONS_FOLDER = "ServerOption";
         public const string PROFILES_FOLDER = "Profile";
         public const string CUSTOM_COMMANDS_FOLDER = "CustomCommands";
+        public const string GLOBAL_SETTINGS_FOLDER = "GlobalSettings";
         public const string REGISTERED_CHANNEL_FILE = "RegisteredChannel.txt";
         public const string REGISTERED_SERVER_FILE = "RegisteredServer.txt";
+
+        public const string HIDE_LIST_FILE = "HideList.txt";
 
         public const string MAIN_CHANNEL_ID = "MainChannelID";
         public const string CHANNEL_ID = "ChannelID";
@@ -53,6 +56,7 @@ namespace OrbisBot
         public const string ROLE_MENTION_FILE = "RoleMention.txt";
         public const string CHANGE_COOL_DOWN_FILE = "ChangeCoolDown.txt";
         public const string UPDATE_COMMAND_FILE = "UpdateCommand.txt";
+        public const string CLEVER_BOT_FILE = "CleverBot.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
@@ -61,7 +65,7 @@ namespace OrbisBot
         public const string COMMAND_CHANNEL = "CommandChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.3.3 (Bootes)";
+        public const string APP_VERSION = "0.3.4 (Bootes)";
 
         public const string USAGE_INTRO = "This command's syntax is:";
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";

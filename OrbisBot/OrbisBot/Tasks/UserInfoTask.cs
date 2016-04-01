@@ -22,7 +22,7 @@ namespace OrbisBot.Tasks
 
             if (args.Length == 2)
             {
-                targetUser = UserFinderUtil.FindUser(messageSource.Server.Users, args[1]);
+                targetUser = UserFinderUtil.FindUser(messageSource.Server.Users, args[1], Context.Instance.GlobalSetting.HideList);
                 if (targetUser == null)
                 {
                     return "The user you are trying to find does not exist in this server";

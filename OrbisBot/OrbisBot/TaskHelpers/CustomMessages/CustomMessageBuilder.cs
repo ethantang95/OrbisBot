@@ -15,14 +15,16 @@ namespace OrbisBot.TaskHelpers.CustomMessages
         private string _userName;
         private IEnumerable<User> _users;
         private IEnumerable<Role> _roles;
+        private HashSet<ulong> _hiddenUsers;
 
-        public CustomMessageBuilder(string baseCommand, string[] args, string userName, IEnumerable<User> users, IEnumerable<Role> roles)
+        public CustomMessageBuilder(string baseCommand, string[] args, string userName, IEnumerable<User> users, IEnumerable<Role> roles, HashSet<ulong> hiddenUsers)
         {
             _baseCommand = baseCommand;
             _args = args;
             _userName = userName;
             _users = users;
             _roles = roles;
+            _hiddenUsers = hiddenUsers;
         }
 
         private void UsersTokenInjection()
@@ -53,7 +55,7 @@ namespace OrbisBot.TaskHelpers.CustomMessages
             {
                 //first, we replace the user strings, if they are not found, replace it with norm strings
                 var replaceUserString = "%" + (i + 1) + "u";
-                var userToReplace = UserFinderUtil.FindUserMention(_users, _args[i]);
+                var userToReplace = UserFinderUtil.FindUserMention(_users, _args[i], _hiddenUsers);
                 _baseCommand = _baseCommand.Replace(replaceUserString, userToReplace);
                 var replaceString = "%" + (i + 1);
                 _baseCommand = _baseCommand.Replace(replaceString, _args[i]);
