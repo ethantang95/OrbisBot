@@ -8,6 +8,7 @@ using Amazon.S3.Model;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.WolframAlpha;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskHelpers.AWS;
 
 namespace OrbisBot.Tasks
 {
@@ -49,27 +50,9 @@ namespace OrbisBot.Tasks
                 return "Wolfram did not find any search result for this query";
             }
 
-            TransferUtility fileTransferUtility = new
-                TransferUtility(new AmazonS3Client(Amazon.RegionEndpoint.USEast1));
-
-            using (var fileToUpload = new MemoryStream())
-            {
-                image.Save(fileToUpload, ImageFormat.Png);
-                fileTransferUtility.Upload(fileToUpload, "orbis-bot-s3", args[1] + "-WARequest.png");
-            }
-
-            GetPreSignedUrlRequest request1 = new GetPreSignedUrlRequest()
-            {
-                BucketName = "orbis-bot-s3",
-                Key = args[1] + "-WARequest.png",
-                Expires = DateTime.Now.AddDays(10)
-            };
-
-            string url = new AmazonS3Client(Amazon.RegionEndpoint.USEast1).GetPreSignedURL(request1);
+            var url = AWSS3UploadUtil.UploadImage(image, args[1]);
 
             return url;
-            
-            
         }
 
         public override bool CheckArgs(string[] args)

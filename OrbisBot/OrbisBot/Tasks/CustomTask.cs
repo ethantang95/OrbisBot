@@ -58,7 +58,7 @@ namespace OrbisBot.Tasks
 
             var commandArgs = args.Skip(1).ToArray();
 
-            var builder = new CustomMessageBuilder(selectedLine, commandArgs, messageSource.User.Name, messageSource.Channel.Users, messageSource.Server.Roles, Context.Instance.GlobalSetting.HideList);
+            var builder = new CustomMessageBuilder(selectedLine, commandArgs, messageSource.User, messageSource.Channel.Users, messageSource.Server.Roles, Context.Instance.GlobalSetting.HideList);
 
             var iterations = HasVariable(messageSource.Channel.Id, "iterations") ? (int)GetVariable(messageSource.Channel.Id, "iterations") : 0;
 
@@ -102,7 +102,7 @@ namespace OrbisBot.Tasks
             foreach (var customReturn in newCommands)
             {
                 var fakeParams = Enumerable.Repeat("1", content.MaxArgs).ToArray();
-                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, source.User.Name, source.Channel.Users, source.Server.Roles, Context.Instance.GlobalSetting.HideList);
+                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, source.User, source.Channel.Users, source.Server.Roles, Context.Instance.GlobalSetting.HideList);
                 var result = validationBuilder.GenerateGeneralMessage().EvaluateCommandTokens(source).GetMessage();
             }
 

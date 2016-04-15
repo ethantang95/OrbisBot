@@ -129,6 +129,12 @@ namespace OrbisBot
                             aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
                             //pass in a dummy string to bypass the NPE
                         }
+                        else if (Context.Instance.InProgressStateTasks.ContainsKey(eventArgs.User.Id))
+                        {
+                            var task = Context.Instance.InProgressStateTasks[eventArgs.User.Id];
+                            var args = CommandParser.ParseCommand(eventArgs.Message.Text);
+                            task.RunStateTask(args, eventArgs);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -155,7 +161,7 @@ namespace OrbisBot
             {
                 try
                 {
-                    var commandBuilder = new CustomMessageBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User.Name, eventArgs.Server.Users, eventArgs.Server.Roles, Context.Instance.GlobalSetting.HideList);
+                    var commandBuilder = new CustomMessageBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User, eventArgs.Server.Users, eventArgs.Server.Roles, Context.Instance.GlobalSetting.HideList);
 
                     var result = channel.SendMessage(commandBuilder.GenerateGeneralMessage().GetMessage());
                 }

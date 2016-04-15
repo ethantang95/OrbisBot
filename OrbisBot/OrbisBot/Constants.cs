@@ -57,6 +57,8 @@ namespace OrbisBot
         public const string CHANGE_COOL_DOWN_FILE = "ChangeCoolDown.txt";
         public const string UPDATE_COMMAND_FILE = "UpdateCommand.txt";
         public const string CLEVER_BOT_FILE = "CleverBot.txt";
+        public const string RANDOM_COMIC_FILE = "RandomComic.txt";
+        public const string EDGE_IMAGE_FILE = "EdgeImage.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
@@ -65,7 +67,7 @@ namespace OrbisBot
         public const string COMMAND_CHANNEL = "CommandChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.3.4 (Bootes)";
+        public const string APP_VERSION = "0.4.0 (Cassiopeia)";
 
         public const string USAGE_INTRO = "This command's syntax is:";
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";

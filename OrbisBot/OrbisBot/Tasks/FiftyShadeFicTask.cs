@@ -31,7 +31,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "generatelewd"; //should change to something better later or nah... lol
+            return "generate-lewd"; //should change to something better later or nah... lol
         }
 
         public override CommandPermission DefaultCommandPermission()

@@ -66,7 +66,7 @@ namespace OrbisBot.Tasks
             foreach (var customReturn in customReturns)
             {
                 var fakeParams = Enumerable.Repeat("1", maxParams).ToArray();
-                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, messageSource.User.Name, messageSource.Channel.Users, messageSource.Server.Roles, Context.Instance.GlobalSetting.HideList);
+                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, messageSource.User, messageSource.Channel.Users, messageSource.Server.Roles, Context.Instance.GlobalSetting.HideList);
                 var result = validationBuilder.GenerateGeneralMessage().EvaluateCommandTokens(messageSource).GetMessage();
             }
 

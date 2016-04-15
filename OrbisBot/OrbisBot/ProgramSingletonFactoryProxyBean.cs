@@ -23,6 +23,7 @@ namespace OrbisBot
         public ChannelPermissionsWrapper ChannelPermission { get; private set; }
         public ServerSettingsWrapper ServerSettings { get; private set; }
         public GlobalSetting GlobalSetting { get; private set; }
+        public Dictionary<ulong, StateTaskAbstract> InProgressStateTasks { get; private set; }
         public Dictionary<string, string> OAuthKeys { get; private set; }
         public DBAccessor DB { get; private set; }
 
@@ -54,6 +55,7 @@ namespace OrbisBot
         {
             Client = new DiscordClient();
             Tasks = new Dictionary<string, TaskAbstract>();
+            InProgressStateTasks = new Dictionary<ulong, StateTaskAbstract>();
             OAuthKeys = new Dictionary<string, string>();
             ChannelPermission = new ChannelPermissionsWrapper();
             ServerSettings = new ServerSettingsWrapper();
@@ -97,6 +99,9 @@ namespace OrbisBot
             AddTask(new UpdateCustomTask());
 
             AddTask(new BotPrivacyTask());
+            AddTask(new MigrateCommandTask());
+            AddTask(new ComicGeneratorTask());
+            AddTask(new EdgeDrawerTask());
         }
 
         private void PopulateCustomTasks()
@@ -125,6 +130,26 @@ namespace OrbisBot
             Client.Disconnect();
         }
 
+        public void AddStateTask(ulong userId, StateTaskAbstract task)
+        {
+            if (!InProgressStateTasks.ContainsKey(userId))
+            {
+                InProgressStateTasks.Add(userId, task);
+            }
+            else
+            {
+                InProgressStateTasks[userId] = task;
+            }
+        }
+
+        public void RemoveStateTask(ulong userId)
+        {
+            if (InProgressStateTasks.ContainsKey(userId))
+            {
+                InProgressStateTasks.Remove(userId);
+            }
+        }
+
         private void SetUpDiscordClient()
         {
             _restartToken = false;
@@ -150,6 +175,7 @@ namespace OrbisBot
 
             Client = null;
             Tasks = null;
+            InProgressStateTasks = null;
             ChannelPermission = null;
             ServerSettings = null;
             GlobalSetting = null;

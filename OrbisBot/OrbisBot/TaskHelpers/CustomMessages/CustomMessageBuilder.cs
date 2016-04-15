@@ -12,16 +12,16 @@ namespace OrbisBot.TaskHelpers.CustomMessages
     {
         private string _baseCommand;
         private string[] _args;
-        private string _userName;
+        private User _baseUser;
         private IEnumerable<User> _users;
         private IEnumerable<Role> _roles;
         private HashSet<ulong> _hiddenUsers;
 
-        public CustomMessageBuilder(string baseCommand, string[] args, string userName, IEnumerable<User> users, IEnumerable<Role> roles, HashSet<ulong> hiddenUsers)
+        public CustomMessageBuilder(string baseCommand, string[] args, User baseUser, IEnumerable<User> users, IEnumerable<Role> roles, HashSet<ulong> hiddenUsers)
         {
             _baseCommand = baseCommand;
             _args = args;
-            _userName = userName;
+            _baseUser = baseUser;
             _users = users;
             _roles = roles;
             _hiddenUsers = hiddenUsers;
@@ -50,7 +50,8 @@ namespace OrbisBot.TaskHelpers.CustomMessages
         private void ReplaceIndependents()
         {
             //we know that %1...N and %u are constants to be replaced
-            _baseCommand = _baseCommand.Replace("%u", _userName);
+            _baseCommand = _baseCommand.Replace("%uu", _baseUser.Mention);
+            _baseCommand = _baseCommand.Replace("%u", _baseUser.Name);
             for (int i = 0; i < _args.Length; i++)
             {
                 //first, we replace the user strings, if they are not found, replace it with norm strings

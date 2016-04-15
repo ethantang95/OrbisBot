@@ -28,7 +28,7 @@ namespace OrbisBot.TaskAbstracts
             return _commandPermission.Disabled;
         }
 
-        public void RunTask(string[] args, MessageEventArgs messageEventArgs)
+        public virtual void RunTask(string[] args, MessageEventArgs messageEventArgs)
         {
             //here, check if we will proceed based on the command and channel settings
             if (!ProceedWithCommand(messageEventArgs) || !AllowTaskExecution(messageEventArgs))
@@ -77,6 +77,7 @@ namespace OrbisBot.TaskAbstracts
         private async void ExecuteTask(string[] args, MessageEventArgs messageSource)
         {
             string taskResult;
+            bool success = false;
             try
             {
                 //check if it is for about, or if it's for activating the test
@@ -97,6 +98,7 @@ namespace OrbisBot.TaskAbstracts
                         {
                             taskResult = TaskComponent(args, messageSource);
                             UpdateCoolDown(messageSource.Channel.Id);
+                            success = true;
                         }
                         else
                         {
@@ -115,7 +117,14 @@ namespace OrbisBot.TaskAbstracts
 
                 DiscordMethods.OnMessageFailure(e, messageSource);
             }
-            await PublishTask(taskResult, messageSource);
+            await PublishMessage(taskResult, messageSource);
+
+            PostTaskExecution(success, messageSource);
+        }
+
+        protected virtual void PostTaskExecution(bool success, MessageEventArgs eventArgs)
+        {
+            return;
         }
 
         private int SecondsFromLastUsed(ulong channelId)
@@ -144,24 +153,7 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        private async Task PublishTask(string message, MessageEventArgs messageSource)
-        {
-            if (message == "" || message == String.Empty)
-            {
-                return;
-            }
-            var discordClient = Context.Instance.Client;
-            try
-            {
-                var result = await messageSource.Channel.SendMessage(message);
-            }
-            catch (Exception ex)
-            {
-                DiscordMethods.OnMessageFailure(ex, messageSource);
-            }
-        }
-
-        protected async Task<Message> PublishIntermeditate(string message, MessageEventArgs messageSource)
+        protected async Task<Message> PublishMessage(string message, MessageEventArgs messageSource)
         {
             if (message == "" || message == String.Empty)
             {
@@ -193,6 +185,10 @@ namespace OrbisBot.TaskAbstracts
                 return null;
             }
         }
+        protected void SetUserVariable(ulong channelId, ulong userId, string name, object obj)
+        {
+            SetVariable(channelId, userId + name, obj);
+        }
 
         protected void SetVariable(ulong channelId, string name, object obj)
         {
@@ -211,9 +207,19 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
+        protected bool HasUserVariable(ulong channelId, ulong userId, string name)
+        {
+            return HasVariable(channelId, userId + name);
+        }
+
         protected bool HasVariable(ulong channelId, string name)
         {
             return (_varDictionary.ContainsKey(channelId) && _varDictionary[channelId].ContainsKey(name));
+        }
+
+        public object GetUserVariable(ulong channelId, ulong userId, string name)
+        {
+            return GetVariable(channelId, userId + name);
         }
 
         protected object GetVariable(ulong channelId, string name)

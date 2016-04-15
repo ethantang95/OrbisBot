@@ -28,7 +28,14 @@ namespace OrbisBot.TaskHelpers.Reddit
                     //get the source for quality purposes
                     try
                     {
-                        postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                        if (postNode["url"].Contains(".gif"))
+                        {
+                            postResults.Add(title + "\n" + postNode["url"].Value<string>()); //only way to get the gif
+                        }
+                        else
+                        {
+                            postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                        }
                     }
                     catch (Exception e) {
                         //for whatever dumb reason
