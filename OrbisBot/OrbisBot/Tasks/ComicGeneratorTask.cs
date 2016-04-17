@@ -24,7 +24,7 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "generate-comic  ";
+            return "generate-comic";
         }
 
         public override CommandPermission DefaultCommandPermission()

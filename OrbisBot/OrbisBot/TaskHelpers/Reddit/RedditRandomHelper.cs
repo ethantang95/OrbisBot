@@ -28,7 +28,7 @@ namespace OrbisBot.TaskHelpers.Reddit
                     //get the source for quality purposes
                     try
                     {
-                        if (postNode["url"].Contains(".gif"))
+                        if (postNode["url"].Value<string>().Contains(".gif") || postNode["url"].Value<string>().Contains(".GIF"))
                         {
                             postResults.Add(title + "\n" + postNode["url"].Value<string>()); //only way to get the gif
                         }

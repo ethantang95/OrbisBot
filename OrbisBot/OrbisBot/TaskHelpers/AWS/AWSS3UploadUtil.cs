@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.TaskHelpers.AWS
 {
-    class AWSS3UploadUtil
+    static class AWSS3UploadUtil
     {
 
         public static string UploadImage(Image image)

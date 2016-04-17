@@ -93,14 +93,7 @@ namespace OrbisBot.Tasks
 
         public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
         {
-            if (typeof(JsonReaderException) == ex.GetType())
-            {
-                return "Attempting to fetch reddit contents is interrupted by a known and currently unsolvable bug that happens occasionally, please try the command again";
-            }
-            else
-            {
-                return base.ExceptionMessage(ex, eventArgs);
-            }
+            return "Attempting to fetch reddit contents is interrupted by a known and currently unsolvable bug that happens occasionally, please try the command again";
         }
     }
 }

@@ -60,7 +60,8 @@ namespace OrbisBot.Tasks
             }
 
             //separate the commands
-            var customReturns = CommandParser.ParseList(args[3]);
+            var rawArgs = CommandParser.ParseCommand(messageSource.Message.RawText);
+            var customReturns = CommandParser.ParseList(rawArgs[3]);
 
             //now, we will test each args
             foreach (var customReturn in customReturns)

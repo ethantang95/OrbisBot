@@ -77,7 +77,9 @@ namespace OrbisBot.Tasks
             {
                 if (args.Length == 3)
                 {
-                    Context.Instance.ServerSettings.SetWelcomeMessage(messageSource.Server.Id, args[2]);
+                    //we actually want to re parse the raw message
+                    var rawArgs = CommandParser.ParseCommand(messageSource.Message.RawText);
+                    Context.Instance.ServerSettings.SetWelcomeMessage(messageSource.Server.Id, rawArgs[2]);
                     return "Server welcome message is set, please enable server welcome messages for it to work";
                 }
                 else
