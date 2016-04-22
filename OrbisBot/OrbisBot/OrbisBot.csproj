@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandParser.cs" />
+    <Compile Include="CommonTools.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EnumParser.cs" />
     <Compile Include="Events\EventDispatcher.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Events\EventManager.cs" />
     <Compile Include="Events\EventScheduler.cs" />
     <Compile Include="GlobalSettings\GlobalSetting.cs" />
+    <Compile Include="OrbScript\OrbScriptUtils.cs" />
+    <Compile Include="OrbScript\ScriptFunctions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramSingletonFactoryProxyBean.cs" />
     <Compile Include="DiscordMethods.cs" />
@@ -129,40 +132,40 @@
     <Compile Include="TaskHelpers\UserFinder\UserFinderUtil.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
-    <Compile Include="Tasks\AboutTask.cs" />
-    <Compile Include="Tasks\AdjustUserPermissionTask.cs" />
-    <Compile Include="Tasks\AutoRoleAssignTask.cs" />
-    <Compile Include="Tasks\BotMentionTask.cs" />
-    <Compile Include="Tasks\BotPrivacyTask.cs" />
-    <Compile Include="Tasks\ChangeCommandPermissionTask.cs" />
-    <Compile Include="Tasks\ChangeCoolDownTask.cs" />
-    <Compile Include="Tasks\ChangeMainChannelTask.cs" />
-    <Compile Include="Tasks\ComicGeneratorTask.cs" />
-    <Compile Include="Tasks\CreateCustomTask.cs" />
-    <Compile Include="Tasks\CustomTask.cs" />
+    <Compile Include="Tasks\BotTasks\AboutTask.cs" />
+    <Compile Include="Tasks\EventTasks\CreateEventTask.cs" />
+    <Compile Include="Tasks\PermissionTasks\AdjustUserPermissionTask.cs" />
+    <Compile Include="Tasks\PermissionTasks\AutoRoleAssignTask.cs" />
+    <Compile Include="Tasks\BotTasks\BotMentionTask.cs" />
+    <Compile Include="Tasks\BotTasks\BotPrivacyTask.cs" />
+    <Compile Include="Tasks\PermissionTasks\ChangeCommandPermissionTask.cs" />
+    <Compile Include="Tasks\PermissionTasks\ChangeCoolDownTask.cs" />
+    <Compile Include="Tasks\ServerTasks\ChangeMainChannelTask.cs" />
+    <Compile Include="Tasks\FunTasks\ComicGeneratorTask.cs" />
+    <Compile Include="Tasks\CustomCommandTasks\CreateCustomTask.cs" />
+    <Compile Include="Tasks\CustomCommandTasks\CustomTask.cs" />
     <Compile Include="TaskAbstracts\FilePermissionTaskAbstract.cs" />
-    <Compile Include="Tasks\CutePictureTask.cs" />
-    <Compile Include="Tasks\EdgeDrawerTask.cs" />
-    <Compile Include="Tasks\ExceptionThrowingTask.cs" />
-    <Compile Include="Tasks\FiftyShadeFicTask.cs" />
-    <Compile Include="Tasks\InsultTask.cs" />
-    <Compile Include="Tasks\ListCommandsTask.cs" />
-    <Compile Include="Tasks\MentionRoleTask.cs" />
-    <Compile Include="Tasks\MigrateCommandTask.cs" />
-    <Compile Include="Tasks\ProxyPMTask.cs" />
-    <Compile Include="Tasks\ServerWelcomeSettingsTask.cs" />
-    <Compile Include="Tasks\UpdateCustomTask.cs" />
-    <Compile Include="Tasks\UploadFileTask.cs" />
-    <Compile Include="Tasks\UserInfoTask.cs" />
-    <Compile Include="Tasks\BotMuteTask.cs" />
-    <Compile Include="Tasks\RandomNumberTask.cs" />
-    <Compile Include="Tasks\RedditTask.cs" />
-    <Compile Include="Tasks\RegisterTask.cs" />
+    <Compile Include="Tasks\FunTasks\CutePictureTask.cs" />
+    <Compile Include="Tasks\FunTasks\EdgeDrawerTask.cs" />
+    <Compile Include="Tasks\BotAdminTasks\ExceptionThrowingTask.cs" />
+    <Compile Include="Tasks\FunTasks\FiftyShadeFicTask.cs" />
+    <Compile Include="Tasks\FunTasks\InsultTask.cs" />
+    <Compile Include="Tasks\BotTasks\ListCommandsTask.cs" />
+    <Compile Include="Tasks\ToolTasks\MentionRoleTask.cs" />
+    <Compile Include="Tasks\CustomCommandTasks\MigrateCommandTask.cs" />
+    <Compile Include="Tasks\BotAdminTasks\ProxyPMTask.cs" />
+    <Compile Include="Tasks\ServerTasks\ServerWelcomeSettingsTask.cs" />
+    <Compile Include="Tasks\CustomCommandTasks\UpdateCustomTask.cs" />
+    <Compile Include="Tasks\ToolTasks\UserInfoTask.cs" />
+    <Compile Include="Tasks\BotTasks\BotMuteTask.cs" />
+    <Compile Include="Tasks\ToolTasks\RandomNumberTask.cs" />
+    <Compile Include="Tasks\FunTasks\RedditTask.cs" />
+    <Compile Include="Tasks\BotTasks\RegisterTask.cs" />
     <Compile Include="TaskAbstracts\RegisteredChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />
-    <Compile Include="Tasks\RemoveCustomTask.cs" />
-    <Compile Include="Tasks\RestartContextTask.cs" />
-    <Compile Include="Tasks\WolframAlphaTask.cs" />
+    <Compile Include="Tasks\CustomCommandTasks\RemoveCustomTask.cs" />
+    <Compile Include="Tasks\BotAdminTasks\RestartContextTask.cs" />
+    <Compile Include="Tasks\FunTasks\WolframAlphaTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -182,6 +185,7 @@
       <Name>DatabaseConnector</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

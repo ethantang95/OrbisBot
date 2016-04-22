@@ -38,7 +38,7 @@ namespace OrbisBot.TaskHelpers.CustomMessages
                 tokenReplacement.Append($"%{i}u");
             }
 
-            _baseCommand = _baseCommand.Replace("%l", tokenReplacement.ToString());
+            _baseCommand = _baseCommand.Replace("%t", tokenReplacement.ToString());
 
             var everyoneRole = _roles.First(s => s.IsEveryone);
 

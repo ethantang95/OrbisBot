@@ -89,7 +89,7 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user, mentionUsers, server.Roles, Context.Instance.GlobalSetting.HideList);
+            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user, mentionUsers, server.Roles, new HashSet<ulong>());
 
             var message = calloutList.GenerateCalloutMessage().GetMessage();
 
@@ -106,7 +106,7 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user, mentionUsers, server.Roles, Context.Instance.GlobalSetting.HideList);
+            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user, mentionUsers, server.Roles, new HashSet<ulong>());
 
             var message = calloutList.GenerateCalloutMessage().GetMessage();
 

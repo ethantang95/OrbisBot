@@ -59,6 +59,7 @@ namespace OrbisBot
         public const string CLEVER_BOT_FILE = "CleverBot.txt";
         public const string RANDOM_COMIC_FILE = "RandomComic.txt";
         public const string EDGE_IMAGE_FILE = "EdgeImage.txt";
+        public const string EVENTS_FILE = "Events.txt"; //all permission associated with events
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";

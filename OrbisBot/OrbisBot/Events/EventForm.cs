@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace OrbisBot.Events
 {
     public enum EventType { ChannelEvent, ServerEvent, UserEvent, InternalError }
-    class EventForm
+    internal class EventForm
     {
         public long EventId { get; set; }
         public string EventName { get; set; }

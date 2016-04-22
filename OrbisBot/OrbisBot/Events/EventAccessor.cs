@@ -19,8 +19,8 @@ namespace OrbisBot.Events
 
         public List<EventForm> GetEvents(DateTime start, DateTime end)
         {
-            var startUXTime = ToUnixMilliTime(start);
-            var endUXTime = ToUnixMilliTime(end);
+            var startUXTime = CommonTools.ToUnixMilliTime(start);
+            var endUXTime = CommonTools.ToUnixMilliTime(end);
 
             var results = _eventDAO.GetEventByTimeRange(startUXTime, endUXTime);
 
@@ -50,6 +50,20 @@ namespace OrbisBot.Events
             var result = _eventDAO.SetNextDispatch(eventId, delay);
 
             return result;
+        }
+
+        public bool RemoveEvent(long id)
+        {
+            var result = _eventDAO.DeleteObject(id);
+
+            return result;
+        }
+
+        public List<EventForm> FindEventByName(string search, long channelID)
+        {
+            var result = _eventDAO.FindObjectByName(search, channelID);
+
+            return result.Select(EventFormParser).ToList();
         }
 
         private EventForm EventFormParser(EventModel model)
@@ -85,16 +99,11 @@ namespace OrbisBot.Events
             toReturn.TargetUsersJSON = JsonConvert.SerializeObject(form.TargetEveryone);
             toReturn.TargetRole = form.TargetRole;
             toReturn.TargetEveryone = form.TargetEveryone;
-            toReturn.NextDispatch = ToUnixMilliTime(form.DispatchTime);
+            toReturn.NextDispatch = CommonTools.ToUnixMilliTime(form.DispatchTime);
             toReturn.DispatchDelay = form.NextDispatchPeriod;
             toReturn.EventType = form.EventType.ToString();
 
             return toReturn;
-        }
-
-        private long ToUnixMilliTime(DateTime time)
-        {
-            return (time.ToUniversalTime().Ticks - 621355968000000000) / TimeSpan.TicksPerMillisecond;
         }
     }
 }

@@ -64,11 +64,23 @@ namespace OrbisBot
             return true;
         }
 
+        public static async void SendExceptionMsg(Exception ex)
+        {
+            try
+            {
+                var result = await GetCommandChannel().SendMessage($"An exception has occurred with the details {ex.ToString()}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occurred when trying to log message. {e.ToString()}");
+            }
+        }
+
         public static async void OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
         {
             try
             { 
-                var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+                var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -80,7 +92,7 @@ namespace OrbisBot
         {
             try
             {
-                var result = await GetCommandChannel().SendMessage($"An exception has occurred in attempting to send private message to {user.Id} - {user.Name} with the message: {message}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+                var result = await GetCommandChannel().SendMessage($"An exception has occurred in attempting to send private message to {user.Id} - {user.Name} with the message: {message}. \n The exception details are: {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -92,7 +104,7 @@ namespace OrbisBot
         {
             try
             {
-                var result = await GetCommandChannel().SendMessage( $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.Message}, {ex.ToString()}");
+                var result = await GetCommandChannel().SendMessage( $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.ToString()}");
             }
             catch (Exception e)
             {
