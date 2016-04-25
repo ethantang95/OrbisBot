@@ -19,5 +19,22 @@ namespace OrbisBot.OrbScript
         {
             return UserFinderUtil.FindUser(searchList, name, ignoreList).Name;
         }
+
+        public static string MentionEveryone(IEnumerable<Role> roles)
+        {
+            return roles.First(s => s.IsEveryone).Mention;
+        }
+
+        public static string MentionGroup(IEnumerable<User> users)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var user in users)
+            {
+                builder.Append(UserMention(user.Name, users, new HashSet<ulong>()));
+            }
+
+            return builder.ToString();
+        }
     }
 }

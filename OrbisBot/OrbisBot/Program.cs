@@ -1,4 +1,5 @@
 ﻿using Discord;
+using OrbisBot.OrbScript;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,15 @@ namespace OrbisBot
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, folder));
                 Console.WriteLine($"Created OrbisBot Folder {folder}");
             }
+        }
+
+        public static void TestOrbScriptEngine()
+        {
+            var engine = new OrbScriptEngine(null, null);
+            engine.SetArgs(new string[]{"false", "true"});
+            var result = engine.EvaluateString("$var1=~Or(true, $param1); The result is ~If($var1, {this is a message}, {this is another message})");
+            Console.WriteLine(result);
+            Console.ReadLine();
         }
     }
 }
