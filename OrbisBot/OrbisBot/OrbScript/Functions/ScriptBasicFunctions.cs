@@ -12,14 +12,14 @@ namespace OrbisBot.OrbScript.Functions
         {
             var first = double.Parse(a);
             var second = double.Parse(b);
-            return Math.Round(first + second).ToString();
+            return (first + second).ToString();
         }
 
         public static string Subtract(string a, string b)
         {
             var first = double.Parse(a);
             var second = double.Parse(b);
-            return Math.Round(first - second).ToString();
+            return (first - second).ToString();
         }
 
         public static string Multiply(string a, string b)
@@ -40,7 +40,7 @@ namespace OrbisBot.OrbScript.Functions
         {
             var first = double.Parse(a);
             var second = double.Parse(b);
-            return Math.Round(first % second).ToString();
+            return (first % second).ToString();
         }
 
         public static string Power(string a, string b)

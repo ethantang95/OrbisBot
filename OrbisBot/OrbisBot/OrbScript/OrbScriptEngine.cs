@@ -77,7 +77,7 @@ namespace OrbisBot.OrbScript
                     return true;
                 }
                 _lexer.consume("=");
-                var value = EvaluateTerm();
+                var value = EvaluateParam();
                 _vars.Add(varName, value);
                 _lexer.consume(";");
             }
@@ -87,6 +87,7 @@ namespace OrbisBot.OrbScript
 
         private string EvaluateTerm()
         {
+            //will not be called unless it is inspected or it follows a variable 
             if (_lexer.inspect("$"))
             {
                 var result = EvaluateVariable();
@@ -98,7 +99,7 @@ namespace OrbisBot.OrbScript
                 return result;
             }
 
-            throw new ArgumentException("Attempted to evaluate a term that is not a variable for a function");
+            throw new ArgumentException("Attempted to evaluate a term that is not a variable or a function");
         }
 
         private string EvaluateVariable()
