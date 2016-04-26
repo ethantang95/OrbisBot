@@ -63,16 +63,7 @@ namespace OrbisBot.Tasks
             var rawArgs = CommandParser.ParseCommand(messageSource.Message.RawText);
             var customReturns = CommandParser.ParseList(rawArgs[3]);
 
-            //now, we will test each args
-            foreach (var customReturn in customReturns)
-            {
-                var fakeParams = Enumerable.Repeat("True", maxParams).ToArray();
-                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, messageSource.User, messageSource.Channel.Users, messageSource.Server.Roles, Context.Instance.GlobalSetting.HideList);
-                var result = validationBuilder.GenerateGeneralMessage().EvaluateCommandTokens(messageSource).GetMessage();
-            }
-
-
-            //here, the command successfully validates, because otherwise, we would've gotten an exception
+            //we are no longer validating the commands because it basically is a hard NP problem or even a halting problem, so we will fail on runtime
             var customCommand = new CustomCommandForm(args[1], maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList(), 30);
 
             if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))

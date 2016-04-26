@@ -37,7 +37,7 @@ namespace OrbisBot.OrbScript
 
         private bool isContinueID(char ch)
         {
-            return (char.IsLetter(ch) || char.IsDigit(ch) || ch == '_');
+            return (char.IsLetter(ch) || char.IsDigit(ch) || ch == '_' || ch == '.' || ch == '-' || ch == '+');
         }
 
         public void advance()
@@ -67,7 +67,7 @@ namespace OrbisBot.OrbScript
                         }
                         continue;
                     }
-                    else if (char.IsLetterOrDigit(ch))
+                    else if (char.IsLetterOrDigit(ch) || ch == '.' || ch == '-' || ch == '+')
                     {
                         kind = Kind.ID;
                         state = State.CONTINUE_ID;

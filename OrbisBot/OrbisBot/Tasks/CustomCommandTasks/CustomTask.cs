@@ -8,6 +8,7 @@ using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.CustomMessages;
+using OrbisBot.OrbScript;
 
 namespace OrbisBot.Tasks
 {
@@ -58,11 +59,30 @@ namespace OrbisBot.Tasks
 
             var commandArgs = args.Skip(1).ToArray();
 
-            var builder = new CustomMessageBuilder(selectedLine, commandArgs, messageSource.User, messageSource.Channel.Users, messageSource.Server.Roles, Context.Instance.GlobalSetting.HideList);
-
             var iterations = HasVariable(messageSource.Channel.Id, "iterations") ? (int)GetVariable(messageSource.Channel.Id, "iterations") : 0;
 
-            return builder.GenerateGeneralMessage().EvaluateCommandTokens(messageSource, iterations+1).GetMessage();
+            var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.Standard)
+                .SetEventArgs(messageSource)
+                .SetIgnoreList(Context.Instance.GlobalSetting.HideList)
+                .SetRoleList(messageSource.Server.Roles)
+                .SetUserList(messageSource.Channel.Users)
+                .SetCallIterations(iterations);
+
+            var engine = new OrbScriptEngine(engineConfig, messageSource.User);
+            engine.SetArgs(commandArgs);
+
+            string result;
+
+            try
+            {
+                result = engine.EvaluateString(selectedLine);
+            }
+            catch (Exception e)
+            {
+                result = $"An error has occurred when trying to parse the script {selectedLine} with the error {e.Message}";
+            }
+
+            return result;
             
         }
 

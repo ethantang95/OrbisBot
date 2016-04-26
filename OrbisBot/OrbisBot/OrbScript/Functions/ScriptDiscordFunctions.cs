@@ -10,7 +10,11 @@ namespace OrbisBot.OrbScript
 {
     static class ScriptFunctions
     {
-        public static string UserMention(string name, IEnumerable<User> searchList, HashSet<ulong> ignoreList)
+        public static string MentionUser(User user)
+        {
+            return user.Mention;
+        }
+        public static string FindAndMentionUser(string name, IEnumerable<User> searchList, HashSet<ulong> ignoreList)
         {
             var user = UserFinderUtil.FindUserMention(searchList, name, ignoreList);
             return user == null ? user : string.Empty;
@@ -34,7 +38,7 @@ namespace OrbisBot.OrbScript
 
             foreach (var user in users)
             {
-                builder.Append(UserMention(user.Name, users, new HashSet<ulong>()));
+                builder.Append(FindAndMentionUser(user.Name, users, new HashSet<ulong>()));
             }
 
             return builder.ToString();

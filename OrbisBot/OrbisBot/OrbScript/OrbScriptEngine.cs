@@ -29,17 +29,20 @@ namespace OrbisBot.OrbScript
             {
                 _vars.Add($"param{i+1}", args[i]);
             }
-            //_vars.Add("user", _focusUser.Name);
+            _vars.Add("user", _focusUser.Name);
         }
 
         public string EvaluateString(string s)
         {
             _evalString = s;
             _lexer = new OrbScriptLexer(s);
-            ExtractVariables();
+            var startWithVar = ExtractVariables();
             var builder = new StringBuilder();
 
-            _evalString = _evalString.Substring(_lexer.Index - _lexer.Token.Length);
+            if (!startWithVar)
+            {
+                _evalString = _evalString.Substring(_lexer.Index - _lexer.Token.Length);
+            }
 
             while (_evalString.Length != 0)
             {
@@ -60,18 +63,26 @@ namespace OrbisBot.OrbScript
             return builder.ToString();
         }
 
-        private void ExtractVariables()
+        private bool ExtractVariables()
         {
             //args will have the format $<name>=(<eval>)
             while (_lexer.inspect("$"))
             {
                 _lexer.consume("$");
                 var varName = _lexer.consumeVar();
+                if (_vars.ContainsKey(varName))
+                {
+                    var position = _evalString.IndexOf("$" + varName);
+                    _evalString = _evalString.Substring(position);
+                    return true;
+                }
                 _lexer.consume("=");
                 var value = EvaluateTerm();
                 _vars.Add(varName, value);
                 _lexer.consume(";");
             }
+
+            return false;
         }
 
         private string EvaluateTerm()
@@ -160,11 +171,18 @@ namespace OrbisBot.OrbScript
         {
             switch (name)
             {
-                case "Execute": return OrbisBotFunctions.Execute(args, _config.EventArgs, _config.Iterations);
-                case "UserMention": return ScriptFunctions.UserMention(args[0], _config.UserList, _config.IgnoreList);
-                case "FindUser": return ScriptFunctions.FindUser(args[0], _config.UserList, _config.IgnoreList);
+                case "Execute": CheckIfStandard(name);
+                    return OrbisBotFunctions.Execute(args, _config.EventArgs, _config.Iterations);
+
+                case "MentionUser": return ScriptFunctions.MentionUser(_focusUser);
+                case "FindAndMentionUser": CheckIfStandard(name);
+                    return ScriptFunctions.FindAndMentionUser(args[0], _config.UserList, _config.IgnoreList);
+                case "FindUser": CheckIfStandard(name);
+                    return ScriptFunctions.FindUser(args[0], _config.UserList, _config.IgnoreList);
                 case "MentionEveryone": return ScriptFunctions.MentionEveryone(_config.RoleList);
-                case "MentionGroup": return CallMentionGroup();
+                case "MentionGroup": CheckIfEvent(name);
+                    return ScriptFunctions.MentionGroup(_config.UserList);
+
                 case "Add": return ScriptBasicFunctions.Add(args[0], args[1]);
                 case "Subtract": return ScriptBasicFunctions.Subtract(args[0], args[1]);
                 case "Multiply": return ScriptBasicFunctions.Multiply(args[0], args[1]);
@@ -175,6 +193,7 @@ namespace OrbisBot.OrbScript
                 case "LogBase": return ScriptBasicFunctions.LogBase(args[0], args[1]);
                 case "Max": return ScriptBasicFunctions.Max(args[0], args[1]);
                 case "Min": return ScriptBasicFunctions.Min(args[0], args[1]);
+                case "Round": return ScriptBasicFunctions.Round(args[0], args[1]);
                 case "Equal": return ScriptBasicFunctions.Equal(args[0], args[1]);
                 case "Greater": return ScriptBasicFunctions.Greater(args[0], args[1]);
                 case "GreaterEqual": return ScriptBasicFunctions.GreaterEqual(args[0], args[1]);
@@ -193,15 +212,27 @@ namespace OrbisBot.OrbScript
             }
         }
 
-        private string CallMentionGroup()
+        private void CheckIfEvent(string name)
         {
-            if (_config.BuildType == OrbScriptBuildType.Events)
+            if (_config.BuildType != OrbScriptBuildType.Events)
             {
-                return ScriptFunctions.MentionGroup(_config.UserList);
+                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not events");
             }
-            else
+        }
+
+        private void CheckIfStandard(string name)
+        {
+            if (_config.BuildType != OrbScriptBuildType.Standard)
             {
-                throw new InvalidOperationException("Cannot call mention group for custom messages that are not events");
+                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not standard custom messages");
+            }
+        }
+
+        private void CheckIfWelcome(string name)
+        {
+            if (_config.BuildType != OrbScriptBuildType.Welcome)
+            {
+                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not welcome messages");
             }
         }
     }

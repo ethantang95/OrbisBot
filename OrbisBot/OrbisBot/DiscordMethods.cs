@@ -7,6 +7,7 @@ using OrbisBot.Tasks;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.Events;
 using OrbisBot.TaskHelpers.CustomMessages;
+using OrbisBot.OrbScript;
 
 namespace OrbisBot
 {
@@ -173,9 +174,15 @@ namespace OrbisBot
             {
                 try
                 {
-                    var commandBuilder = new CustomMessageBuilder(server.WelcomeMsg, new string[] { }, eventArgs.User, eventArgs.Server.Users, eventArgs.Server.Roles, Context.Instance.GlobalSetting.HideList);
+                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.Welcome)
+                        .SetRoleList(eventArgs.Server.Roles)
+                        .SetUserList(eventArgs.Server.Users);
 
-                    var result = channel.SendMessage(commandBuilder.GenerateGeneralMessage().GetMessage());
+                    var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
+
+                    var message = engine.EvaluateString(server.WelcomeMsg);
+
+                    var result = channel.SendMessage(message);
                 }
                 catch (Exception e)
                 {

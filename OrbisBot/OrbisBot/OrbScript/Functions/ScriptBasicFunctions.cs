@@ -77,6 +77,13 @@ namespace OrbisBot.OrbScript.Functions
             return first < second ? first.ToString() : second.ToString();
         }
 
+        public static string Round(string a, string b)
+        {
+            var first = double.Parse(a);
+            var second = int.Parse(b);
+            return Math.Round(first, second).ToString();
+        }
+
         public static string Equal(string a, string b)
         {
             return a.Equals(b, StringComparison.InvariantCultureIgnoreCase).ToString();

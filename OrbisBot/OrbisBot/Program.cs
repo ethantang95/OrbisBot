@@ -1,5 +1,7 @@
 ﻿using Discord;
 using OrbisBot.OrbScript;
+using OrbisBot.ServerSettings;
+using OrbisBot.TaskHelpers.CustomCommands;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -29,9 +31,9 @@ namespace OrbisBot
             CheckAndCreateFolders(Constants.OPTIONS_FOLDER);
             CheckAndCreateFolders(Constants.PROFILES_FOLDER);
 
-            //var app = Context.Instance;
+            var app = Context.Instance;
 
-            TestOrbScriptEngine();
+            //PortOldToNewEngine();
         }
 
         public static void CheckAndCreateFolders(string folder)
@@ -44,13 +46,70 @@ namespace OrbisBot
             }
         }
 
-        public static void TestOrbScriptEngine()
+        public static void PortOldToNewEngine()
         {
-            var engine = new OrbScriptEngine(null, null);
-            engine.SetArgs(new string[]{"false", "true"});
-            var result = engine.EvaluateString("$var1=~Or(true, $param1); The result is ~And($var1, ~Xor($var1, $param2)) and this is another result ~Xor($param1, $param2)");
-            Console.WriteLine(result);
-            Console.ReadLine();
+            var allFiles = FileHelper.GetAllFiles(Constants.CUSTOM_COMMANDS_FOLDER);
+            foreach (var filePath in allFiles)
+            {
+                var customTaskContents = CustomCommandFileHandler.GetCustomTaskFromFile(filePath);
+
+                var newList = new List<CustomCommandForm>();
+
+                foreach (var content in customTaskContents)
+                {
+                    var newContent = new CustomCommandForm(content.CommandName, content.MaxArgs, content.Channel, content.PermissionLevel, new List<string>(), content.CoolDown);
+                    foreach (var value in content.ReturnValues)
+                    {
+                        var newValue = value;
+                        //first replace the params
+                        for (int i = 0; i < newContent.MaxArgs; i++) {
+                            newValue = newValue.Replace($"%{i + 1}u", $"~FindAndMentionUser($param{i + 1})");
+                            newValue = newValue.Replace($"%{i + 1}", $"$param{i + 1}");
+                        }
+
+                        //replace the user mentions
+                        newValue = newValue.Replace("%uu", "~MentionUser()");
+                        newValue = newValue.Replace("%u", "$user");
+
+                        //replace function calls
+                        newValue = newValue.Replace("%c(", "~Execute(");
+
+                        //replace the randoms
+                        newValue = newValue.Replace("%r(", "~Random(");
+                        newValue = newValue.Replace("http,", "http:");
+
+                        newContent.ReturnValues.Add(newValue);
+                    }
+
+                    newList.Add(newContent);
+                }
+
+                //write to file
+                CustomCommandFileHandler.SaveCustomTask(newList);
+            }
+
+            //now deal with the server welcome messages
+            var serverSetting = new ServerSettingsWrapper();
+
+            foreach (var server in serverSetting.ServerSettings)
+            {
+                var message = server.Value.WelcomeMsg;
+
+                var newValue = message;
+
+                //replace the user mentions
+                newValue = newValue.Replace("%uu", "~MentionUser()");
+                newValue = newValue.Replace("%u", "$user");
+
+                //replace function calls
+                newValue = newValue.Replace("%c(", "~Execute(");
+
+                //replace the randoms
+                newValue = newValue.Replace("%r(", "~Random(");
+                newValue = newValue.Replace(":", ",");
+
+                serverSetting.SetWelcomeMessage(server.Key, newValue);
+            }
         }
     }
 }
