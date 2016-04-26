@@ -29,7 +29,9 @@ namespace OrbisBot
             CheckAndCreateFolders(Constants.OPTIONS_FOLDER);
             CheckAndCreateFolders(Constants.PROFILES_FOLDER);
 
-            var app = Context.Instance;
+            //var app = Context.Instance;
+
+            TestOrbScriptEngine();
         }
 
         public static void CheckAndCreateFolders(string folder)
@@ -46,7 +48,7 @@ namespace OrbisBot
         {
             var engine = new OrbScriptEngine(null, null);
             engine.SetArgs(new string[]{"false", "true"});
-            var result = engine.EvaluateString("$var1=~Or(true, $param1); The result is ~If($var1, {this is a message}, {this is another message})");
+            var result = engine.EvaluateString("$var1=~Or(true, $param1); The result is ~And($var1, ~Xor($var1, $param2)) and this is another result ~Xor($param1, $param2)");
             Console.WriteLine(result);
             Console.ReadLine();
         }

@@ -110,6 +110,7 @@
     <Compile Include="GlobalSettings\GlobalSetting.cs" />
     <Compile Include="OrbScript\Functions\OrbisBotFunctions.cs" />
     <Compile Include="OrbScript\Functions\ScriptBasicFunctions.cs" />
+    <Compile Include="OrbScript\Functions\ScriptCastFunctions.cs" />
     <Compile Include="OrbScript\OrbScriptConfiger.cs" />
     <Compile Include="OrbScript\OrbScriptEngine.cs" />
     <Compile Include="OrbScript\OrbScriptLexer.cs" />

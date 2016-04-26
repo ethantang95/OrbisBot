@@ -47,7 +47,7 @@ namespace OrbisBot.OrbScript
                 {
                     _lexer = new OrbScriptLexer(_evalString);
                     var term = EvaluateTerm();
-                    builder.Append(term);
+                    builder.Append(term + " ");
                     _evalString = _evalString.Substring(_lexer.Index - _lexer.Token.Length);
                 }
                 else
@@ -169,6 +169,10 @@ namespace OrbisBot.OrbScript
                 case "Subtract": return ScriptBasicFunctions.Subtract(args[0], args[1]);
                 case "Multiply": return ScriptBasicFunctions.Multiply(args[0], args[1]);
                 case "Divide": return ScriptBasicFunctions.Divide(args[0], args[1]);
+                case "Mod": return ScriptBasicFunctions.Mod(args[0], args[1]);
+                case "Power": return ScriptBasicFunctions.Power(args[0], args[1]);
+                case "Ln": return ScriptBasicFunctions.Ln(args[0]);
+                case "LogBase": return ScriptBasicFunctions.LogBase(args[0], args[1]);
                 case "Max": return ScriptBasicFunctions.Max(args[0], args[1]);
                 case "Min": return ScriptBasicFunctions.Min(args[0], args[1]);
                 case "Equal": return ScriptBasicFunctions.Equal(args[0], args[1]);
@@ -181,8 +185,10 @@ namespace OrbisBot.OrbScript
                 case "Or": return ScriptBasicFunctions.Or(args[0], args[1]);
                 case "Xor": return ScriptBasicFunctions.Xor(args[0], args[1]);
                 case "If": return ScriptBasicFunctions.If(args[0], args[1], args[2]);
-                case "Loop": return ScriptBasicFunctions.LessEqual(args[0], args[1]);
+                //case "Loop": return ScriptBasicFunctions.LessEqual(args[0], args[1]);
                 case "Random": return ScriptBasicFunctions.Random(args[0], args[1]);
+                case "BoolToNum": return ScriptCastFunctions.BoolToNum(args[0]);
+                case "NumToBool": return ScriptCastFunctions.NumToBool(args[0]);
                 default: throw new ArgumentException($"Function {name} does not exist");
             }
         }

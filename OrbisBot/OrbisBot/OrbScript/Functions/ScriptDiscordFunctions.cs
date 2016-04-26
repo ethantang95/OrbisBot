@@ -12,16 +12,19 @@ namespace OrbisBot.OrbScript
     {
         public static string UserMention(string name, IEnumerable<User> searchList, HashSet<ulong> ignoreList)
         {
-            return UserFinderUtil.FindUserMention(searchList, name, ignoreList);
+            var user = UserFinderUtil.FindUserMention(searchList, name, ignoreList);
+            return user == null ? user : string.Empty;
         }
 
         public static string FindUser(string name, IEnumerable<User> searchList, HashSet<ulong> ignoreList)
         {
-            return UserFinderUtil.FindUser(searchList, name, ignoreList).Name;
+            var user = UserFinderUtil.FindUser(searchList, name, ignoreList)?.Name;
+            return user == null ? user : string.Empty;
         }
 
         public static string MentionEveryone(IEnumerable<Role> roles)
         {
+            //I am not sure if this can be blank... because it should not be
             return roles.First(s => s.IsEveryone).Mention;
         }
 

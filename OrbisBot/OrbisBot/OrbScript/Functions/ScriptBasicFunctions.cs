@@ -36,6 +36,33 @@ namespace OrbisBot.OrbScript.Functions
             return (first / second).ToString();
         }
 
+        public static string Mod(string a, string b)
+        {
+            var first = double.Parse(a);
+            var second = double.Parse(b);
+            return Math.Round(first % second).ToString();
+        }
+
+        public static string Power(string a, string b)
+        {
+            var first = double.Parse(a);
+            var second = double.Parse(b);
+            return Math.Pow(first, second).ToString();
+        }
+
+        public static string Ln(string a)
+        {
+            var first = double.Parse(a);
+            return Math.Log(first).ToString();
+        }
+
+        public static string LogBase(string a, string b)
+        {
+            var first = double.Parse(a);
+            var second = double.Parse(b);
+            return Math.Log(first, second).ToString();
+        }
+
         public static string Max(string a, string b)
         {
             var first = double.Parse(a);
