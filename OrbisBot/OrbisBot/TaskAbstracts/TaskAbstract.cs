@@ -185,12 +185,12 @@ namespace OrbisBot.TaskAbstracts
                 return null;
             }
         }
-        protected void SetUserVariable(ulong channelId, ulong userId, string name, object obj)
+        public void SetUserVariable(ulong channelId, ulong userId, string name, object obj)
         {
             SetVariable(channelId, userId + name, obj);
         }
 
-        protected void SetVariable(ulong channelId, string name, object obj)
+        public void SetVariable(ulong channelId, string name, object obj)
         {
             if (!_varDictionary.ContainsKey(channelId))
             {
@@ -207,12 +207,12 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        protected bool HasUserVariable(ulong channelId, ulong userId, string name)
+        public bool HasUserVariable(ulong channelId, ulong userId, string name)
         {
             return HasVariable(channelId, userId + name);
         }
 
-        protected bool HasVariable(ulong channelId, string name)
+        public bool HasVariable(ulong channelId, string name)
         {
             return (_varDictionary.ContainsKey(channelId) && _varDictionary[channelId].ContainsKey(name));
         }
@@ -222,7 +222,7 @@ namespace OrbisBot.TaskAbstracts
             return GetVariable(channelId, userId + name);
         }
 
-        protected object GetVariable(ulong channelId, string name)
+        public object GetVariable(ulong channelId, string name)
         {
             if (!_varDictionary.ContainsKey(channelId))
             {

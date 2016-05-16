@@ -47,33 +47,46 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
+            Random random;
+
+            //we want to have a determined seed for the channel
+            if (HasVariable(messageSource.Channel.Id, "seed"))
+            {
+                random = (Random)GetVariable(messageSource.Channel.Id, "seed");
+            }
+            else
+            {
+                random = new Random();
+                SetVariable(messageSource.Channel.Id, "seed", random);
+            }
+
             if (args.Length == 2)
             {
                 var number = 0;
                 if (args[1].Equals("coin", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var flip = new Random().Next(2) == 1 ? "Heads" : "Tails";
+                    var flip = random.Next(2) == 1 ? "Heads" : "Tails";
                     return $"{flip}";
                 }
                 else if (args[1].Equals("dice", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var roll = new Random().Next(6)+1;
+                    var roll = random.Next(6)+1;
                     return $"{roll}";
                 }
-                else if (Int32.TryParse(args[1], out number))
+                else if (int.TryParse(args[1], out number))
                 {
-                    var roll = new Random().Next(number + 1);
+                    var roll = random.Next(number + 1);
                     return $"{roll}";
                 }
                 else
                 {
                     var options = CommandParser.ParseList(args[1]);
-                    return options[new Random().Next(0, options.Length)];
+                    return options[random.Next(0, options.Length)];
                 }
             }
             else
             {
-                var roll = new Random().Next(Int32.Parse(args[1]), Int32.Parse(args[2]) + 1);
+                var roll = random.Next(int.Parse(args[1]), int.Parse(args[2]) + 1);
                 return $"{roll}";
             }
         }

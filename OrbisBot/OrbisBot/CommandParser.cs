@@ -20,6 +20,7 @@ namespace OrbisBot
             var lastPosition = 0;
             var insideQuery = false;
             var insideList = false;
+            var nestCount = 0;
             for (int i = 0; i < command.Length; i++)
             {
                 if ((command[i] == ' ' || i == command.Length - 1) && !insideQuery && !insideList)
@@ -55,18 +56,32 @@ namespace OrbisBot
                         insideQuery = false;
                     }
                 }
-                else if (command[i] == '[' && !insideQuery && !insideList)
+                else if (command[i] == '[' && !insideQuery)
                 {
-                    lastPosition = i;
-                    insideList = true;
+                    if (!insideList)
+                    {
+                        lastPosition = i;
+                        insideList = true;
+                    }
+                    else
+                    {
+                        nestCount += 1;
+                    }
                 }
                 else if (command[i] == ']' && insideList)
                 {
-                    var argList = command.Substring(lastPosition, i - lastPosition + 1);
-                    argList = argList.Substring(1, argList.Length - 2).Trim(); //remove the backets
-                    parsedArgs.Add(argList);
-                    lastPosition = i + 1;
-                    insideList = false;
+                    if (nestCount != 0)
+                    {
+                        nestCount -= 1;
+                    }
+                    else
+                    {
+                        var argList = command.Substring(lastPosition, i - lastPosition + 1);
+                        argList = argList.Substring(1, argList.Length - 2).Trim(); //remove the backets
+                        parsedArgs.Add(argList);
+                        lastPosition = i + 1;
+                        insideList = false;
+                    }
                 }
             }
 

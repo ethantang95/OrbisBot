@@ -63,12 +63,13 @@ namespace OrbisBot
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
+        public const string DISCORD_TOKEN_KEY = "DiscordLoginToken";
         public const string IMGUR_CLIENT_ID = "ImgurClientID";
         public const string IMGUR_CLIENT_SECRET = "ImgurClientSecret";
         public const string COMMAND_CHANNEL = "CommandChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.5.0 (Dorado)";
+        public const string APP_VERSION = "0.5.2 (Dorado)";
 
         public const string USAGE_INTRO = "This command's syntax is:";
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";

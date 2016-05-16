@@ -23,6 +23,11 @@ namespace OrbisBot.OrbScript
             _vars = new Dictionary<string, string>();
         }
 
+        public void SetArgs()
+        {
+            SetArgs(new string[0]);
+        }
+
         public void SetArgs(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
@@ -124,7 +129,10 @@ namespace OrbisBot.OrbScript
             _lexer.consume("(");
             //now, it contains a variable... fk, this might be hard to parse
             //first case, if it's a call another function
-            varParams.Add(EvaluateParam());
+            if (!_lexer.inspect(")")) //in the case that there are no params
+            {
+                varParams.Add(EvaluateParam());
+            }
             while (_lexer.inspect(","))
             {
                 _lexer.consume(",");
@@ -161,10 +169,18 @@ namespace OrbisBot.OrbScript
                 //we parsed out that string
                 return builder.ToString();
             }
-            else //can only be a single entree
+            else //can only be a single number entree
             {
-                var param = _lexer.consumeVar();
-                return param;
+                if (_lexer.inspectNum())
+                {
+                    var param = _lexer.consumeNum();
+                    return param;
+                }
+                else
+                {
+                    var param = _lexer.consumeVar();
+                    return param;
+                }
             }
         }
 
@@ -172,26 +188,40 @@ namespace OrbisBot.OrbScript
         {
             switch (name)
             {
-                case "Execute": CheckIfStandard(name);
-                    return OrbisBotFunctions.Execute(args, _config.EventArgs, _config.Iterations);
+                case "Execute": CheckIfType(name, OrbScriptBuildType.Standard);
+                    return OrbisBotFunctions.Execute(args[0], _config.EventArgs, _config.Iterations);
+                case "SetVariable": CheckIfType(name, OrbScriptBuildType.Standard);
+                    return OrbisBotFunctions.SetVariable(args[0], args[1], _config.EventArgs.Channel.Id, _config.SourceCommand);
+                case "SetUserVariable":
+                    CheckIfType(name, OrbScriptBuildType.Standard);
+                    return OrbisBotFunctions.SetUserVariable(args[0], args[1], _config.EventArgs.Channel.Id, _focusUser.Id, _config.SourceCommand);
+                case "GetVariable":
+                    CheckIfType(name, OrbScriptBuildType.Standard);
+                    return OrbisBotFunctions.GetVariable(args[0], args[1], _config.EventArgs.Channel.Id, _config.SourceCommand);
+                case "GetUserVariable":
+                    CheckIfType(name, OrbScriptBuildType.Standard);
+                    return OrbisBotFunctions.GetUserVariable(args[0], args[1], _config.EventArgs.Channel.Id, _focusUser.Id, _config.SourceCommand);
 
                 case "MentionUser": return ScriptFunctions.MentionUser(_focusUser);
-                case "FindAndMentionUser": CheckIfStandard(name);
+                case "FindAndMentionUser": CheckIfType(name, OrbScriptBuildType.Standard, OrbScriptBuildType.Events);
                     return ScriptFunctions.FindAndMentionUser(args[0], _config.UserList, _config.IgnoreList);
-                case "FindUser": CheckIfStandard(name);
+                case "FindUser": CheckIfType(name, OrbScriptBuildType.Standard, OrbScriptBuildType.Events);
                     return ScriptFunctions.FindUser(args[0], _config.UserList, _config.IgnoreList);
                 case "MentionEveryone": return ScriptFunctions.MentionEveryone(_config.RoleList);
-                case "MentionGroup": CheckIfEvent(name);
+                case "MentionGroup": CheckIfType(name, OrbScriptBuildType.Events);
                     return ScriptFunctions.MentionGroup(_config.UserList);
 
                 case "Add": return ScriptBasicFunctions.Add(args[0], args[1]);
+                case "IntAdd": return ScriptBasicFunctions.IntAdd(args[0], args[1]);
                 case "Subtract": return ScriptBasicFunctions.Subtract(args[0], args[1]);
+                case "IntSubtract": return ScriptBasicFunctions.IntSubtract(args[0], args[1]);
                 case "Multiply": return ScriptBasicFunctions.Multiply(args[0], args[1]);
                 case "Divide": return ScriptBasicFunctions.Divide(args[0], args[1]);
                 case "Mod": return ScriptBasicFunctions.Mod(args[0], args[1]);
                 case "Power": return ScriptBasicFunctions.Power(args[0], args[1]);
                 case "Ln": return ScriptBasicFunctions.Ln(args[0]);
                 case "LogBase": return ScriptBasicFunctions.LogBase(args[0], args[1]);
+                case "Absolute": return ScriptBasicFunctions.Absolute(args[0]);
                 case "Max": return ScriptBasicFunctions.Max(args[0], args[1]);
                 case "Min": return ScriptBasicFunctions.Min(args[0], args[1]);
                 case "Round": return ScriptBasicFunctions.Round(args[0], args[1]);
@@ -207,33 +237,21 @@ namespace OrbisBot.OrbScript
                 case "If": return ScriptBasicFunctions.If(args[0], args[1], args[2]);
                 //case "Loop": return ScriptBasicFunctions.LessEqual(args[0], args[1]);
                 case "Random": return ScriptBasicFunctions.Random(args[0], args[1]);
+                case "Time": return ScriptBasicFunctions.Time(args[0]);
                 case "BoolToNum": return ScriptCastFunctions.BoolToNum(args[0]);
                 case "NumToBool": return ScriptCastFunctions.NumToBool(args[0]);
+                case "TimeToUnix": return ScriptCastFunctions.TimeToUnix(args[0]);
+                case "UixToTime": return ScriptCastFunctions.UnixToTime(args[0]);
                 default: throw new ArgumentException($"Function {name} does not exist");
             }
         }
 
-        private void CheckIfEvent(string name)
+        private void CheckIfType(string name, params OrbScriptBuildType[] types)
         {
-            if (_config.BuildType != OrbScriptBuildType.Events)
+            var eventTypes = string.Join(" ", types.Select(s => s.ToString()).ToArray());
+            if (!types.Contains(_config.BuildType))
             {
-                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not events");
-            }
-        }
-
-        private void CheckIfStandard(string name)
-        {
-            if (_config.BuildType != OrbScriptBuildType.Standard)
-            {
-                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not standard custom messages");
-            }
-        }
-
-        private void CheckIfWelcome(string name)
-        {
-            if (_config.BuildType != OrbScriptBuildType.Welcome)
-            {
-                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not welcome messages");
+                throw new InvalidOperationException($"Cannot call method {name} for custom messages that are not events of type {eventTypes}");
             }
         }
     }

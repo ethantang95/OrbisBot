@@ -43,7 +43,7 @@ namespace OrbisBot.Tasks.EventTasks
 
         public override string CommandText()
         {
-            throw new NotImplementedException();
+            return "events-create";
         }
 
         public override CommandPermission DefaultCommandPermission()

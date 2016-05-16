@@ -14,15 +14,16 @@ namespace OrbisBot.OrbScript
         private enum Kind
         {
             SIMPLE,
-            ID,
-            KEYWORD,
+            VAR,
+            NUM,
             EOF,
         }
 
         private enum State
         {
             START,
-            CONTINUE_ID,
+            CONTINUE_VAR,
+            CONTINUE_NUM
         }
 
         private char[] input;
@@ -37,7 +38,12 @@ namespace OrbisBot.OrbScript
 
         private bool isContinueID(char ch)
         {
-            return (char.IsLetter(ch) || char.IsDigit(ch) || ch == '_' || ch == '.' || ch == '-' || ch == '+');
+            return (char.IsLetterOrDigit(ch) || ch == '_');
+        }
+
+        private bool isContinueNum(char ch)
+        {
+            return (char.IsNumber(ch) || ch == '.');
         }
 
         public void advance()
@@ -67,15 +73,28 @@ namespace OrbisBot.OrbScript
                         }
                         continue;
                     }
-                    else if (char.IsLetterOrDigit(ch) || ch == '.' || ch == '-' || ch == '+')
+                    else if (char.IsLetter(ch))
                     {
-                        kind = Kind.ID;
-                        state = State.CONTINUE_ID;
+                        kind = Kind.VAR;
+                        state = State.CONTINUE_VAR;
+                    }
+                    else if (char.IsNumber(ch) || ch == '-' || ch == '+')
+                    {
+                        kind = Kind.NUM;
+                        state = State.CONTINUE_NUM;
                     }
                 }
-                else if (state == State.CONTINUE_ID)
+                else if (state == State.CONTINUE_VAR)
                 {
                     if (!isContinueID(ch))
+                    {
+                        --Index;
+                        break;
+                    }
+                }
+                else if (state == State.CONTINUE_NUM)
+                {
+                    if (!isContinueNum(ch))
                     {
                         --Index;
                         break;
@@ -128,9 +147,14 @@ namespace OrbisBot.OrbScript
          * @return true if the current token is an ID, otherwise it will return
          *         false.
          */
-        public bool inspectID()
+        public bool inspectVar()
         {
-            return kind == Kind.ID;
+            return kind == Kind.VAR;
+        }
+
+        public bool inspectNum()
+        {
+            return kind == Kind.NUM;
         }
 
         /**
@@ -200,7 +224,15 @@ namespace OrbisBot.OrbScript
          */
         public string consumeVar()
         {
-            if (!inspectID()) err("expected: Var got '" + Token + "'");
+            if (!inspectVar()) err("expected: Var got '" + Token + "'");
+            string result = Token;
+            advance();
+            return result;
+        }
+
+        public string consumeNum()
+        {
+            if (!inspectNum()) err("expected: Num got '" + Token + "'");
             string result = Token;
             advance();
             return result;

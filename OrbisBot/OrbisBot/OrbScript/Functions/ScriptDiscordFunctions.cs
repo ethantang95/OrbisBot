@@ -17,13 +17,13 @@ namespace OrbisBot.OrbScript
         public static string FindAndMentionUser(string name, IEnumerable<User> searchList, HashSet<ulong> ignoreList)
         {
             var user = UserFinderUtil.FindUserMention(searchList, name, ignoreList);
-            return user == null ? user : string.Empty;
+            return user != null ? user : $"[user {name} not found]";
         }
 
         public static string FindUser(string name, IEnumerable<User> searchList, HashSet<ulong> ignoreList)
         {
             var user = UserFinderUtil.FindUser(searchList, name, ignoreList)?.Name;
-            return user == null ? user : string.Empty;
+            return user != null ? user : $"[user {name} not found]";
         }
 
         public static string MentionEveryone(IEnumerable<Role> roles)
@@ -39,6 +39,7 @@ namespace OrbisBot.OrbScript
             foreach (var user in users)
             {
                 builder.Append(FindAndMentionUser(user.Name, users, new HashSet<ulong>()));
+                builder.Append(" ");
             }
 
             return builder.ToString();

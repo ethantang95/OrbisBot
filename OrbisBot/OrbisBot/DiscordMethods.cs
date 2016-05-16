@@ -180,6 +180,8 @@ namespace OrbisBot
 
                     var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
 
+                    engine.SetArgs();
+
                     var message = engine.EvaluateString(server.WelcomeMsg);
 
                     var result = channel.SendMessage(message);

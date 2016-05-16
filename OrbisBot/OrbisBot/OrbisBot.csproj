@@ -138,6 +138,10 @@
     <Compile Include="TaskHelpers\UserFinder\UserFinderUtil.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
+    <Compile Include="TaskPermissions\PermissionBuilders\FileBasedTaskPermission.cs" />
+    <Compile Include="TaskPermissions\PermissionBuilders\FileBasedTaskPermissionBuilder.cs" />
+    <Compile Include="TaskPermissions\PermissionBuilders\TaskPermissionBuilderAbstract.cs" />
+    <Compile Include="TaskPermissions\TaskPermissionAbstract.cs" />
     <Compile Include="Tasks\BotTasks\AboutTask.cs" />
     <Compile Include="Tasks\EventTasks\CreateEventTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AdjustUserPermissionTask.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.OrbScript
 {
-    enum OrbScriptBuildType { Standard, Events, Welcome};
+    enum OrbScriptBuildType { Standard, Events, Welcome, PrivateMessage};
     class OrbScriptConfiger
     {
         public IEnumerable<User> UserList { get; private set; }
@@ -15,6 +15,7 @@ namespace OrbisBot.OrbScript
         public HashSet<ulong> IgnoreList { get; private set; }
         public OrbScriptBuildType BuildType { get; private set; }
         public MessageEventArgs EventArgs { get; private set; }
+        public string SourceCommand { get; private set; }
         public int Iterations { get; private set; }
 
         public OrbScriptConfiger(OrbScriptBuildType buildType = OrbScriptBuildType.Standard)
@@ -23,6 +24,7 @@ namespace OrbisBot.OrbScript
             UserList = new List<User>();
             RoleList = new List<Role>();
             IgnoreList = new HashSet<ulong>();
+            SourceCommand = string.Empty;
         }
 
         public OrbScriptConfiger SetUserList(IEnumerable<User> users)
@@ -46,6 +48,12 @@ namespace OrbisBot.OrbScript
         public OrbScriptConfiger SetEventArgs(MessageEventArgs eventArgs)
         {
             EventArgs = eventArgs;
+            return this;
+        }
+
+        public OrbScriptConfiger SetSourceCommand(string command)
+        {
+            SourceCommand = command;
             return this;
         }
 

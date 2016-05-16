@@ -15,10 +15,24 @@ namespace OrbisBot.OrbScript.Functions
             return (first + second).ToString();
         }
 
+        public static string IntAdd(string a, string b)
+        {
+            var first = int.Parse(a);
+            var second = int.Parse(b);
+            return (first + second).ToString();
+        }
+
         public static string Subtract(string a, string b)
         {
             var first = double.Parse(a);
             var second = double.Parse(b);
+            return (first - second).ToString();
+        }
+
+        public static string IntSubtract(string a, string b)
+        {
+            var first = int.Parse(a);
+            var second = int.Parse(b);
             return (first - second).ToString();
         }
 
@@ -61,6 +75,12 @@ namespace OrbisBot.OrbScript.Functions
             var first = double.Parse(a);
             var second = double.Parse(b);
             return Math.Log(first, second).ToString();
+        }
+
+        public static string Absolute(string a)
+        {
+            var first = double.Parse(a);
+            return Math.Abs(first).ToString();
         }
 
         public static string Max(string a, string b)
@@ -167,6 +187,17 @@ namespace OrbisBot.OrbScript.Functions
             var second = int.Parse(upper);
 
             return new Random().Next(first, second + 1).ToString();
+        }
+
+        public static string Time(string timeZone)
+        {
+            var time = DateTime.UtcNow;
+
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+
+            var converted = TimeZoneInfo.ConvertTime(time, timezone);
+
+            return converted.ToString();
         }
     }
 }

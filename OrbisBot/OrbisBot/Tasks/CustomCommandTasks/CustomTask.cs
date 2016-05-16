@@ -66,7 +66,8 @@ namespace OrbisBot.Tasks
                 .SetIgnoreList(Context.Instance.GlobalSetting.HideList)
                 .SetRoleList(messageSource.Server.Roles)
                 .SetUserList(messageSource.Channel.Users)
-                .SetCallIterations(iterations);
+                .SetCallIterations(iterations)
+                .SetSourceCommand(CommandTrigger());
 
             var engine = new OrbScriptEngine(engineConfig, messageSource.User);
             engine.SetArgs(commandArgs);

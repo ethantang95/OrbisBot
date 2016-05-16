@@ -166,10 +166,9 @@ namespace OrbisBot
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             Client.ExecuteAndWait(async () =>
             {
-                //Connect to the Discord server using our email and password
-                var username = ConfigurationManager.AppSettings[Constants.DISCORD_USERNAME_KEY];
-                var password = ConfigurationManager.AppSettings[Constants.DISCORD_PASSWORD_KEY];
-                await Client.Connect(username, password);
+                //Connect to the Discord server using our token
+                var token = ConfigurationManager.AppSettings[Constants.DISCORD_TOKEN_KEY];
+                await Client.Connect(token);
                 Client.SetGame($"AWS EC2 - {Constants.APP_VERSION}");
             });
 

@@ -19,5 +19,25 @@ namespace OrbisBot.OrbScript.Functions
             var num = double.Parse(numVal);
             return (num != 0 ? true : false).ToString();
         }
+
+        public static string TimeToUnix(string timeStr)
+        {
+            var date = DateTime.Parse(timeStr);
+
+            var ticks = CommonTools.ToUnixMilliTime(date);
+
+            return ticks.ToString();
+        }
+
+        public static string UnixToTime(string unixTicks)
+        {
+            var ticks = long.Parse(unixTicks);
+
+            var winTicks = CommonTools.ToWindowsTicks(ticks);
+
+            var date = new DateTime(winTicks);
+
+            return date.ToString();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Discord;
+using OrbisBot.OrbScript;
 using OrbisBot.TaskHelpers.CustomMessages;
 using System;
 using System.Collections.Generic;
@@ -89,9 +90,13 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user, mentionUsers, server.Roles, new HashSet<ulong>());
+            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList(server.Roles).SetUserList(mentionUsers);
 
-            var message = calloutList.GenerateCalloutMessage().GetMessage();
+            var engine = new OrbScriptEngine(config, user);
+
+            engine.SetArgs();
+
+            var message = engine.EvaluateString($"$user reminds: {eventForm.Message}");
 
             await PublishTask(message, channel);
         }
@@ -106,9 +111,13 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var calloutList = new CustomMessageBuilder($"%u reminds: {eventForm.Message}", null, user, mentionUsers, server.Roles, new HashSet<ulong>());
+            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList            (server.Roles).SetUserList(mentionUsers);
 
-            var message = calloutList.GenerateCalloutMessage().GetMessage();
+            var engine = new OrbScriptEngine(config, user);
+
+            engine.SetArgs();
+
+            var message = engine.EvaluateString($"$user reminds: {eventForm.Message}");
 
             await PublishTask(message, mainChannel);
         }
@@ -118,7 +127,15 @@ namespace OrbisBot.Events
             //this will just pm the user
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
 
-            await user.PrivateChannel.SendMessage($"Reminder: {eventForm.Message}");
+            var config = new OrbScriptConfiger(OrbScriptBuildType.PrivateMessage);
+
+            var engine = new OrbScriptEngine(config, user);
+
+            engine.SetArgs();
+
+            var message = engine.EvaluateString($"Reminder: {eventForm.Message}");
+
+            await user.PrivateChannel.SendMessage(message);
         }
     }
 }

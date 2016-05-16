@@ -13,5 +13,9 @@ namespace OrbisBot
             return (time.ToUniversalTime().Ticks - 621355968000000000) / TimeSpan.TicksPerMillisecond;
         }
 
+        public static long ToWindowsTicks(long ticks)
+        {
+            return (ticks * TimeSpan.TicksPerMillisecond) + 621355968000000000;
+        }
     }
 }
