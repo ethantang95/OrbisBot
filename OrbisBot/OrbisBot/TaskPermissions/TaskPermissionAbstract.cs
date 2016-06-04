@@ -10,14 +10,11 @@ namespace OrbisBot.TaskPermissions
 {
     abstract class TaskPermissionAbstract
     {
-        protected CommandPermission _commandPermission;
-        private Dictionary<ulong, DateTime> _lastUsed;
+        public CommandPermission CommandPermission { get; private set; }
 
         public TaskPermissionAbstract(CommandPermission permission)
         {
-            _commandPermission = permission;
-            _lastUsed = new Dictionary<ulong, DateTime>();
-            _commandPermission.ChannelPermission.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
+            CommandPermission = permission;
         }
 
         public abstract bool AllowTaskExecution(MessageEventArgs eventArgs);

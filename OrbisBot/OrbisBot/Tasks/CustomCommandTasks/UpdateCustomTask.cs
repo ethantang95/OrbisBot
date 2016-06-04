@@ -7,11 +7,16 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.CustomMessages;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class UpdateCustomTask : FilePermissionTaskAbstract
+    class UpdateCustomTask : TaskAbstract
     {
+        public UpdateCustomTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Appends new return options for the custom command";
@@ -25,16 +30,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "commands-update";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.UPDATE_COMMAND_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -53,7 +48,7 @@ namespace OrbisBot.Tasks
 
             var command = (CustomTask)Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
 
-            if (command.GetCommandPermissionForChannel(messageSource.Channel.Id) == PermissionLevel.UsageDenied)
+            if (command.TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id) == PermissionLevel.UsageDenied)
             {
                 return $"The command {args[1]} does not exist for this channel";
             }

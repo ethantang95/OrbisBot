@@ -10,11 +10,16 @@ using System.Drawing;
 using System.Net;
 using System.IO;
 using OrbisBot.TaskHelpers.AWS;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
     class EdgeDrawerTask : StateTaskAbstract
     {
+        public EdgeDrawerTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Creates an edge image";
@@ -28,16 +33,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "edge";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.EDGE_IMAGE_FILE;
         }
 
         public override bool StateCheckArgs(int state, string[] args)

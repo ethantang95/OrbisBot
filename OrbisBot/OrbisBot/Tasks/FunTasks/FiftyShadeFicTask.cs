@@ -11,13 +11,15 @@ using System.Xml;
 using System.IO;
 using HtmlAgilityPack;
 using OrbisBot.TaskHelpers.UserFinder;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class FiftyShadeFicTask : FilePermissionTaskAbstract
+    class FiftyShadeFicTask : TaskAbstract
     {
-
-        public FiftyShadeFicTask() { }
+        public FiftyShadeFicTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
 
         public override string AboutText()
         {
@@ -32,16 +34,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "generate-lewd"; //should change to something better later or nah... lol
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 180);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.FIFTY_SHADES_FIC_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

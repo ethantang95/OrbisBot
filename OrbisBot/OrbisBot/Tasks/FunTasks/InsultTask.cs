@@ -8,13 +8,16 @@ using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.UserFinder;
 using HtmlAgilityPack;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class InsultTask : FilePermissionTaskAbstract
+    class InsultTask : TaskAbstract
     {
+        public InsultTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
 
-        public InsultTask() { }
         public override string AboutText()
         {
             return "Insults a person of your choice";
@@ -28,16 +31,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "insult";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.INSULT_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class RemoveCustomTask : FilePermissionTaskAbstract
+    class RemoveCustomTask : TaskAbstract
     {
+        public RemoveCustomTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Remove a custom made command";
@@ -19,16 +24,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "commands-remove";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CUSTOM_COMMAND_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -45,7 +40,7 @@ namespace OrbisBot.Tasks
                 return "You cannot remove a non custom task";
             }
 
-            if (task.GetCommandPermissionForChannel(messageSource.Channel.Id) > Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id))
+            if (task.TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id) > Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id))
             {
                 return "You do not have permission to remove this custom command or this custom command is not available in your channel";
             }

@@ -7,11 +7,16 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using System.Threading;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
     class RestartContextTask : CommandChannelTaskAbstract
     {
+        public RestartContextTask(CommandChannelTaskPermission permission) : base(permission)
+        {
+
+        }
         public override string AboutText()
         {
             return "Recreate the context object... not even sure if this works";

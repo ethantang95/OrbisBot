@@ -5,11 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
     class ProxyPMTask : CommandChannelTaskAbstract
     {
+        public ProxyPMTask(CommandChannelTaskPermission permission) : base(permission)
+        {
+
+        }
         public override string AboutText()
         {
             return "sends a private message to user with their ID from OrbisBot";

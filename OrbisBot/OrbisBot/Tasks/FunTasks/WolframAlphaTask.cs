@@ -9,14 +9,15 @@ using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.WolframAlpha;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.AWS;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class WolframAlphaTask : FilePermissionTaskAbstract
+    class WolframAlphaTask : TaskAbstract
     {
-        public override CommandPermission DefaultCommandPermission()
+        public WolframAlphaTask(FileBasedTaskPermission permission) : base(permission)
         {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
+
         }
 
         public override string CommandText()
@@ -27,11 +28,6 @@ namespace OrbisBot.Tasks
         public override string AboutText()
         {
             return "Asks WolframAlpha for results to a question";
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.WOLFRAMALPHA_SETTINGS_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

@@ -83,7 +83,16 @@ namespace OrbisBot.OrbScript
                 }
                 _lexer.consume("=");
                 var value = EvaluateParam();
-                _vars.Add(varName, value);
+
+                //replace a variable's value
+                if (_vars.ContainsKey(varName))
+                {
+                    _vars[varName] = value;
+                }
+                else
+                {
+                    _vars.Add(varName, value);
+                }
                 _lexer.consume(";");
             }
 

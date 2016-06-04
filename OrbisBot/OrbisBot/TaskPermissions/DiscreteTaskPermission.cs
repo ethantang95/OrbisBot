@@ -1,5 +1,4 @@
-﻿using OrbisBot.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,21 +6,25 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 
-namespace OrbisBot.TaskAbstracts
+namespace OrbisBot.TaskPermissions
 {
-    //for tasks that are based on a certain permission only
-    abstract class DiscretePermissionTaskAbstract : TaskAbstract
+    class DiscreteTaskPermission : TaskPermissionAbstract
     {
+        public DiscreteTaskPermission(CommandPermission permission) : base(permission)
+        {
+
+        }
+
         public override bool AllowTaskExecution(MessageEventArgs eventArgs)
         {
             var userPermission = GetUserPermission(eventArgs);
 
-            return userPermission >= _commandPermission.DefaultLevel;
+            return userPermission >= CommandPermission.DefaultLevel;
         }
 
         public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
-            return _commandPermission.DefaultLevel;
+            return CommandPermission.DefaultLevel;
         }
 
         public override void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel)
@@ -38,11 +41,6 @@ namespace OrbisBot.TaskAbstracts
         {
             return Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id,
                 messageEventArgs.User.Id);
-        }
-
-        public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
-        {
-            return String.Empty;
         }
     }
 }

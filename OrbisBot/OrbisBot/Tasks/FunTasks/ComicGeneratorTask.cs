@@ -7,11 +7,16 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using HtmlAgilityPack;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ComicGeneratorTask : FilePermissionTaskAbstract
+    class ComicGeneratorTask : TaskAbstract
     {
+        public ComicGeneratorTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Generate a random Cyanide and Happiness comic";
@@ -24,24 +29,14 @@ namespace OrbisBot.Tasks
 
         public override string CommandText()
         {
-            return "generate-comic  ";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.RANDOM_COMIC_FILE;
+            return "generate-comic";
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             var web = new HtmlWeb();
 
-            var doc = web.Load("http://explosm.net/rcg");
+            var doc = web.Load("    ");
 
             var pNodes = doc.GetElementbyId("rcg-comic");
 

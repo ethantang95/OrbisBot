@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 
-namespace OrbisBot.TaskPermissions.PermissionBuilders
+namespace OrbisBot.TaskPermissions
 {
     class FileBasedTaskPermission : TaskPermissionAbstract
     {
@@ -34,37 +34,37 @@ namespace OrbisBot.TaskPermissions.PermissionBuilders
 
         public override PermissionLevel GetCommandPermissionForChannel(ulong channelId)
         {
-            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
+            if (CommandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                return _commandPermission.ChannelPermission[channelId].PermissionLevel;
+                return CommandPermission.ChannelPermission[channelId].PermissionLevel;
             }
-            return _commandPermission.DefaultLevel;
+            return CommandPermission.DefaultLevel;
         }
 
         public override void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel)
         {
-            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
+            if (CommandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermission[channelId].PermissionLevel = newPermissionLevel;
+                CommandPermission.ChannelPermission[channelId].PermissionLevel = newPermissionLevel;
             }
             else
             {
-                _commandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(newPermissionLevel, _commandPermission.DefaultCoolDown));
+                CommandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(newPermissionLevel, CommandPermission.DefaultCoolDown));
             }
-            FileHelper.WriteObjectToFile(_fileSource, _commandPermission);
+            FileHelper.WriteObjectToFile(_fileSource, CommandPermission);
         }
 
         public override void SetCoolDownForChannel(ulong channelId, int cooldown)
         {
-            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
+            if (CommandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                _commandPermission.ChannelPermission[channelId].CoolDown = cooldown;
+                CommandPermission.ChannelPermission[channelId].CoolDown = cooldown;
             }
             else
             {
-                _commandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(_commandPermission.DefaultLevel, cooldown));
+                CommandPermission.ChannelPermission.Add(channelId, new ChannelPermissionSetting(CommandPermission.DefaultLevel, cooldown));
             }
-            FileHelper.WriteObjectToFile(_fileSource, _commandPermission);
+            FileHelper.WriteObjectToFile(_fileSource, CommandPermission);
         }
 
         private PermissionLevel GetUserPermission(MessageEventArgs messageEventArgs)

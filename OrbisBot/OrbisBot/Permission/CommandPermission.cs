@@ -27,6 +27,11 @@ namespace OrbisBot.Permission
             DefaultCoolDown = defaultCoolDown;
             ChannelPermission = new Dictionary<ulong, ChannelPermissionSetting>();
         }
+
+        public void AddPermission(ICommandPermissionForm permission)
+        {
+            ChannelPermission.Add(permission.Channel, new ChannelPermissionSetting(permission));
+        }
     }
 
     class ChannelPermissionSetting
@@ -38,6 +43,12 @@ namespace OrbisBot.Permission
         {
             PermissionLevel = permissionLevel;
             CoolDown = coolDown;
+        }
+
+        public ChannelPermissionSetting(ICommandPermissionForm permission)
+        {
+            PermissionLevel = permission.PermissionLevel;
+            CoolDown = permission.CoolDown;
         }
     }
 }

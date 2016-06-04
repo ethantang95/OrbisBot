@@ -7,11 +7,16 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.CustomCommands;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class MigrateCommandTask : FilePermissionTaskAbstract
+    class MigrateCommandTask : TaskAbstract
     {
+        public MigrateCommandTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Copy a custom command to a different channel on the server";
@@ -25,16 +30,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "commands-migrate";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, false, 5);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CUSTOM_COMMAND_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

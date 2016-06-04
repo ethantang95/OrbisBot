@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class AboutTask : FilePermissionTaskAbstract
+    class AboutTask : TaskAbstract
     {
+        public AboutTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             //we do not need any args... really... it will just process itself
@@ -25,16 +30,6 @@ namespace OrbisBot.Tasks
                 .AppendLine("If you would like to see the source code, it is available at https://github.com/ethantang95/OrbisBot");
 
             return message.ToString();
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.ABOUT_SETTINGS_FILE;
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 1);
         }
 
         public override string CommandText()

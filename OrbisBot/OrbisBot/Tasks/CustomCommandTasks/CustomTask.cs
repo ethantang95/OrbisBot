@@ -9,18 +9,18 @@ using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.CustomMessages;
 using OrbisBot.OrbScript;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class CustomTask : RegisteredChannelTaskAbstract
+    class CustomTask : TaskAbstract
     {
         private string _commandText;
         private Dictionary<ulong, CustomCommandForm> _customCommands;
-        public CustomTask(string commandName, List<CustomCommandForm> commands)
+        public CustomTask(string commandName, List<CustomCommandForm> commands, RegisteredChannelTaskPermission permission) : base(permission)
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
-            commands.ForEach(s => _commandPermission.ChannelPermission.Add(s.Channel, new ChannelPermissionSetting(s.PermissionLevel, s.CoolDown)));
         }
         public override string AboutText()
         {
@@ -30,11 +30,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return _commandText.ToLower();
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -92,7 +87,7 @@ namespace OrbisBot.Tasks
             if (!_customCommands.ContainsKey(toAdd.Channel))
             {
                 _customCommands.Add(toAdd.Channel, toAdd);
-                _commandPermission.ChannelPermission.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
+                TaskPermission.CommandPermission.ChannelPermission.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
             }
             else
             {
@@ -104,7 +99,7 @@ namespace OrbisBot.Tasks
         public void RemoveCommand(ulong channelId)
         {
             _customCommands.Remove(channelId);
-            _commandPermission.ChannelPermission.Remove(channelId);
+            TaskPermission.CommandPermission.ChannelPermission.Remove(channelId);
             if (_customCommands.Count == 0)
             {
                 CustomCommandFileHandler.RemoveTaskFile(_commandText + ".txt");
@@ -151,16 +146,6 @@ namespace OrbisBot.Tasks
         public override string UsageText()
         {
             return "This is a custom command created for your channel, the usage might vary";
-        }
-
-        public override void SaveSettings(CommandPermission commandPermission)
-        {
-            foreach (var channelPermission in commandPermission.ChannelPermission)
-            {
-                _customCommands[channelPermission.Key].PermissionLevel = channelPermission.Value.PermissionLevel;
-                _customCommands[channelPermission.Key].CoolDown = channelPermission.Value.CoolDown;
-            }
-            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
     }
 }

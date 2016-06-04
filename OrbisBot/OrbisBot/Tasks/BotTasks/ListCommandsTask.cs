@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ListCommandsTask : FilePermissionTaskAbstract
+    class ListCommandsTask : TaskAbstract
     {
+        public ListCommandsTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             var listCustom = args.Length == 2;
@@ -22,7 +27,7 @@ namespace OrbisBot.Tasks
 
             var availableCommands =
                 Context.Instance.Tasks.Where(s =>
-                    (s.Value.GetCommandPermissionForChannel(messageSource.Channel.Id) <= userPermission) &&
+                    (s.Value.TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id) <= userPermission) &&
                     !s.Value.IsCommandDisabled() &&
                     (!channelMuted ||
                         (s.Value.OverrideMuting() && userPermission >= PermissionLevel.Admin)));
@@ -60,16 +65,6 @@ namespace OrbisBot.Tasks
             returnMessage.AppendLine("Type about after a command to see what it does or usage to see how to use it.");
 
             return returnMessage.ToString();
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.LIST_COMMANDS_FILE;
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.RestrictedUser, true, 10);
         }
 
         public override string CommandText()

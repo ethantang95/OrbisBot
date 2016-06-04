@@ -10,11 +10,16 @@ using Newtonsoft.Json.Linq;
 using OrbisBot.TaskHelpers.Reddit;
 using OrbisBot.TaskAbstracts;
 using Newtonsoft.Json;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class RedditTask : FilePermissionTaskAbstract
+    class RedditTask : TaskAbstract
     {
+        public RedditTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "returns a random post from the front page of the subreddit, if no subreddit is specified, returns a random post from reddit. Note, content might or might not be NSFW";
@@ -36,16 +41,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "reddit";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.REDDIT_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

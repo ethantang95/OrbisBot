@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ExceptionThrowingTask : FilePermissionTaskAbstract
+    class ExceptionThrowingTask : TaskAbstract
     {
+        public ExceptionThrowingTask(DiscreteTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Throws an exception, used for debugging";
@@ -24,16 +29,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "bot-crash";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Developer, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.EXCEPTION_TEST_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

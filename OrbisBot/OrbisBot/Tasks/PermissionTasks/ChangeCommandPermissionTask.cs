@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ChangeCommandPermissionTask : FilePermissionTaskAbstract
+    class ChangeCommandPermissionTask : TaskAbstract
     {
+        public ChangeCommandPermissionTask(FileBasedTaskPermission permission) : base(permission)
+        {
+
+        }
+
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             args[1] = "-" + args[1];
@@ -34,7 +40,7 @@ namespace OrbisBot.Tasks
             }
 
             //if the user's level is below the command's level
-            if (commandToChange.GetCommandPermissionForChannel(messageSource.Channel.Id) > userPermissionLevel)
+            if (commandToChange.TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id) > userPermissionLevel)
             {
                 return "You do not have sufficient privledge to change the permission level of this command";
             }
@@ -51,18 +57,8 @@ namespace OrbisBot.Tasks
                 return "You cannot set the permission level to restricted as it is reserved for special cases only";
             }
             
-            commandToChange.SetCommandPermissionForChannel(messageSource.Channel.Id, targetNewPermissionLevel);
+            commandToChange.TaskPermission.SetCommandPermissionForChannel(messageSource.Channel.Id, targetNewPermissionLevel);
             return $"Permission level for command {args[1]} has successfully been set to {targetNewPermissionLevel}";
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CHANGE_COMMAND_PERMISSION_FILE;
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Admin, true, 1);
         }
 
         public override string CommandText()

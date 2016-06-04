@@ -116,6 +116,7 @@
     <Compile Include="OrbScript\OrbScriptLexer.cs" />
     <Compile Include="OrbScript\OrbScriptUtils.cs" />
     <Compile Include="OrbScript\Functions\ScriptDiscordFunctions.cs" />
+    <Compile Include="Permission\ICommandPermmissionForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramSingletonFactoryProxyBean.cs" />
     <Compile Include="DiscordMethods.cs" />
@@ -126,7 +127,6 @@
     <Compile Include="ServerSettings\ServerSettingsWrapper.cs" />
     <Compile Include="ServerSettings\ServerSettings.cs" />
     <Compile Include="TaskAbstracts\CommandChannelTaskAbstract.cs" />
-    <Compile Include="TaskAbstracts\DiscretePermissionTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\MultiInputTaskAbstract.cs" />
     <Compile Include="TaskHelpers\AdminUtils\GeneralAdminUtils.cs" />
     <Compile Include="TaskHelpers\AWS\AWSS3UploadUtil.cs" />
@@ -138,11 +138,20 @@
     <Compile Include="TaskHelpers\UserFinder\UserFinderUtil.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WAImageGenerator.cs" />
     <Compile Include="TaskHelpers\WolframAlpha\WARequest.cs" />
-    <Compile Include="TaskPermissions\PermissionBuilders\FileBasedTaskPermission.cs" />
+    <Compile Include="TaskPermissions\CommandChannelTaskPermission.cs" />
+    <Compile Include="TaskPermissions\DiscreteTaskPermission.cs" />
+    <Compile Include="TaskPermissions\FileBasedTaskPermission.cs" />
+    <Compile Include="TaskPermissions\Implmentations\SaveCustomCommands.cs" />
+    <Compile Include="TaskPermissions\Interfaces\IPermissionSaver.cs" />
+    <Compile Include="TaskPermissions\PermissionBuilders\CommandChannelTaskPermissionBuilder.cs" />
+    <Compile Include="TaskPermissions\PermissionBuilders\DiscreteTaskPermissionBuilder.cs" />
     <Compile Include="TaskPermissions\PermissionBuilders\FileBasedTaskPermissionBuilder.cs" />
+    <Compile Include="TaskPermissions\PermissionBuilders\RegisteredChannelTaskPermissionBuilder.cs" />
     <Compile Include="TaskPermissions\PermissionBuilders\TaskPermissionBuilderAbstract.cs" />
+    <Compile Include="TaskPermissions\RegisteredChannelTaskPermission.cs" />
     <Compile Include="TaskPermissions\TaskPermissionAbstract.cs" />
     <Compile Include="Tasks\BotTasks\AboutTask.cs" />
+    <Compile Include="Tasks\BotTasks\BotJoinTask.cs" />
     <Compile Include="Tasks\EventTasks\CreateEventTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AutoRoleAssignTask.cs" />
@@ -154,7 +163,6 @@
     <Compile Include="Tasks\FunTasks\ComicGeneratorTask.cs" />
     <Compile Include="Tasks\CustomCommandTasks\CreateCustomTask.cs" />
     <Compile Include="Tasks\CustomCommandTasks\CustomTask.cs" />
-    <Compile Include="TaskAbstracts\FilePermissionTaskAbstract.cs" />
     <Compile Include="Tasks\FunTasks\CutePictureTask.cs" />
     <Compile Include="Tasks\FunTasks\EdgeDrawerTask.cs" />
     <Compile Include="Tasks\BotAdminTasks\ExceptionThrowingTask.cs" />
@@ -171,7 +179,6 @@
     <Compile Include="Tasks\ToolTasks\RandomNumberTask.cs" />
     <Compile Include="Tasks\FunTasks\RedditTask.cs" />
     <Compile Include="Tasks\BotTasks\RegisterTask.cs" />
-    <Compile Include="TaskAbstracts\RegisteredChannelTaskAbstract.cs" />
     <Compile Include="TaskAbstracts\TaskAbstract.cs" />
     <Compile Include="Tasks\CustomCommandTasks\RemoveCustomTask.cs" />
     <Compile Include="Tasks\BotAdminTasks\RestartContextTask.cs" />

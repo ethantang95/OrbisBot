@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class MentionRoleTask : FilePermissionTaskAbstract
+    class MentionRoleTask : TaskAbstract
     {
+        public MentionRoleTask(FileBasedTaskPermission permission) : base(permission)
+        {
+
+        }
+
         public override string AboutText()
         {
             return "Sends a notification with a message to everyone with the given role";
@@ -24,16 +30,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "role-mention";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.ROLE_MENTION_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

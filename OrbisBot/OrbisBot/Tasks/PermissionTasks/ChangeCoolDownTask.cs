@@ -6,11 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ChangeCoolDownTask : FilePermissionTaskAbstract
+    class ChangeCoolDownTask : TaskAbstract
     {
+        public ChangeCoolDownTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Changes the cooldown of a task";
@@ -27,16 +32,6 @@ namespace OrbisBot.Tasks
             return "commands-cooldown";
         }
 
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CHANGE_COOL_DOWN_FILE;
-        }
-
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             //first, see if the command exists
@@ -49,7 +44,7 @@ namespace OrbisBot.Tasks
             var command = Context.Instance.Tasks[commandText];
 
             //now, get the permission of the command
-            var commandPermission = command.GetCommandPermissionForChannel(messageSource.Channel.Id);
+            var commandPermission = command.TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id);
 
             var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id);
 
@@ -60,7 +55,7 @@ namespace OrbisBot.Tasks
 
             var cooldown = Int32.Parse(args[2]);
 
-            command.SetCoolDownForChannel(messageSource.Channel.Id, cooldown);
+            command.TaskPermission.SetCoolDownForChannel(messageSource.Channel.Id, cooldown);
 
             return "Cooldown successfully set for command";
         }

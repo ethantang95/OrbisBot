@@ -7,11 +7,16 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.UserFinder;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class UserInfoTask : FilePermissionTaskAbstract
+    class UserInfoTask : TaskAbstract
     {
+        public UserInfoTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             var mainChannel = messageSource.Server.TextChannels.FirstOrDefault(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(messageSource.Server.Id));
@@ -50,16 +55,6 @@ namespace OrbisBot.Tasks
                 .AppendLine($"User Avatar: {targetUser.AvatarUrl}");
 
             return returnText.ToString();
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.META_INFO_FILE;
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, true, 15);
         }
 
         public override string CommandText()

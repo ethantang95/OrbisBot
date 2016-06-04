@@ -1,5 +1,6 @@
 ﻿using Discord;
 using OrbisBot.Permission;
+using OrbisBot.TaskPermissions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,28 +11,28 @@ namespace OrbisBot.TaskAbstracts
 {
     abstract class TaskAbstract : IComparable<TaskAbstract>
     {
-        protected CommandPermission _commandPermission;
+        public TaskPermissionAbstract TaskPermission { get; private set; }
         private Dictionary<ulong, DateTime> _lastUsed;
         private Dictionary<ulong, Dictionary<string, object>> _varDictionary;
 
-        public TaskAbstract()
+        public TaskAbstract(TaskPermissionAbstract permission)
         {
             //to ensure non-nullability, we will always start the command permissions to start with default
-            _commandPermission = DefaultCommandPermission();
+            TaskPermission = permission;
             _lastUsed = new Dictionary<ulong, DateTime>();
             _varDictionary = new Dictionary<ulong, Dictionary<string, object>>();
-            _commandPermission.ChannelPermission.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
+            TaskPermission.CommandPermission.ChannelPermission.Keys.ToList().ForEach(s => _lastUsed.Add(s, new DateTime(0)));
         }
 
         public bool IsCommandDisabled()
         {
-            return _commandPermission.Disabled;
+            return TaskPermission.CommandPermission.Disabled;
         }
 
         public virtual void RunTask(string[] args, MessageEventArgs messageEventArgs)
         {
             //here, check if we will proceed based on the command and channel settings
-            if (!ProceedWithCommand(messageEventArgs) || !AllowTaskExecution(messageEventArgs))
+            if (!ProceedWithCommand(messageEventArgs) || !TaskPermission.AllowTaskExecution(messageEventArgs))
             {
                 return;
             }
@@ -41,7 +42,7 @@ namespace OrbisBot.TaskAbstracts
 
         public string ExecuteTaskDirect(string[] args, MessageEventArgs messageEventArgs, int iterations = 0)
         {
-            if (!ProceedWithCommand(messageEventArgs) || !AllowTaskExecution(messageEventArgs))
+            if (!ProceedWithCommand(messageEventArgs) || !TaskPermission.AllowTaskExecution(messageEventArgs))
             {
                 throw new InvalidOperationException("You do not have permission to execute this task");
             }
@@ -67,10 +68,10 @@ namespace OrbisBot.TaskAbstracts
             if (Context.Instance.ChannelPermission.ContainsChannel(messageEventArgs.Channel.Id))
             {
                 proceed &= !Context.Instance.ChannelPermission.ChannelPermissions[messageEventArgs.Channel.Id].Muted
-                    || (_commandPermission.OverrideMuting 
+                    || (TaskPermission.CommandPermission.OverrideMuting 
                         && Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id, messageEventArgs.User.Id) >= PermissionLevel.Admin); //if a channel is muted, only an admin can proceed with override mute commands
             }
-            proceed &= !_commandPermission.Disabled;
+            proceed &= !TaskPermission.CommandPermission.Disabled;
             return proceed;
         }
 
@@ -83,7 +84,7 @@ namespace OrbisBot.TaskAbstracts
                 //check if it is for about, or if it's for activating the test
                 if (args.Length > 1 && args[1].Equals("about", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    taskResult = $"{CommandText()} - {AboutText()}. Permission level for this channel: {GetCommandPermissionForChannel(messageSource.Channel.Id)}";
+                    taskResult = $"{CommandText()} - {AboutText()}. Permission level for this channel: {TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id)}";
                 }
                 else if (args.Length > 1 && args[1].Equals("usage", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -239,13 +240,13 @@ namespace OrbisBot.TaskAbstracts
 
         public int GetCoolDownTime(ulong channelId)
         {
-            if (_commandPermission.ChannelPermission.ContainsKey(channelId))
+            if (TaskPermission.CommandPermission.ChannelPermission.ContainsKey(channelId))
             {
-                return _commandPermission.ChannelPermission[channelId].CoolDown;
+                return TaskPermission.CommandPermission.ChannelPermission[channelId].CoolDown;
             }
             else
             {
-                return DefaultCommandPermission().DefaultCoolDown;
+                return TaskPermission.CommandPermission.DefaultCoolDown;
             }
         }
 
@@ -256,7 +257,7 @@ namespace OrbisBot.TaskAbstracts
 
         public bool OverrideMuting()
         {
-            return _commandPermission.OverrideMuting;
+            return TaskPermission.CommandPermission.OverrideMuting;
         }
 
         public string CoolDownMesasgePrefix()
@@ -268,27 +269,20 @@ namespace OrbisBot.TaskAbstracts
 
         public abstract string TaskComponent(string[] args, MessageEventArgs messageSource);
 
-        public abstract CommandPermission DefaultCommandPermission();
-
         public abstract string CommandText();
 
         public abstract string AboutText();
 
         public abstract string UsageText();
 
-        public abstract string ExceptionMessage(Exception ex, MessageEventArgs eventArgs);
-
-        public abstract bool AllowTaskExecution(MessageEventArgs eventArgs);
-
-        public abstract PermissionLevel GetCommandPermissionForChannel(ulong channelId);
-
-        public abstract void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel);
-
-        public abstract void SetCoolDownForChannel(ulong channelId, int cooldown);
+        public virtual string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
+        {
+            return string.Empty;
+        }
 
         public int CompareTo(TaskAbstract other)
         {
-            return this.CommandText().CompareTo(other.CommandText());
+            return CommandText().CompareTo(other.CommandText());
         }
     }
 }

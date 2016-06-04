@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class AutoRoleAssignTask : DiscretePermissionTaskAbstract
+    class AutoRoleAssignTask : TaskAbstract
     {
+        public AutoRoleAssignTask(DiscreteTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Automatically assign the roles for this bot based on the permission given to the users in this channel. Type commit as a parameter to actually assign the roles";
@@ -32,11 +37,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "user-autopermission";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Owner, true, 1);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

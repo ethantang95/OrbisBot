@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class BotMuteTask : FilePermissionTaskAbstract
+    class BotMuteTask : TaskAbstract
     {
+        public BotMuteTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Mutes or unmutes the bot for the channel or server";
@@ -19,16 +24,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "bot-mute";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Admin, true, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.BOT_CONTROL_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -98,7 +93,7 @@ namespace OrbisBot.Tasks
 
         public override string UsageText()
         {
-            return "<mute|unmute> OPTIONAL<server>";
+            return "(mute|unmute) OPTIONAL(server)";
         }
     }
 }

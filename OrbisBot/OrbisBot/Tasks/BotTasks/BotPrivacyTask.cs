@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class BotPrivacyTask : DiscretePermissionTaskAbstract
+    class BotPrivacyTask : TaskAbstract
     {
+        public BotPrivacyTask(DiscreteTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Hide yourself from the bot being able to search you from commands globally";
@@ -26,11 +31,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "bot-privacy";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.RestrictedUser, true, 10);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

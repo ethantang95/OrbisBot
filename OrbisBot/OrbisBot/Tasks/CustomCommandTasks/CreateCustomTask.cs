@@ -8,11 +8,18 @@ using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskHelpers.CustomMessages;
+using OrbisBot.TaskPermissions;
+using OrbisBot.TaskPermissions.PermissionBuilders;
+using OrbisBot.TaskPermissions.Implmentations;
 
 namespace OrbisBot.Tasks
 {
-    class CreateCustomTask : FilePermissionTaskAbstract
+    class CreateCustomTask : TaskAbstract
     {
+        public CreateCustomTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Create a custom command, for more information, try the command out";
@@ -27,16 +34,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "commands-create";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CUSTOM_COMMAND_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -73,7 +70,14 @@ namespace OrbisBot.Tasks
                 return $"The command {task.CommandTrigger()} has been added";
             }
 
-            var newTask = new CustomTask(args[1], new List<CustomCommandForm> { customCommand });
+            var customCommandList = new List<CustomCommandForm> { customCommand };
+
+            var permission = new RegisteredChannelTaskPermissionBuilder()
+                    .SetSaver(new SaveCustomCommands())
+                    .SetPermissions(customCommandList)
+                    .BuildPermission();
+
+            var newTask = new CustomTask(args[1], customCommandList, permission);
 
             Context.Instance.AddTask(newTask);
 
@@ -84,7 +88,7 @@ namespace OrbisBot.Tasks
 
         public override string UsageText()
         {
-            return " (command name) (max number of params) [\"(possible return strings)\"]. \nFor the return strings, you can use tokens as placeholders to replace it with content. \n%u represents the user that called this command. \n%n where n is an integer like %1 represent the nth parameter for it to replace it with, starting with 1. Optionally, you can add a u after the number in %n for it to explicitly search for a member in the parameter, like %1u. \nYou can also have a random number generator between a range with the token %r(a-b) where a and b are integers.";
+            return " (command name) (max number of params) [\"(possible return strings)\"]";
         }
 
         public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)

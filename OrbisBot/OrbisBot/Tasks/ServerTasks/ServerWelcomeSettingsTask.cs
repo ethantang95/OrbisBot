@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ServerWelcomeSettingsTask : DiscretePermissionTaskAbstract
+    class ServerWelcomeSettingsTask : TaskAbstract
     {
+        public ServerWelcomeSettingsTask(DiscreteTaskPermission permission) : base(permission)
+        {
+
+        }
+
         public override string AboutText()
         {
             return "Enables or disables the welcome message for the server and sets the welcome message";
@@ -25,18 +31,11 @@ namespace OrbisBot.Tasks
 
             if (args[1].Equals("enable", StringComparison.InvariantCultureIgnoreCase) || args[1].Equals("disable", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (args.Length != 2)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return args.Length == 2;
             }
             else if (args[1].Equals("message", StringComparison.InvariantCultureIgnoreCase))
             {
-                return true;
+                return args.Length <= 3;
             }
             else
             {
@@ -47,11 +46,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "server-welcome";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Admin, true, 1);
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

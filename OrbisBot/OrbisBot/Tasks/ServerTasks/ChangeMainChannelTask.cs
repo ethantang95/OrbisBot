@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class ChangeMainChannelTask : FilePermissionTaskAbstract
+    class ChangeMainChannelTask : TaskAbstract
     {
+        public ChangeMainChannelTask(FileBasedTaskPermission permission) : base(permission)
+        {
+
+        }
+
         public override string AboutText()
         {
             return "Set the current channel as the main channel for this server, all general messages by OrbisBot will be sent to this channel";
@@ -19,16 +25,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "channel-setasmain";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Admin, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CHANGE_MAIN_CHANNEL_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

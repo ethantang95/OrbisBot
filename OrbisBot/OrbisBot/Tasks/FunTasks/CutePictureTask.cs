@@ -12,11 +12,16 @@ using Newtonsoft.Json.Linq;
 using OrbisBot.TaskHelpers.Reddit;
 using OrbisBot.TaskAbstracts;
 using HtmlAgilityPack;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class CutePictureTask : FilePermissionTaskAbstract
+    class CutePictureTask : TaskAbstract
     {
+        public CutePictureTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Sends back a cute picture";
@@ -53,16 +58,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "aww";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 30);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.CUTE_PICTURE_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

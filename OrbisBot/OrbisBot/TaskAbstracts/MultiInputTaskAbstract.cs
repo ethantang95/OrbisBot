@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.TaskAbstracts
 {
     //for these type of tasks, long processing should not be done inside the
     //Task component as registering the person to the task is not synchronous
     //Long running tasks should be done in the state tasks
-    abstract class StateTaskAbstract : FilePermissionTaskAbstract
+    abstract class StateTaskAbstract : TaskAbstract
     {
         Dictionary<ulong, int> _userStates;
 
-        public StateTaskAbstract()
+        public StateTaskAbstract(TaskPermissionAbstract permission) : base(permission)
         {
             _userStates = new Dictionary<ulong, int>();
         }

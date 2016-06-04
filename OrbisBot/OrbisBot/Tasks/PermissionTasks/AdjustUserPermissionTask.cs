@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class AdjustUserPermissionTask : FilePermissionTaskAbstract
+    class AdjustUserPermissionTask : TaskAbstract
     {
+        public AdjustUserPermissionTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            //remove the @ sign
-            var name = args[1].Substring(1);
+            var user = messageSource.Message.MentionedUsers.FirstOrDefault();
 
-            if (!messageSource.Server.Users.Any(s => s.Name == name))
+            if (user == null)
             {
                 return "The user you have tried to change permission for does not exist, did you forget the @?";
             }
@@ -40,9 +44,8 @@ namespace OrbisBot.Tasks
             var userPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
                 messageSource.User.Id);
 
-            var targetUser = messageSource.Server.Users.First(s => s.Name == name);
             var targetPermission = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id,
-                targetUser.Id);
+                user.Id);
 
             //if the target user's permission is higher or same, do not change
             if (userPermission <= targetPermission)
@@ -57,19 +60,9 @@ namespace OrbisBot.Tasks
                 return "You do not have the power to change the user to this role";
             }
 
-            Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, targetUser.Id, targetNewPermissionLevel);
+            Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, user.Id, targetNewPermissionLevel);
 
             return "New Role successfully set";
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.ADJUST_PERMISSION_FILE;
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.Moderator, true, 1);
         }
 
         public override string CommandText()

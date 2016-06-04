@@ -7,11 +7,16 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using System.Text.RegularExpressions;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks.EventTasks
 {
-    class CreateEventTask : FilePermissionTaskAbstract
+    class CreateEventTask : TaskAbstract
     {
+        public CreateEventTask(FileBasedTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string AboutText()
         {
             return "Creates an event which will notify you this message at later time";
@@ -44,16 +49,6 @@ namespace OrbisBot.Tasks.EventTasks
         public override string CommandText()
         {
             return "events-create";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string PermissionFileSource()
-        {
-            throw new NotImplementedException();
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)

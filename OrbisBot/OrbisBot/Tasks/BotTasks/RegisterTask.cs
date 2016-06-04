@@ -7,12 +7,17 @@ using Discord;
 using OrbisBot.Permission;
 using System.Configuration;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
     //really a task to make the other ones easier... mostly to register admins
-    class RegisterTask : FilePermissionTaskAbstract
+    class RegisterTask : TaskAbstract
     {
+        public RegisterTask(DiscreteTaskPermission permission) : base(permission)
+        {
+        }
+
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             var developers = ConfigurationManager.AppSettings[Constants.DEVELOPERS].Split(',').Select(s => s.Trim());
@@ -37,16 +42,6 @@ namespace OrbisBot.Tasks
             Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, messageSource.User.Id, PermissionLevel.User);
 
             return "Thank you for registering with this channel";
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.REGISTER_SELF_FILE;
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.RestrictedUser, true, 1);
         }
 
         public override string CommandText()

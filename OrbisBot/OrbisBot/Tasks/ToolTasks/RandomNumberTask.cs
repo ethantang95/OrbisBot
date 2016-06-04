@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class RandomNumberTask : FilePermissionTaskAbstract
+    class RandomNumberTask : TaskAbstract
     {
+        public RandomNumberTask(FileBasedTaskPermission permission) : base(permission)
+        {
+
+        }
+
         public override string AboutText()
         {
             return "Rolls a random number between specified, or you can flip a coin, roll a dice, or get an option from a list";
@@ -33,16 +39,6 @@ namespace OrbisBot.Tasks
         public override string CommandText()
         {
             return "random";
-        }
-
-        public override CommandPermission DefaultCommandPermission()
-        {
-            return new CommandPermission(false, PermissionLevel.User, false, 1);
-        }
-
-        public override string PermissionFileSource()
-        {
-            return Constants.RANDOM_COMMAND_FILE;
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
