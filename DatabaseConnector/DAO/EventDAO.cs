@@ -20,8 +20,8 @@ namespace DatabaseConnector.DAO
         }
         public override void CreateTable()
         {
-            var sql = new StringBuilder($"CREATE TABLE IF NOT EXIST {TableName()} (")
-                .Append($"{Constants.ID_COLUMN} INT PRIMARY KEY,AUTOINCREMENT,")
+            var sql = new StringBuilder($"CREATE TABLE IF NOT EXISTS {TableName()} (")
+                .Append($"{Constants.ID_COLUMN} INTEGER PRIMARY KEY AUTOINCREMENT,")
                 .Append($"{Constants.EVENT_NAME} VARCHAR(255),")
                 .Append($"{Constants.USERID_COLUMN} BIGINT,")
                 .Append($"{Constants.CHANNELID_COLUMN} BIGINT,")
@@ -60,17 +60,18 @@ namespace DatabaseConnector.DAO
         public override bool InsertObject(EventModel obj)
         {
             var sql = new StringBuilder($"INSERT INTO {TableName()} (")
-                .Append($"{Constants.EVENT_NAME},")
-                .Append($"{Constants.USERID_COLUMN}, {Constants.CHANNELID_COLUMN},")
-                .Append($"{Constants.SERVERID_COLUMN}, {Constants.MESSAGE_COLUMN},")
-                .Append($"{Constants.TARGET_USER_JSON_COLUMN}, {Constants.TARGET_EVERYONE_COLUMN},")
-                .Append($"{Constants.NEXT_DISPATCH_COLUMN}, {Constants.DISPATCH_DELAY_COLUMN},")
+                .Append($"{Constants.EVENT_NAME}, ")
+                .Append($"{Constants.USERID_COLUMN}, {Constants.CHANNELID_COLUMN}, ")
+                .Append($"{Constants.SERVERID_COLUMN}, {Constants.MESSAGE_COLUMN}, ")
+                .Append($"{Constants.TARGET_USER_JSON_COLUMN}, {Constants.TARGET_EVERYONE_COLUMN}, ")
+                .Append($"{Constants.NEXT_DISPATCH_COLUMN}, {Constants.DISPATCH_DELAY_COLUMN}, ")
                 .Append($"{Constants.EVENT_TYPE_COlUMN})")
-                .Append($"VALUES (")
-                .Append($"@{Constants.EVENT_NAME}")
-                .Append($"@{Constants.SERVERID_COLUMN}, @{Constants.MESSAGE_COLUMN},")
-                .Append($"@{Constants.TARGET_USER_JSON_COLUMN}, @{Constants.TARGET_EVERYONE_COLUMN},")
-                .Append($"@{Constants.NEXT_DISPATCH_COLUMN}, @{Constants.DISPATCH_DELAY_COLUMN},")
+                .Append($" VALUES (")
+                .Append($"@{Constants.EVENT_NAME}, ")
+                .Append($"@{Constants.USERID_COLUMN}, @{Constants.CHANNELID_COLUMN}, ")
+                .Append($"@{Constants.SERVERID_COLUMN}, @{Constants.MESSAGE_COLUMN}, ")
+                .Append($"@{Constants.TARGET_USER_JSON_COLUMN}, @{Constants.TARGET_EVERYONE_COLUMN}, ")
+                .Append($"@{Constants.NEXT_DISPATCH_COLUMN}, @{Constants.DISPATCH_DELAY_COLUMN}, ")
                 .Append($"@{Constants.EVENT_TYPE_COlUMN});");
 
             var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
@@ -213,7 +214,7 @@ namespace DatabaseConnector.DAO
             var start_name = "Start";
             var end_name = "end";
 
-            var sql = $"SELECT * FROM {Constants.EVENT_TABLE_NAME} WHERE {Constants.NEXT_DISPATCH_COLUMN} >= @{startTime} AND {Constants.NEXT_DISPATCH_COLUMN} <= @{endTime};";
+            var sql = $"SELECT * FROM {Constants.EVENT_TABLE_NAME} WHERE {Constants.NEXT_DISPATCH_COLUMN} >= @{start_name} AND {Constants.NEXT_DISPATCH_COLUMN} <= @{end_name};";
 
             var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
             sqlParams.Add(start_name, new Tuple<DbType, object>(DbType.Int64, startTime));
@@ -278,7 +279,7 @@ namespace DatabaseConnector.DAO
             {
                 var model = new EventModel();
                 model.ID = (long)reader[Constants.ID_COLUMN];
-                model.Name = (string)reader[Constants.USERID_COLUMN];
+                model.Name = (string)reader[Constants.EVENT_NAME];
                 model.UserID = (long)reader[Constants.USERID_COLUMN];
                 model.ChannelID = (long)reader[Constants.CHANNELID_COLUMN];
                 model.ServerID = (long)reader[Constants.SERVERID_COLUMN];
@@ -288,6 +289,8 @@ namespace DatabaseConnector.DAO
                 model.NextDispatch = (long)reader[Constants.NEXT_DISPATCH_COLUMN];
                 model.DispatchDelay = (long)reader[Constants.DISPATCH_DELAY_COLUMN];
                 model.EventType = (string)reader[Constants.EVENT_TYPE_COlUMN];
+
+                toReturn.Add(model);
             }
 
             return toReturn;

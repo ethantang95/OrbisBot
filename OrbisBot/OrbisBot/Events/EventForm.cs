@@ -16,10 +16,15 @@ namespace OrbisBot.Events
         public ulong UserId { get; set; }
         public string Message { get; set; }
         public List<ulong> TargetUsers { get; set; }
-        public string TargetRole { get; set; }
+        public ulong TargetRole { get; set; }
         public bool? TargetEveryone { get; set; }
         public DateTime DispatchTime { get; set; }
         public long NextDispatchPeriod { get; set; }
         public EventType EventType { get; set; }
+
+        public EventForm()
+        {
+            EventId = -1;
+        }
     }
 }

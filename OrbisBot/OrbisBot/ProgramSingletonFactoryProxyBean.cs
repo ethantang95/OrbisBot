@@ -16,6 +16,8 @@ using OrbisBot.TaskPermissions.PermissionBuilders;
 using OrbisBot.TaskPermissions.Implmentations;
 using OrbisBot.TaskPermissions;
 using OrbisBot.Tasks.BotTasks;
+using OrbisBot.Events;
+using OrbisBot.Tasks.EventTasks;
 
 namespace OrbisBot
 {
@@ -30,6 +32,7 @@ namespace OrbisBot
         public Dictionary<ulong, StateTaskAbstract> InProgressStateTasks { get; private set; }
         public Dictionary<string, string> OAuthKeys { get; private set; }
         public DBAccessor DB { get; private set; }
+        public EventManager EventManager { get; private set; }
 
         private bool _restartToken;
 
@@ -65,6 +68,7 @@ namespace OrbisBot
             ServerSettings = new ServerSettingsWrapper();
             GlobalSetting = new GlobalSetting();
             DB = DBAccessor.GetAccessor();
+            EventManager = new EventManager(DB.EventDAO);
             PopulateTaskDictionary();
             PopulateCustomTasks();
             SetUpDiscordClient();
@@ -107,6 +111,10 @@ namespace OrbisBot
             AddTask(new ComicGeneratorTask(CreateFilePermission(Constants.RANDOM_COMIC_FILE)));
             AddTask(new EdgeDrawerTask(CreateFilePermission(Constants.EDGE_IMAGE_FILE)));
             AddTask(new BotJoinTask(CreateDiscretePermission(false, false, PermissionLevel.User, 30)));
+
+            AddTask(new CreateEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
+            AddTask(new RemoveEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
+            AddTask(new SearchEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
         }
 
         private void PopulateCustomTasks()
@@ -196,13 +204,24 @@ namespace OrbisBot
             Client.UserJoined += DiscordMethods.OnUserJoinsServer;
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
-            Client.ExecuteAndWait(async () =>
+            try
             {
-                //Connect to the Discord server using our token
-                var token = ConfigurationManager.AppSettings[Constants.DISCORD_TOKEN_KEY];
-                await Client.Connect(token);
-                Client.SetGame($"AWS EC2 - {Constants.APP_VERSION}");
-            });
+                Client.ExecuteAndWait(async () =>
+                {
+                    //Connect to the Discord server using our token
+                    var token = ConfigurationManager.AppSettings[Constants.DISCORD_TOKEN_KEY];
+                    await Client.Connect(token);
+                    Client.SetGame($"AWS EC2 - {Constants.APP_VERSION}");
+                    await Task.Delay(5000); //wait for 5 seconds to connect
+                    EventManager.GetEvents();
+                });
+            }
+            catch (Exception e)
+            {
+                //loop it to restart... yeah this might not be a good idea
+                Console.WriteLine($"An error has occurred {e.ToString()}");
+                _restartToken = true;
+            }
 
             Client = null;
             Tasks = null;

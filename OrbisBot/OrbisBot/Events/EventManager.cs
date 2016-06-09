@@ -13,6 +13,7 @@ namespace OrbisBot.Events
     internal class EventManager
     {
         public const int EVENT_FETCH_INTERVAL = 30;
+        public const int EVENT_GRACE_LATE_PERIOD = -10;
 
         public EventAccessor EventDAOAccessor { get; private set; }
 
@@ -24,18 +25,22 @@ namespace OrbisBot.Events
             _scheduler = new EventScheduler(this);
             EventDAOAccessor = new EventAccessor(dao);
             _eventFetcherTimer = new Timer(new TimeSpan(0, EVENT_FETCH_INTERVAL, 0).TotalMilliseconds);
-            FetchAndHandleEvents(null, null);
             _eventFetcherTimer.Elapsed += FetchAndHandleEvents;
+        }
+
+        public void GetEvents()
+        {
+            FetchAndHandleEvents(null, null);
         }
 
         private void FetchAndHandleEvents(object o, ElapsedEventArgs args)
         {
             //fetch also any events that hasn't been updated
-            var events = EventDAOAccessor.GetEvents(new DateTime(0), DateTime.Now.AddMinutes(EVENT_FETCH_INTERVAL + 1));
+            var events = EventDAOAccessor.GetEvents(new DateTime(0), DateTime.UtcNow.AddMinutes(EVENT_FETCH_INTERVAL + 1));
 
             //update and destroy the events that are somehow late?
             //1 minute buffer for task delay
-            var scheduleEvents = events.Where(s => s.DispatchTime > DateTime.Now.AddMinutes(-5));
+            var scheduleEvents = events.Where(s => s.DispatchTime > DateTime.UtcNow.AddMinutes(EVENT_GRACE_LATE_PERIOD));
 
             foreach(var scheduleEvent in scheduleEvents) 
             {
@@ -68,7 +73,7 @@ namespace OrbisBot.Events
         public void CreateEvent(EventForm form)
         {
             //local 30 minutes, might as well queue it
-            if (form.DispatchTime <= DateTime.Now.AddMinutes(EVENT_FETCH_INTERVAL))
+            if (form.DispatchTime <= DateTime.UtcNow.AddMinutes(EVENT_FETCH_INTERVAL))
             {
                 AddEventToDispatch(form);
             }

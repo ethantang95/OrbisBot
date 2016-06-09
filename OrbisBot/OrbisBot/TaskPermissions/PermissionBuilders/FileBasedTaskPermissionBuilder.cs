@@ -39,7 +39,7 @@ namespace OrbisBot.TaskPermissions.PermissionBuilders
                 else
                 {
                     //we want only the channel permissions so it can be flexible
-                    permission.ChannelPermission = permission.ChannelPermission;
+                    permission.ChannelPermission = readPermission.ChannelPermission;
                 }
             }
             catch (Exception e)

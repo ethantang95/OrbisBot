@@ -116,7 +116,7 @@ namespace OrbisBot.TaskAbstracts
             {
                 taskResult = ExceptionMessage(e, messageSource);
 
-                DiscordMethods.OnMessageFailure(e, messageSource);
+                await DiscordMethods.OnMessageFailure(e, messageSource);
             }
             await PublishMessage(taskResult, messageSource);
 
@@ -167,7 +167,7 @@ namespace OrbisBot.TaskAbstracts
             }
             catch (Exception ex)
             {
-                DiscordMethods.OnMessageFailure(ex, messageSource);
+                await DiscordMethods.OnMessageFailure(ex, messageSource);
                 return null;
             }
         }
@@ -182,8 +182,20 @@ namespace OrbisBot.TaskAbstracts
             }
             catch (Exception ex)
             {
-                DiscordMethods.OnPrivateMessageFailure(ex, messageSource.User, message);
+                await DiscordMethods.OnPrivateMessageFailure(ex, messageSource.User, message);
                 return null;
+            }
+        }
+
+        protected async void PublishDevMessage(string message, MessageEventArgs messageSource)
+        {
+            try
+            {
+                await DiscordMethods.SendDevMessage(message, messageSource);
+            }
+            catch (Exception ex)
+            {
+                await DiscordMethods.OnMessageFailure(ex, messageSource);
             }
         }
         public void SetUserVariable(ulong channelId, ulong userId, string name, object obj)

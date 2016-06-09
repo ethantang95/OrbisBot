@@ -69,7 +69,7 @@ namespace OrbisBot
         public const string COMMAND_CHANNEL = "CommandChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.5.2 (Dorado)";
+        public const string APP_VERSION = "0.5.3 (Dorado)";
 
         public const string USAGE_INTRO = "This command's syntax is:";
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";

@@ -19,6 +19,11 @@ namespace OrbisBot.Permission
         public PermissionLevel DefaultLevel { get; set; }
         public Dictionary<ulong, ChannelPermissionSetting> ChannelPermission { get; set; }
 
+        public CommandPermission()
+        {
+
+        }
+
         public CommandPermission(bool disabled, PermissionLevel defaultLevel, bool overrideMuting, int defaultCoolDown)
         {
             Disabled = disabled;
@@ -26,6 +31,15 @@ namespace OrbisBot.Permission
             OverrideMuting = overrideMuting;
             DefaultCoolDown = defaultCoolDown;
             ChannelPermission = new Dictionary<ulong, ChannelPermissionSetting>();
+        }
+
+        public CommandPermission(bool disabled, PermissionLevel defaultLevel, bool overrideMuting, int defaultCoolDown, Dictionary<ulong, ChannelPermissionSetting> channelPermission)
+        {
+            Disabled = disabled;
+            DefaultLevel = defaultLevel;
+            OverrideMuting = overrideMuting;
+            DefaultCoolDown = defaultCoolDown;
+            ChannelPermission = channelPermission;
         }
 
         public void AddPermission(ICommandPermissionForm permission)
@@ -38,6 +52,12 @@ namespace OrbisBot.Permission
     {
         public PermissionLevel PermissionLevel { get; set; }
         public int CoolDown { get; set; }
+
+        public ChannelPermissionSetting()
+        {
+            PermissionLevel = PermissionLevel.User;
+            CoolDown = 30;
+        }
 
         public ChannelPermissionSetting(PermissionLevel permissionLevel, int coolDown)
         {

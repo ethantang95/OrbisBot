@@ -29,7 +29,7 @@ namespace DatabaseConnector
             {
                 SQLiteConnection.CreateFile(FileLocation(_database));
             }
-            connectionString = $"Data Source={_database};Version=3;FailIfMissing=True;";
+            connectionString = $"Data Source={_database};Version=3;";
             _connection = new SQLiteConnection(connectionString);
         }
 

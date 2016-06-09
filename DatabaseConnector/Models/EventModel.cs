@@ -15,7 +15,7 @@ namespace DatabaseConnector.Models
         public long ServerID { get; set; }
         public string Message { get; set; }
         public string TargetUsersJSON { get; set; }
-        public string TargetRole { get; set; }
+        public long TargetRole { get; set; }
         public bool? TargetEveryone { get; set; }
         public long NextDispatch { get; set; }
         public long DispatchDelay { get; set; }

@@ -43,7 +43,7 @@ namespace OrbisBot
             Context.Instance.Client.SetGame(game);
         }
 
-        public static bool SendPrivateMessage(ulong userId, string message)
+        public static async Task<bool> SendPrivateMessage(ulong userId, string message)
         {
             var client = Context.Instance.Client;
 
@@ -55,17 +55,17 @@ namespace OrbisBot
             }
             try
             {
-                var result = user.PrivateChannel.SendMessage(message);
+                var result = await user.PrivateChannel.SendMessage(message);
             }
             catch (Exception e)
             {
-                OnPrivateMessageFailure(e, user, message);
+                await OnPrivateMessageFailure(e, user, message);
             }
 
             return true;
         }
 
-        public static async void SendExceptionMsg(Exception ex)
+        public static async Task SendExceptionMsg(Exception ex)
         {
             try
             {
@@ -77,7 +77,19 @@ namespace OrbisBot
             }
         }
 
-        public static async void OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
+        public static async Task SendDevMessage(string message, MessageEventArgs eventArgs)
+        {
+            try
+            {
+                var result = await GetCommandChannel().SendMessage($"channel {eventArgs.Channel.Name} of {eventArgs.Server.Name} has logged the message of {message}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error has occurred when trying to log message. {e.ToString()}");
+            }
+        }
+
+        public static async Task OnMessageFailure(Exception ex, MessageEventArgs eventArgs)
         {
             try
             { 
@@ -89,7 +101,7 @@ namespace OrbisBot
             }
         }
 
-        public static async void OnPrivateMessageFailure(Exception ex, User user, string message)
+        public static async Task OnPrivateMessageFailure(Exception ex, User user, string message)
         {
             try
             {
@@ -101,7 +113,7 @@ namespace OrbisBot
             }
         }
 
-        public static async void OnEventFailure(Exception ex, EventForm eventForm)
+        public static async Task OnEventFailure(Exception ex, EventForm eventForm)
         {
             try
             {
@@ -152,7 +164,7 @@ namespace OrbisBot
                 }
                 catch (Exception ex)
                 {
-                    OnMessageFailure(ex, eventArgs);
+                    await OnMessageFailure(ex, eventArgs);
                 }
             }
         }
@@ -184,7 +196,7 @@ namespace OrbisBot
 
                     var message = engine.EvaluateString(server.WelcomeMsg);
 
-                    var result = channel.SendMessage(message);
+                    var result = await channel.SendMessage(message);
                 }
                 catch (Exception e)
                 {

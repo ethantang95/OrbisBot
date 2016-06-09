@@ -13,7 +13,10 @@ namespace DatabaseConnector
 
         public EventDAO EventDAO { get; private set; }
 
-        DBAccessor() { }
+        DBAccessor()
+        {
+            CreateDAOs();
+        }
 
         public static DBAccessor GetAccessor()
         {

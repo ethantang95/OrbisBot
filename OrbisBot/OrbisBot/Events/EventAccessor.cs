@@ -59,9 +59,16 @@ namespace OrbisBot.Events
             return result;
         }
 
-        public List<EventForm> FindEventByName(string search, long channelID)
+        public EventForm FindEventById(long id)
         {
-            var result = _eventDAO.FindObjectByName(search, channelID);
+            var result = _eventDAO.GetObjectById(id);
+
+            return EventFormParser(result);
+        }
+
+        public List<EventForm> FindEventByName(string search, ulong channelID)
+        {
+            var result = _eventDAO.FindObjectByName(search, (long)channelID);
 
             return result.Select(EventFormParser).ToList();
         }
@@ -77,9 +84,9 @@ namespace OrbisBot.Events
             toReturn.UserId = (ulong)model.UserID;
             toReturn.Message = model.Message;
             toReturn.TargetUsers = JsonConvert.DeserializeObject<List<ulong>>(model.TargetUsersJSON);
-            toReturn.TargetRole = model.TargetRole;
+            toReturn.TargetRole = (ulong)model.TargetRole;
             toReturn.TargetEveryone = model.TargetEveryone;
-            toReturn.DispatchTime = new DateTime(model.NextDispatch);
+            toReturn.DispatchTime = new DateTime(CommonTools.ToWindowsTicks(model.NextDispatch));
             toReturn.NextDispatchPeriod = model.DispatchDelay;
             toReturn.EventType = EnumParser.ParseString(model.EventType, EventType.InternalError);
             
@@ -96,8 +103,8 @@ namespace OrbisBot.Events
             toReturn.ChannelID = (long)form.ChannelId;
             toReturn.UserID = (long)form.UserId;
             toReturn.Message = form.Message;
-            toReturn.TargetUsersJSON = JsonConvert.SerializeObject(form.TargetEveryone);
-            toReturn.TargetRole = form.TargetRole;
+            toReturn.TargetUsersJSON = JsonConvert.SerializeObject(form.TargetUsers);
+            toReturn.TargetRole = (long)form.TargetRole;
             toReturn.TargetEveryone = form.TargetEveryone;
             toReturn.NextDispatch = CommonTools.ToUnixMilliTime(form.DispatchTime);
             toReturn.DispatchDelay = form.NextDispatchPeriod;

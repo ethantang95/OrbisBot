@@ -24,7 +24,7 @@ namespace OrbisBot.Events
         public void AddEvent(EventForm form)
         {
 
-            if (form.DispatchTime < DateTime.Now)
+            if (form.DispatchTime < DateTime.UtcNow)
             {
                 EventDispatcher.Dispatch(form);
                 return;
@@ -62,7 +62,7 @@ namespace OrbisBot.Events
         {
             _form = form;
 
-            var timeToDispatch = CommonTools.ToUnixMilliTime(form.DispatchTime) - CommonTools.ToUnixMilliTime(DateTime.Now);
+            var timeToDispatch = CommonTools.ToUnixMilliTime(form.DispatchTime) - CommonTools.ToUnixMilliTime(DateTime.UtcNow);
             _timer = new Timer(timeToDispatch);
             _timer.Elapsed += DispatchEvent;
             _timer.Start();

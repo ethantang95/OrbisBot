@@ -37,7 +37,7 @@ namespace OrbisBot.Tasks
 
             var result = DiscordMethods.SendPrivateMessage(userID, args[2]);
 
-            return result ? "message successfully sent" : "User is not found";
+            return result.Result ? "message successfully sent" : "User is not found";
         }
 
         public override string UsageText()
