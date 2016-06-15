@@ -1,5 +1,6 @@
 ﻿using Discord;
 using OrbisBot.Events;
+using OrbisBot.Permission;
 using OrbisBot.TaskAbstracts;
 using OrbisBot.TaskPermissions;
 using System;
@@ -69,6 +70,25 @@ namespace OrbisBot.Tasks.EventTasks
             {
                 return "This event does not belong to this channel, the skip is not completed";
             }
+
+            //check permission, users cannot remove other users events
+            var createrRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, eventObj.UserId);
+            var callerRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id);
+
+            if (eventObj.UserId != messageSource.User.Id)
+            {
+                if (callerRole <= PermissionLevel.User)
+                {
+                    return "You do not have permission to skip this event";
+                }
+
+                if (createrRole > callerRole)
+                {
+                    return "You do not have permission to skip this event";
+                }
+            }
+
+
             //this is an ID, we can just delete directly
             Context.Instance.EventManager.SkipEvent(id);
 

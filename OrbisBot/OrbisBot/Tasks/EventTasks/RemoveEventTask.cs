@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OrbisBot.TaskPermissions;
 using Discord;
 using OrbisBot.Events;
+using OrbisBot.Permission;
 
 namespace OrbisBot.Tasks.EventTasks
 {
@@ -69,6 +70,25 @@ namespace OrbisBot.Tasks.EventTasks
             {
                 return "This event does not belong to this channel, the removal is not completed";
             }
+
+            //check permission, users cannot remove other users events
+            var createrRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, eventObj.UserId);
+            var callerRole = Context.Instance.ChannelPermission.GetUserPermission(messageSource.Channel.Id, messageSource.User.Id);
+
+            if (eventObj.UserId != messageSource.User.Id)
+            {
+                if (callerRole <= PermissionLevel.User)
+                {
+                    return "You do not have permission to remove this event";
+                }
+
+                if (createrRole > callerRole)
+                {
+                    return "You do not have permission to remove this event";
+                }
+            }
+
+
             //this is an ID, we can just delete directly
             Context.Instance.EventManager.RemoveEvent(eventObj);
 

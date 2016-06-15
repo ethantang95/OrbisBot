@@ -90,7 +90,24 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList(server.Roles).SetUserList(mentionUsers);
+            var roles = new List<Role>();
+
+            if (eventForm.TargetEveryone.Value)
+            {
+                roles.Add(server.Roles.First(s => s.IsEveryone));
+            }
+
+            if (eventForm.TargetRole > 0)
+            {
+                var role = server.Roles.FirstOrDefault(s => s.Id == eventForm.TargetRole);
+
+                if (role != null)
+                {
+                    roles.Add(role);
+                }
+            }
+
+            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList(roles).SetUserList(mentionUsers);
 
             var engine = new OrbScriptEngine(config, user);
 
@@ -111,7 +128,24 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList            (server.Roles).SetUserList(mentionUsers);
+            var roles = new List<Role>();
+
+            if (eventForm.TargetEveryone.Value)
+            {
+                roles.Add(server.Roles.First(s => s.IsEveryone));
+            }
+
+            if (eventForm.TargetRole > 0)
+            {
+                var role = server.Roles.FirstOrDefault(s => s.Id == eventForm.TargetRole);
+
+                if (role != null)
+                {
+                    roles.Add(role);
+                }
+            }
+
+            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList            (roles).SetUserList(mentionUsers);
 
             var engine = new OrbScriptEngine(config, user);
 

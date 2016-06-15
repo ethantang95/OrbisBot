@@ -119,9 +119,19 @@ namespace OrbisBot.Events
             {
                 result = EventDAOAccessor.SetNextDispatchByDelay(form.NextDispatchPeriod, form.EventId);
             }
+
             if (!result)
             {
                 throw new EventOperationsException($"Failure to set the next dispatch of event {form.EventId}", form);
+            }
+            else if (form.NextDispatchPeriod != -1)
+            {
+                //if it is a close rescheduling, we can just quickly put it back in the queue again
+                var eventModel = EventDAOAccessor.FindEventById(form.EventId);
+                if (eventModel.DispatchTime < DateTime.UtcNow.AddMinutes(30))
+                {
+                    AddEventToDispatch(eventModel);
+                }
             }
         }
     }

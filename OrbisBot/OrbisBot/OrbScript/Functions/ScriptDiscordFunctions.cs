@@ -44,5 +44,10 @@ namespace OrbisBot.OrbScript
 
             return builder.ToString();
         }
+
+        internal static string MentionTargetRole(IEnumerable<Role> roleList)
+        {
+            return roleList.First().Mention;
+        }
     }
 }

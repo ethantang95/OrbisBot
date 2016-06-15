@@ -219,6 +219,8 @@ namespace OrbisBot.OrbScript
                 case "MentionEveryone": return ScriptFunctions.MentionEveryone(_config.RoleList);
                 case "MentionGroup": CheckIfType(name, OrbScriptBuildType.Events);
                     return ScriptFunctions.MentionGroup(_config.UserList);
+                case "MentonTargetRole": CheckIfType(name, OrbScriptBuildType.Events);
+                    return ScriptFunctions.MentionTargetRole(_config.RoleList);
 
                 case "Add": return ScriptBasicFunctions.Add(args[0], args[1]);
                 case "IntAdd": return ScriptBasicFunctions.IntAdd(args[0], args[1]);
