@@ -10,30 +10,6 @@ namespace OrbisBot.Permission
     //restricted should be absolutely restricted, nothing should allow restricted
     //usageDenied is reserved for tasks that are denied to be executed due to permission... a bit hacky
 
-    public class PermissionEnumMethods
-    {
-        public static PermissionLevel ParseString(string toParse)
-        {
-            return ParseString(toParse, false);
-        }
-
-        public static PermissionLevel ParseString(string toParse, bool throwOnFail)
-        {
-            try
-            {
-                return (PermissionLevel)Enum.Parse(typeof(PermissionLevel), toParse);
-            }
-            catch (Exception e)
-            {
-                if (throwOnFail)
-                {
-                    throw e;
-                }
-                return PermissionLevel.User;
-            }
-        }
-    }
-
     //here, it contains the permission level of the command and its associated server. There will be a default value which is set remotely or something if the server name does not exist in here
     class CommandPermission
     {
@@ -43,6 +19,11 @@ namespace OrbisBot.Permission
         public PermissionLevel DefaultLevel { get; set; }
         public Dictionary<ulong, ChannelPermissionSetting> ChannelPermission { get; set; }
 
+        public CommandPermission()
+        {
+
+        }
+
         public CommandPermission(bool disabled, PermissionLevel defaultLevel, bool overrideMuting, int defaultCoolDown)
         {
             Disabled = disabled;
@@ -51,6 +32,20 @@ namespace OrbisBot.Permission
             DefaultCoolDown = defaultCoolDown;
             ChannelPermission = new Dictionary<ulong, ChannelPermissionSetting>();
         }
+
+        public CommandPermission(bool disabled, PermissionLevel defaultLevel, bool overrideMuting, int defaultCoolDown, Dictionary<ulong, ChannelPermissionSetting> channelPermission)
+        {
+            Disabled = disabled;
+            DefaultLevel = defaultLevel;
+            OverrideMuting = overrideMuting;
+            DefaultCoolDown = defaultCoolDown;
+            ChannelPermission = channelPermission;
+        }
+
+        public void AddPermission(ICommandPermissionForm permission)
+        {
+            ChannelPermission.Add(permission.Channel, new ChannelPermissionSetting(permission));
+        }
     }
 
     class ChannelPermissionSetting
@@ -58,10 +53,22 @@ namespace OrbisBot.Permission
         public PermissionLevel PermissionLevel { get; set; }
         public int CoolDown { get; set; }
 
+        public ChannelPermissionSetting()
+        {
+            PermissionLevel = PermissionLevel.User;
+            CoolDown = 30;
+        }
+
         public ChannelPermissionSetting(PermissionLevel permissionLevel, int coolDown)
         {
             PermissionLevel = permissionLevel;
             CoolDown = coolDown;
+        }
+
+        public ChannelPermissionSetting(ICommandPermissionForm permission)
+        {
+            PermissionLevel = permission.PermissionLevel;
+            CoolDown = permission.CoolDown;
         }
     }
 }

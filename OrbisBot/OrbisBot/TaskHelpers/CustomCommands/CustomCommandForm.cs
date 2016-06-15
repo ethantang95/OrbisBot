@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.TaskHelpers.CustomCommands
 {
-    class CustomCommandForm
+    class CustomCommandForm : ICommandPermissionForm
     {
         public string CommandName { get; set; }
         public int MaxArgs { get; set; }

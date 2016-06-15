@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.TaskHelpers.AdminUtils
 {
-    class GeneralAdminUtils
+    static class GeneralAdminUtils
     {
         public static bool IsCommandChannel(ulong id)
         {

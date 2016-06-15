@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.TaskHelpers.Reddit
 {
-    class RedditRandomHelper
+    static class RedditRandomHelper
     {
         //gets a random url with a reddit source JObject
         public static string GetRandomLinkFromRedditSource(JObject redditObj, bool imageOnly)
@@ -28,7 +28,14 @@ namespace OrbisBot.TaskHelpers.Reddit
                     //get the source for quality purposes
                     try
                     {
-                        postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                        if (postNode["url"].Value<string>().Contains(".gif") || postNode["url"].Value<string>().Contains(".GIF"))
+                        {
+                            postResults.Add(title + "\n" + postNode["url"].Value<string>()); //only way to get the gif
+                        }
+                        else
+                        {
+                            postResults.Add(title + "\n" + postNode["preview"]["images"].ToList()[0]["source"]["url"].Value<string>());
+                        }
                     }
                     catch (Exception e) {
                         //for whatever dumb reason

@@ -7,9 +7,9 @@ using Discord;
 
 namespace OrbisBot.TaskHelpers.UserFinder
 {
-    class UserFinderUtil
+    static class UserFinderUtil
     {
-        public static string FindUserMention(IEnumerable<User> users, string username)
+        public static string FindUserMention(IEnumerable<User> users, string username, HashSet<ulong> hiddenUsers)
         {
             //see if it's already a mention string
             if (IsMentionFormat(username))
@@ -21,11 +21,11 @@ namespace OrbisBot.TaskHelpers.UserFinder
                 return username;
             }
 
-            var user = FindUser(users, username);
+            var user = FindUser(users, username, hiddenUsers);
 
             return user == null ? username : user.Mention;
         }
-        public static User FindUser(IEnumerable<User> users, string username)
+        public static User FindUser(IEnumerable<User> users, string username, HashSet<ulong> hiddenUsers)
         {
             if (username[0] == '@')
             {
@@ -38,8 +38,26 @@ namespace OrbisBot.TaskHelpers.UserFinder
                 username = username.Substring(2, username.Length - 3);
             }
 
+            var usersFiltered = users.Where(s => !hiddenUsers.Contains(s.Id));
+
             //first, find by direct match
-            var userToReturn = users.FirstOrDefault(s => s.Name == username);
+            var userToReturn = usersFiltered.FirstOrDefault(s => s.Name == username);
+
+            if (userToReturn != null)
+            {
+                return userToReturn;
+            }
+
+            //then try by id
+            userToReturn = usersFiltered.FirstOrDefault(s => s.Id.ToString() == username);
+
+            if (userToReturn != null)
+            {
+                return userToReturn;
+            }
+
+            //by discriminator
+            userToReturn = usersFiltered.FirstOrDefault(s => s.Discriminator.ToString() == username);
 
             if (userToReturn != null)
             {
@@ -47,7 +65,7 @@ namespace OrbisBot.TaskHelpers.UserFinder
             }
 
             //if it is null, we will deploy fuzzy search
-            var candidates = users.Where(s => s.Name.ToLowerInvariant().Contains(username.ToLowerInvariant()));
+            var candidates = usersFiltered.Where(s => s.Name.ToLowerInvariant().Contains(username.ToLowerInvariant()));
 
             var sortedList = candidates.Select(s => new UserRank(s, s.Name.ToLowerInvariant().IndexOf(username.ToLowerInvariant()), s.Name.Length,
                 s.Name.Length - s.Name.ToLowerInvariant().IndexOf(username.ToLowerInvariant()) == username.Length)) //to determine if it matches at the back
@@ -59,13 +77,6 @@ namespace OrbisBot.TaskHelpers.UserFinder
             {
                 userToReturn = sortedList.First().User;
             }
-
-            if (userToReturn != null)
-            {
-                return userToReturn;
-            }
-
-            userToReturn = users.FirstOrDefault(s => s.Id.ToString() == username);
 
             if (userToReturn != null)
             {

@@ -1,4 +1,7 @@
 ﻿using Discord;
+using OrbisBot.OrbScript;
+using OrbisBot.ServerSettings;
+using OrbisBot.TaskHelpers.CustomCommands;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -24,6 +27,9 @@ namespace OrbisBot
             CheckAndCreateFolders(Constants.CUSTOM_COMMANDS_FOLDER);
             CheckAndCreateFolders(Constants.CHANNELS_OPTIONS_FOLDER);
             CheckAndCreateFolders(Constants.SERVER_OPTIONS_FOLDER);
+            CheckAndCreateFolders(Constants.GLOBAL_SETTINGS_FOLDER);
+            CheckAndCreateFolders(Constants.OPTIONS_FOLDER);
+            CheckAndCreateFolders(Constants.PROFILES_FOLDER);
 
             var app = Context.Instance;
         }
