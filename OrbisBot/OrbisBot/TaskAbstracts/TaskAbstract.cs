@@ -267,6 +267,16 @@ namespace OrbisBot.TaskAbstracts
             return Constants.TRIGGER_CHAR + CommandText();
         }
 
+        public IEnumerable<string> AdditionalTriggers()
+        {
+            return AdditionalCommandTexts().Select(s => Constants.TRIGGER_CHAR + s);
+        }
+
+        public virtual IEnumerable<string> AdditionalCommandTexts()
+        {
+            return new List<string>();
+        }
+
         public bool OverrideMuting()
         {
             return TaskPermission.CommandPermission.OverrideMuting;

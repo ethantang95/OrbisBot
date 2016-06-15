@@ -171,6 +171,11 @@ namespace OrbisBot
         public void AddTask(TaskAbstract toAdd)
         {
             Tasks.Add(toAdd.CommandTrigger(), toAdd);
+
+            foreach (var trigger in toAdd.AdditionalTriggers())
+            {
+                Tasks.Add(trigger, toAdd);
+            }
         }
 
         public void SignalRestart()
