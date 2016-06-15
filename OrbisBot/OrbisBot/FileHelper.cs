@@ -11,13 +11,17 @@ namespace OrbisBot
     internal static class FileHelper
     {
         //the default save location should be the user's document folder.... or maybe program data but I like docs better
+        public static string GetProgramFolder()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME);
+        }
         static string GetProgramSaveLocation(string fileName)
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, fileName);
+            return Path.Combine(GetProgramFolder(), fileName);
         }
         static string GetOptionsSaveLocation(string filename)
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.ORBIS_BOT_NAME, Constants.OPTIONS_FOLDER, filename);
+            return Path.Combine(GetProgramFolder(), Constants.OPTIONS_FOLDER, filename);
         }
         //get files that have the signature or design of name:value
         public static Dictionary<string, string> GetValuesFromFile(string fileName)

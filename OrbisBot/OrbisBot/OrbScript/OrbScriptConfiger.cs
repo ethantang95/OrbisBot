@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.OrbScript
 {
-    enum OrbScriptBuildType { Standard, Events, Welcome, PrivateMessage};
+    enum OrbScriptBuildType { Standard, Events, JoinLeave, PrivateMessage};
     class OrbScriptConfiger
     {
         public IEnumerable<User> UserList { get; private set; }

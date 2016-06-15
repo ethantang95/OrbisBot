@@ -173,7 +173,7 @@ namespace OrbisBot
         {
             var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
 
-            var channel = eventArgs.Server.TextChannels.FirstOrDefault(s => s.Id == mainChannelID);
+            var channel = GetChannelFromID(mainChannelID);
 
             if (channel == null)
             {
@@ -186,7 +186,7 @@ namespace OrbisBot
             {
                 try
                 {
-                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.Welcome)
+                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.JoinLeave)
                         .SetRoleList(eventArgs.Server.Roles)
                         .SetUserList(eventArgs.Server.Users);
 
@@ -209,6 +209,145 @@ namespace OrbisBot
                         Console.WriteLine($"An error has occurred when trying to log message. {ex.ToString()}");
                     }
                 }
+            }
+        }
+
+        public static async void OnUserLeaveServer(object o, UserEventArgs eventArgs)
+        {
+            var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
+
+            var channel = GetChannelFromID(mainChannelID);
+
+            if (channel == null)
+            {
+                return;
+            }
+
+            var server = Context.Instance.ServerSettings.GetServerSettings(eventArgs.Server.Id);
+
+            if (server.EnableGoodbyeMsgs)
+            {
+                try
+                {
+                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.JoinLeave)
+                        .SetRoleList(eventArgs.Server.Roles)
+                        .SetUserList(eventArgs.Server.Users);
+
+                    var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
+
+                    engine.SetArgs();
+
+                    var message = engine.EvaluateString(server.GoodbyeMsg);
+
+                    var result = await channel.SendMessage(message);
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.GoodbyeMsg}. \n The exception details are: {e.ToString()}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error has occurred when trying to log message. {ex.ToString()}");
+                    }
+                }
+            }
+
+            if (server.EnableGoodbyePms)
+            {
+                try
+                {
+                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.JoinLeave)
+                        .SetRoleList(eventArgs.Server.Roles)
+                        .SetUserList(eventArgs.Server.Users);
+
+                    var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
+
+                    engine.SetArgs();
+
+                    var message = engine.EvaluateString(server.GoodbyePms);
+
+                    var result = await eventArgs.User.SendMessage(message);
+                }
+                catch (Exception e)
+                {
+                    await OnPrivateMessageFailure(e, eventArgs.User, server.GoodbyePms);
+                }
+            }
+        }
+
+        public static async void OnUserBanned(object o, UserEventArgs eventArgs)
+        {
+            var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
+
+            var channel = GetChannelFromID(mainChannelID);
+
+            if (channel == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var result = await channel.SendMessage($"User {eventArgs.User.Name} has been banned from the server");
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name}. \n The exception details are: {e.ToString()}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error has occurred when trying to log message. {ex.ToString()}");
+                }
+            }
+
+            try
+            {
+                var result = await eventArgs.Server.Owner.SendMessage($"User {eventArgs.User.Name} has been banned from the server");
+            }
+            catch (Exception e)
+            {
+                await OnPrivateMessageFailure(e, eventArgs.Server.Owner, $"User {eventArgs.User.Name} has been banned from the server");
+            }
+        }
+
+        public static async void OnUserUnBanned(object o, UserEventArgs eventArgs)
+        {
+            var mainChannelID = Context.Instance.ChannelPermission.GetMainChannelForServer(eventArgs.Server.Id);
+
+            var channel = GetChannelFromID(mainChannelID);
+
+            if (channel == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var result = await channel.SendMessage($"User {eventArgs.User.Name} has been unbanned from the server");
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name}. \n The exception details are: {e.ToString()}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error has occurred when trying to log message. {ex.ToString()}");
+                }
+            }
+
+            try
+            {
+                var result = await eventArgs.Server.Owner.SendMessage($"User {eventArgs.User.Name} has been unbanned from the server");
+            }
+            catch (Exception e)
+            {
+                await OnPrivateMessageFailure(e, eventArgs.Server.Owner, $"User {eventArgs.User.Name} has been unbanned from the server");
             }
         }
     }

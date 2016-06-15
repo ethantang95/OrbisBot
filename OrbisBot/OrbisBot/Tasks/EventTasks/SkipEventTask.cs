@@ -1,18 +1,18 @@
-﻿using OrbisBot.TaskAbstracts;
+﻿using Discord;
+using OrbisBot.Events;
+using OrbisBot.TaskAbstracts;
+using OrbisBot.TaskPermissions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OrbisBot.TaskPermissions;
-using Discord;
-using OrbisBot.Events;
 
 namespace OrbisBot.Tasks.EventTasks
 {
-    class RemoveEventTask : TaskAbstract
+    class SkipEventTask : TaskAbstract
     {
-        public RemoveEventTask(FileBasedTaskPermission permission) : base(permission)
+        public SkipEventTask(FileBasedTaskPermission permission) : base(permission)
         {
         }
 
@@ -28,7 +28,7 @@ namespace OrbisBot.Tasks.EventTasks
 
         public override string CommandText()
         {
-            return "events-remove";
+            return "events-skip";
         }
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
@@ -53,7 +53,7 @@ namespace OrbisBot.Tasks.EventTasks
 
                 if (candidates.Count > 1)
                 {
-                    return "Found more than one event with that name, please search the event by name to confirm the event you want to delete";
+                    return "Found more than one event with that name, please search the event by name to confirm the event you want to skip";
                 }
                 else if (candidates.Count == 0)
                 {
@@ -67,14 +67,12 @@ namespace OrbisBot.Tasks.EventTasks
 
             if (messageSource.Channel.Id != eventObj.ChannelId)
             {
-                return "This event does not belong to this channel, the removal is not completed";
+                return "This event does not belong to this channel, the skip is not completed";
             }
             //this is an ID, we can just delete directly
-            Context.Instance.EventManager.RemoveEvent(eventObj);
+            Context.Instance.EventManager.SkipEvent(id);
 
-
-            return $"Event {eventObj.EventName} has been removed";
-
+            return $"Event {eventObj.EventName} has been skipped and will dispatch in the next occurance";
         }
 
         public override string UsageText()
@@ -87,8 +85,8 @@ namespace OrbisBot.Tasks.EventTasks
             if (ex is EventOperationsException)
             {
                 var eventEx = (EventOperationsException)ex;
-                PublishDevMessage($"Event {eventEx.Form.EventName} with ID {eventEx.Form.EventId} failed to be removed", eventArgs);
-                return $"Event did not remove successfully, the developers has been notified";
+                PublishDevMessage($"Event {eventEx.Form.EventName} with ID {eventEx.Form.EventId} failed to be skipped", eventArgs);
+                return $"Event did not skip successfully, the developers has been notified";
             }
             return base.ExceptionMessage(ex, eventArgs);
         }

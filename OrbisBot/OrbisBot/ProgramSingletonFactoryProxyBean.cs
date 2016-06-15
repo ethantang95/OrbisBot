@@ -18,6 +18,7 @@ using OrbisBot.TaskPermissions;
 using OrbisBot.Tasks.BotTasks;
 using OrbisBot.Events;
 using OrbisBot.Tasks.EventTasks;
+using OrbisBot.Tasks.ServerTasks;
 
 namespace OrbisBot
 {
@@ -67,7 +68,7 @@ namespace OrbisBot
             ChannelPermission = new ChannelPermissionsWrapper();
             ServerSettings = new ServerSettingsWrapper();
             GlobalSetting = new GlobalSetting();
-            DB = DBAccessor.GetAccessor();
+            DB = DBAccessor.GetAccessor(FileHelper.GetProgramFolder());
             EventManager = new EventManager(DB.EventDAO);
             PopulateTaskDictionary();
             PopulateCustomTasks();
@@ -76,45 +77,57 @@ namespace OrbisBot
 
         private void PopulateTaskDictionary()
         {
-            AddTask(new WolframAlphaTask(CreateFilePermission(Constants.WOLFRAMALPHA_SETTINGS_FILE)));
-            AddTask(new AboutTask(CreateFilePermission(Constants.ABOUT_SETTINGS_FILE)));
-            AddTask(new RegisterTask(CreateDiscretePermission(false, true, PermissionLevel.RestrictedUser, 1)));
-            AddTask(new AdjustUserPermissionTask(CreateFilePermission(Constants.ADJUST_PERMISSION_FILE, false, true, PermissionLevel.Moderator, 1)));
-            AddTask(new ChangeCommandPermissionTask(CreateFilePermission(Constants.CHANGE_COMMAND_PERMISSION_FILE, false, true, PermissionLevel.Admin, 1)));
-
-            AddTask(new ListCommandsTask(CreateFilePermission(Constants.LIST_COMMANDS_FILE, false, true, PermissionLevel.RestrictedUser, 10)));
-            AddTask(new UserInfoTask(CreateFilePermission(Constants.META_INFO_FILE)));
-            AddTask(new CreateCustomTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, false, PermissionLevel.Moderator, 1)));
-            AddTask(new RandomNumberTask(CreateFilePermission(Constants.RANDOM_COMMAND_FILE)));
-            AddTask(new ChangeMainChannelTask(CreateFilePermission(Constants.CHANGE_MAIN_CHANNEL_FILE, false, true, PermissionLevel.Admin, 1)));
-
-            AddTask(new BotMuteTask(CreateFilePermission(Constants.BOT_CONTROL_FILE, false, true, PermissionLevel.Admin, 1)));
-            AddTask(new CutePictureTask(CreateFilePermission(Constants.CUTE_PICTURE_FILE)));
-            AddTask(new RedditTask(CreateFilePermission(Constants.REDDIT_FILE)));
+            //BotAdminTasks
             AddTask(new ExceptionThrowingTask(CreateDiscretePermission(false, false, PermissionLevel.Developer, 1)));
-            AddTask(new AutoRoleAssignTask(CreateDiscretePermission(false, true, PermissionLevel.Owner, 1)));
-
-            AddTask(new RestartContextTask(new CommandChannelTaskPermissionBuilder().BuildPermission()));
-            AddTask(new BotMentionTask(CreateFilePermission(Constants.BOT_MENTION_FILE)));
-            AddTask(new FiftyShadeFicTask(CreateFilePermission(Constants.FIFTY_SHADES_FIC_FILE)));
-            AddTask(new InsultTask(CreateFilePermission(Constants.INSULT_FILE)));
-            AddTask(new MentionRoleTask(CreateFilePermission(Constants.ROLE_MENTION_FILE, false, true, PermissionLevel.Moderator, 1)));
-
-            AddTask(new RemoveCustomTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, true, PermissionLevel.Moderator, 1)));
-            AddTask(new ServerWelcomeSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
-            AddTask(new ChangeCoolDownTask(CreateFilePermission(Constants.CHANGE_COOL_DOWN_FILE, false, true, PermissionLevel.Moderator, 1)));
             AddTask(new ProxyPMTask(new CommandChannelTaskPermissionBuilder().BuildPermission()));
+            AddTask(new RestartContextTask(new CommandChannelTaskPermissionBuilder().BuildPermission()));
+
+            //BotTasks
+            AddTask(new AboutTask(CreateFilePermission(Constants.ABOUT_SETTINGS_FILE)));
+            AddTask(new BotJoinTask(CreateDiscretePermission(false, false, PermissionLevel.User, 30)));
+            AddTask(new BotMentionTask(CreateFilePermission(Constants.BOT_MENTION_FILE)));
+            AddTask(new BotMuteTask(CreateFilePermission(Constants.BOT_CONTROL_FILE, false, true, PermissionLevel.Admin, 1)));
+            AddTask(new BotPrivacyTask(CreateDiscretePermission(false, true, PermissionLevel.RestrictedUser, 1)));
+            AddTask(new ListCommandsTask(CreateFilePermission(Constants.LIST_COMMANDS_FILE, false, true, PermissionLevel.RestrictedUser, 10)));
+            AddTask(new RegisterTask(CreateDiscretePermission(false, true, PermissionLevel.RestrictedUser, 1)));
+
+            //CustomCommandTasks
+            AddTask(new CreateCustomTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, false, PermissionLevel.Moderator, 1)));
+            AddTask(new MigrateCommandTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, true, PermissionLevel.Moderator, 1)));
+            AddTask(new RemoveCustomTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, true, PermissionLevel.Moderator, 1)));
             AddTask(new UpdateCustomTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, true, PermissionLevel.Moderator, 1)));
 
-            AddTask(new BotPrivacyTask(CreateDiscretePermission(false, true, PermissionLevel.RestrictedUser, 1)));
-            AddTask(new MigrateCommandTask(CreateFilePermission(Constants.CUSTOM_COMMAND_FILE, false, true, PermissionLevel.Moderator, 1)));
-            AddTask(new ComicGeneratorTask(CreateFilePermission(Constants.RANDOM_COMIC_FILE)));
-            AddTask(new EdgeDrawerTask(CreateFilePermission(Constants.EDGE_IMAGE_FILE)));
-            AddTask(new BotJoinTask(CreateDiscretePermission(false, false, PermissionLevel.User, 30)));
-
+            //EventTasks
             AddTask(new CreateEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
             AddTask(new RemoveEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
             AddTask(new SearchEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
+            AddTask(new SkipEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
+
+            //FunTasks
+            AddTask(new ComicGeneratorTask(CreateFilePermission(Constants.RANDOM_COMIC_FILE)));
+            AddTask(new CutePictureTask(CreateFilePermission(Constants.CUTE_PICTURE_FILE)));
+            AddTask(new EdgeDrawerTask(CreateFilePermission(Constants.EDGE_IMAGE_FILE)));
+            AddTask(new FiftyShadeFicTask(CreateFilePermission(Constants.FIFTY_SHADES_FIC_FILE)));
+            AddTask(new InsultTask(CreateFilePermission(Constants.INSULT_FILE)));
+            AddTask(new RedditTask(CreateFilePermission(Constants.REDDIT_FILE)));
+            AddTask(new WolframAlphaTask(CreateFilePermission(Constants.WOLFRAMALPHA_SETTINGS_FILE)));
+
+            //PermissionTasks
+            AddTask(new AdjustUserPermissionTask(CreateFilePermission(Constants.ADJUST_PERMISSION_FILE, false, true, PermissionLevel.Moderator, 1)));
+            AddTask(new AutoRoleAssignTask(CreateDiscretePermission(false, true, PermissionLevel.Owner, 1)));
+            AddTask(new ChangeCommandPermissionTask(CreateFilePermission(Constants.CHANGE_COMMAND_PERMISSION_FILE, false, true, PermissionLevel.Admin, 1)));
+            AddTask(new ChangeCoolDownTask(CreateFilePermission(Constants.CHANGE_COOL_DOWN_FILE, false, true, PermissionLevel.Moderator, 1)));
+
+            //ServerTasks
+            AddTask(new ChangeMainChannelTask(CreateFilePermission(Constants.CHANGE_MAIN_CHANNEL_FILE, false, true, PermissionLevel.Admin, 1)));
+            AddTask(new ServerGoodByeMsgSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
+            AddTask(new ServerGoodByePmSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
+            AddTask(new ServerWelcomeSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
+
+            //ToolTasks
+            AddTask(new MentionRoleTask(CreateFilePermission(Constants.ROLE_MENTION_FILE, false, true, PermissionLevel.Moderator, 1)));
+            AddTask(new RandomNumberTask(CreateFilePermission(Constants.RANDOM_COMMAND_FILE)));
+            AddTask(new UserInfoTask(CreateFilePermission(Constants.META_INFO_FILE)));
         }
 
         private void PopulateCustomTasks()
@@ -202,6 +215,12 @@ namespace OrbisBot
             Client.MessageReceived += DiscordMethods.OnMessageReceived;
 
             Client.UserJoined += DiscordMethods.OnUserJoinsServer;
+
+            Client.UserJoined += DiscordMethods.OnUserLeaveServer;
+
+            Client.UserBanned += DiscordMethods.OnUserBanned;
+
+            Client.UserUnbanned += DiscordMethods.OnUserUnBanned;
 
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             try

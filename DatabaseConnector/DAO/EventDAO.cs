@@ -23,12 +23,12 @@ namespace DatabaseConnector.DAO
             var sql = new StringBuilder($"CREATE TABLE IF NOT EXISTS {TableName()} (")
                 .Append($"{Constants.ID_COLUMN} INTEGER PRIMARY KEY AUTOINCREMENT,")
                 .Append($"{Constants.EVENT_NAME} VARCHAR(255),")
-                .Append($"{Constants.USERID_COLUMN} BIGINT,")
-                .Append($"{Constants.CHANNELID_COLUMN} BIGINT,")
-                .Append($"{Constants.SERVERID_COLUMN} BIGINT,")
+                .Append($"{Constants.USERID_COLUMN} VARCHAR(63),")
+                .Append($"{Constants.CHANNELID_COLUMN} VARCHAR(63),")
+                .Append($"{Constants.SERVERID_COLUMN} VARCHAR(63),")
                 .Append($"{Constants.MESSAGE_COLUMN} VARCHAR(2047),")
                 .Append($"{Constants.TARGET_USER_JSON_COLUMN} VARCHAR(2047),")
-                .Append($"{Constants.TARGET_ROLE_COLUMN} VARCHAR(255),")
+                .Append($"{Constants.TARGET_ROLE_COLUMN} VARCHAR(63),")
                 .Append($"{Constants.TARGET_EVERYONE_COLUMN} BOOLEAN,")
                 .Append($"{Constants.NEXT_DISPATCH_COLUMN} BIGINT,")
                 .Append($"{Constants.DISPATCH_DELAY_COLUMN} BIGINT,")
@@ -61,26 +61,37 @@ namespace DatabaseConnector.DAO
         {
             var sql = new StringBuilder($"INSERT INTO {TableName()} (")
                 .Append($"{Constants.EVENT_NAME}, ")
-                .Append($"{Constants.USERID_COLUMN}, {Constants.CHANNELID_COLUMN}, ")
-                .Append($"{Constants.SERVERID_COLUMN}, {Constants.MESSAGE_COLUMN}, ")
-                .Append($"{Constants.TARGET_USER_JSON_COLUMN}, {Constants.TARGET_EVERYONE_COLUMN}, ")
-                .Append($"{Constants.NEXT_DISPATCH_COLUMN}, {Constants.DISPATCH_DELAY_COLUMN}, ")
-                .Append($"{Constants.EVENT_TYPE_COlUMN})")
-                .Append($" VALUES (")
+                .Append($"{Constants.USERID_COLUMN}, ")
+                .Append($"{Constants.CHANNELID_COLUMN}, ")
+                .Append($"{Constants.SERVERID_COLUMN}, ")
+                .Append($"{Constants.MESSAGE_COLUMN}, ")
+                .Append($"{Constants.TARGET_USER_JSON_COLUMN}, ")
+                .Append($"{Constants.TARGET_ROLE_COLUMN}, ")
+                .Append($"{Constants.TARGET_EVERYONE_COLUMN}, ")
+                .Append($"{Constants.NEXT_DISPATCH_COLUMN}, ")
+                .Append($"{Constants.DISPATCH_DELAY_COLUMN}, ")
+                .Append($"{Constants.EVENT_TYPE_COlUMN}")
+                .Append($") VALUES (")
                 .Append($"@{Constants.EVENT_NAME}, ")
-                .Append($"@{Constants.USERID_COLUMN}, @{Constants.CHANNELID_COLUMN}, ")
-                .Append($"@{Constants.SERVERID_COLUMN}, @{Constants.MESSAGE_COLUMN}, ")
-                .Append($"@{Constants.TARGET_USER_JSON_COLUMN}, @{Constants.TARGET_EVERYONE_COLUMN}, ")
-                .Append($"@{Constants.NEXT_DISPATCH_COLUMN}, @{Constants.DISPATCH_DELAY_COLUMN}, ")
+                .Append($"@{Constants.USERID_COLUMN}, ")
+                .Append($"@{Constants.CHANNELID_COLUMN}, ")
+                .Append($"@{Constants.SERVERID_COLUMN}, ")
+                .Append($"@{Constants.MESSAGE_COLUMN}, ")
+                .Append($"@{Constants.TARGET_USER_JSON_COLUMN}, ")
+                .Append($"@{Constants.TARGET_ROLE_COLUMN}, ")
+                .Append($"@{Constants.TARGET_EVERYONE_COLUMN}, ")
+                .Append($"@{Constants.NEXT_DISPATCH_COLUMN}, ")
+                .Append($"@{Constants.DISPATCH_DELAY_COLUMN}, ")
                 .Append($"@{Constants.EVENT_TYPE_COlUMN});");
 
             var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
             sqlParams.Add(Constants.EVENT_NAME, new Tuple<DbType, object>(DbType.String, obj.Name));
-            sqlParams.Add(Constants.USERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.UserID));
-            sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ChannelID));
-            sqlParams.Add(Constants.SERVERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ServerID));
+            sqlParams.Add(Constants.USERID_COLUMN, new Tuple<DbType, object>(DbType.String, obj.UserID.ToString()));
+            sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.String, obj.ChannelID.ToString()));
+            sqlParams.Add(Constants.SERVERID_COLUMN, new Tuple<DbType, object>(DbType.String, obj.ServerID.ToString()));
             sqlParams.Add(Constants.MESSAGE_COLUMN, new Tuple<DbType, object>(DbType.String, obj.Message));
             sqlParams.Add(Constants.TARGET_USER_JSON_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetUsersJSON));
+            sqlParams.Add(Constants.TARGET_ROLE_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetRole.ToString()));
             sqlParams.Add(Constants.TARGET_EVERYONE_COLUMN, new Tuple<DbType, object>(DbType.Boolean, obj.TargetEveryone));
             sqlParams.Add(Constants.NEXT_DISPATCH_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.NextDispatch));
             sqlParams.Add(Constants.DISPATCH_DELAY_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.DispatchDelay));
@@ -113,17 +124,17 @@ namespace DatabaseConnector.DAO
             if (obj.UserID != 0)
             {
                 sql.Append($"{Constants.USERID_COLUMN} = @{Constants.USERID_COLUMN},");
-                sqlParams.Add(Constants.USERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.UserID));
+                sqlParams.Add(Constants.USERID_COLUMN, new Tuple<DbType, object>(DbType.String, obj.UserID.ToString()));
             }
             if (obj.ChannelID != 0)
             {
                 sql.Append($"{Constants.CHANNELID_COLUMN} = @{Constants.CHANNELID_COLUMN},");
-                sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ChannelID));
+                sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.String, obj.ChannelID.ToString()));
             }
             if (obj.ServerID != 0)
             {
                 sql.Append($"{Constants.SERVERID_COLUMN} = @{Constants.SERVERID_COLUMN},");
-                sqlParams.Add(Constants.SERVERID_COLUMN, new Tuple<DbType, object>(DbType.Int64, obj.ServerID));
+                sqlParams.Add(Constants.SERVERID_COLUMN, new Tuple<DbType, object>(DbType.String, obj.ServerID.ToString()));
             }
             if (obj.Message != null && obj.Message != string.Empty)
             {
@@ -135,10 +146,15 @@ namespace DatabaseConnector.DAO
                 sql.Append($"{Constants.TARGET_USER_JSON_COLUMN} = @{Constants.TARGET_USER_JSON_COLUMN},");
                 sqlParams.Add(Constants.TARGET_USER_JSON_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetUsersJSON));
             }
+            if (obj.TargetRole != 0)
+            {
+                sql.Append($"{Constants.TARGET_ROLE_COLUMN} = @{Constants.TARGET_ROLE_COLUMN},");
+                sqlParams.Add(Constants.TARGET_ROLE_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetRole.ToString()));
+            }
             if (obj.TargetEveryone != null)
             {
                 sql.Append($"{Constants.TARGET_EVERYONE_COLUMN} = @{Constants.TARGET_EVERYONE_COLUMN},");
-                sqlParams.Add(Constants.TARGET_EVERYONE_COLUMN, new Tuple<DbType, object>(DbType.String, obj.TargetEveryone));
+                sqlParams.Add(Constants.TARGET_EVERYONE_COLUMN, new Tuple<DbType, object>(DbType.Boolean, obj.TargetEveryone));
             }
             if (obj.NextDispatch != 0)
             {
@@ -179,7 +195,7 @@ namespace DatabaseConnector.DAO
         public bool SetNextDispatch(long id, long delay)
         {
             var delay_name = "Delay";
-            var sql = $"UPDATE {TableName()} SET {Constants.NEXT_DISPATCH_COLUMN} = {Constants.NEXT_DISPATCH_COLUMN} + @{delay_name} WHERE {Constants.ID_COLUMN} == @{Constants.ID_COLUMN};";
+            var sql = $"UPDATE {TableName()} SET {Constants.NEXT_DISPATCH_COLUMN} = {Constants.NEXT_DISPATCH_COLUMN} + @{delay_name} WHERE {Constants.ID_COLUMN} = @{Constants.ID_COLUMN};";
 
             var sqlParams = CreateIDParam(id);
             sqlParams.Add(delay_name, new Tuple<DbType, object>(DbType.Int64, delay));
@@ -199,7 +215,7 @@ namespace DatabaseConnector.DAO
 
             var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
             sqlParams.Add(search_name, new Tuple<DbType, object>(DbType.String, $"%{searchStr}%"));
-            sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.Int64, channelID));
+            sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.String, channelID.ToString()));
 
             var command = new SQLiteCommand(sql);
             command = CommandBuilder.AddParameters(sqlParams, command);
@@ -237,11 +253,12 @@ namespace DatabaseConnector.DAO
             return UpdateObject(model);
         }
 
-        public bool UpdateTarget(long id, string targetUserJSON, bool targetEveryone)
+        public bool UpdateTarget(long id, string targetUserJSON, ulong targetRole, bool targetEveryone)
         {
             var model = new EventModel();
             model.ID = id;
             model.TargetUsersJSON = targetUserJSON;
+            model.TargetRole = targetRole;
             model.TargetEveryone = targetEveryone;
             return UpdateObject(model);
         }
@@ -280,11 +297,12 @@ namespace DatabaseConnector.DAO
                 var model = new EventModel();
                 model.ID = (long)reader[Constants.ID_COLUMN];
                 model.Name = (string)reader[Constants.EVENT_NAME];
-                model.UserID = (long)reader[Constants.USERID_COLUMN];
-                model.ChannelID = (long)reader[Constants.CHANNELID_COLUMN];
-                model.ServerID = (long)reader[Constants.SERVERID_COLUMN];
+                model.UserID = ulong.Parse((string)reader[Constants.USERID_COLUMN]);
+                model.ChannelID = ulong.Parse((string)reader[Constants.CHANNELID_COLUMN]);
+                model.ServerID = ulong.Parse((string)reader[Constants.SERVERID_COLUMN]);
                 model.Message = (string)reader[Constants.MESSAGE_COLUMN];
                 model.TargetUsersJSON = (string)reader[Constants.TARGET_USER_JSON_COLUMN];
+                model.TargetRole = ulong.Parse((string)reader[Constants.TARGET_ROLE_COLUMN]);
                 model.TargetEveryone = (bool)reader[Constants.TARGET_EVERYONE_COLUMN];
                 model.NextDispatch = (long)reader[Constants.NEXT_DISPATCH_COLUMN];
                 model.DispatchDelay = (long)reader[Constants.DISPATCH_DELAY_COLUMN];

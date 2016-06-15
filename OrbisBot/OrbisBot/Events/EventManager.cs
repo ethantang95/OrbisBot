@@ -72,17 +72,40 @@ namespace OrbisBot.Events
 
         public void CreateEvent(EventForm form)
         {
+            var result = EventDAOAccessor.CreateEvent(form);
+
+            if (result == -1)
+            {
+                throw new EventOperationsException($"Failure to add the event {form.EventId}", form);
+            }
+
             //local 30 minutes, might as well queue it
             if (form.DispatchTime <= DateTime.UtcNow.AddMinutes(EVENT_FETCH_INTERVAL))
             {
+                form.EventId = result;
                 AddEventToDispatch(form);
             }
-            var result = EventDAOAccessor.CreateEvent(form);
+        }
+
+        public void RemoveEvent(EventForm form)
+        {
+            _scheduler.RemoveEvent(form.EventId);
+
+            var result = EventDAOAccessor.RemoveEvent(form.EventId);
 
             if (!result)
             {
-                throw new EventOperationsException($"Failure to add the event {form.EventId}");
+                throw new EventOperationsException($"Failure to delete the event {form.EventId}", form);
             }
+        }
+
+        public void SkipEvent(long eventId)
+        {
+            _scheduler.RemoveEvent(eventId);
+
+            var eventModel = EventDAOAccessor.FindEventById(eventId);
+
+            ScheduleNextDispatch(eventModel);
         }
 
         public void ScheduleNextDispatch(EventForm form)
@@ -98,15 +121,17 @@ namespace OrbisBot.Events
             }
             if (!result)
             {
-                throw new EventOperationsException($"Failure to set the next dispatch of event {form.EventId}");
+                throw new EventOperationsException($"Failure to set the next dispatch of event {form.EventId}", form);
             }
         }
     }
 
     internal class EventOperationsException : Exception
     {
-        public EventOperationsException(string message) : base(message)
+        public EventForm Form { get; private set; }
+        public EventOperationsException(string message, EventForm form) : base(message)
         {
+            Form = form;
         }
     }
 }

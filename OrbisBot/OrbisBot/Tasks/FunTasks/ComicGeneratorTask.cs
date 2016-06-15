@@ -36,7 +36,7 @@ namespace OrbisBot.Tasks
         {
             var web = new HtmlWeb();
 
-            var doc = web.Load("    ");
+            var doc = web.Load("http://explosm.net/rcg");
 
             var pNodes = doc.GetElementbyId("rcg-comic");
 

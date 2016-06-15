@@ -44,6 +44,20 @@ namespace OrbisBot.Events
             }
         }
 
+        public void RemoveEvent(long eventId)
+        {
+            if (!_events.ContainsKey(eventId))
+            {
+                //called only if we try to remove an event not yet scheduled
+                return;
+            }
+
+            var eventModel = _events[eventId];
+            eventModel.DestroyEvent();
+
+            _events.Remove(eventId);
+        }
+
         private void CleanUpEvent(object sender, EventForm form)
         {
             _events.Remove(form.EventId);
@@ -76,8 +90,7 @@ namespace OrbisBot.Events
 
         private void DispatchEvent(object sender, ElapsedEventArgs e)
         {
-            _timer.Stop();
-            _timer.Dispose();
+            DestroyEvent();
             EventDispatcher.Dispatch(_form);
             if (EventFinished != null)
             {

@@ -157,6 +157,7 @@
     <Compile Include="Tasks\EventTasks\CreateEventTask.cs" />
     <Compile Include="Tasks\EventTasks\RemoveEventTask.cs" />
     <Compile Include="Tasks\EventTasks\SearchEventTask.cs" />
+    <Compile Include="Tasks\EventTasks\SkipEventTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AutoRoleAssignTask.cs" />
     <Compile Include="Tasks\BotTasks\BotMentionTask.cs" />
@@ -173,6 +174,8 @@
     <Compile Include="Tasks\FunTasks\FiftyShadeFicTask.cs" />
     <Compile Include="Tasks\FunTasks\InsultTask.cs" />
     <Compile Include="Tasks\BotTasks\ListCommandsTask.cs" />
+    <Compile Include="Tasks\ServerTasks\ServerGoodByeMsgSettingsTask.cs" />
+    <Compile Include="Tasks\ServerTasks\ServerGoodByePmSettingsTask.cs" />
     <Compile Include="Tasks\ToolTasks\MentionRoleTask.cs" />
     <Compile Include="Tasks\CustomCommandTasks\MigrateCommandTask.cs" />
     <Compile Include="Tasks\BotAdminTasks\ProxyPMTask.cs" />

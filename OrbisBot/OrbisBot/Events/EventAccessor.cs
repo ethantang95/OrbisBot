@@ -27,13 +27,20 @@ namespace OrbisBot.Events
             return results.Select(EventFormParser).ToList();
         }
 
-        public bool CreateEvent(EventForm form)
+        public long CreateEvent(EventForm form)
         {
             var model = EventModelParser(form);
 
             var result = _eventDAO.InsertObject(model);
 
-            return result;
+            if (!result)
+            {
+                return -1;
+            }
+
+            var items = _eventDAO.FindObjectByName(form.EventName, (long)form.ChannelId);
+
+            return items.Select(r => r.ID).Max();
         }
 
         public bool UpdateEvent(EventForm form)
@@ -63,6 +70,11 @@ namespace OrbisBot.Events
         {
             var result = _eventDAO.GetObjectById(id);
 
+            if (result == null)
+            {
+                return null;
+            }
+
             return EventFormParser(result);
         }
 
@@ -79,12 +91,12 @@ namespace OrbisBot.Events
 
             toReturn.EventId = model.ID;
             toReturn.EventName = model.Name;
-            toReturn.ServerId = (ulong)model.ServerID;
-            toReturn.ChannelId = (ulong)model.ChannelID;
-            toReturn.UserId = (ulong)model.UserID;
+            toReturn.ServerId = model.ServerID;
+            toReturn.ChannelId = model.ChannelID;
+            toReturn.UserId = model.UserID;
             toReturn.Message = model.Message;
             toReturn.TargetUsers = JsonConvert.DeserializeObject<List<ulong>>(model.TargetUsersJSON);
-            toReturn.TargetRole = (ulong)model.TargetRole;
+            toReturn.TargetRole = model.TargetRole;
             toReturn.TargetEveryone = model.TargetEveryone;
             toReturn.DispatchTime = new DateTime(CommonTools.ToWindowsTicks(model.NextDispatch));
             toReturn.NextDispatchPeriod = model.DispatchDelay;
@@ -99,12 +111,12 @@ namespace OrbisBot.Events
 
             toReturn.ID = form.EventId;
             toReturn.Name = form.EventName;
-            toReturn.ServerID = (long)form.ServerId;
-            toReturn.ChannelID = (long)form.ChannelId;
-            toReturn.UserID = (long)form.UserId;
+            toReturn.ServerID = form.ServerId;
+            toReturn.ChannelID = form.ChannelId;
+            toReturn.UserID = form.UserId;
             toReturn.Message = form.Message;
             toReturn.TargetUsersJSON = JsonConvert.SerializeObject(form.TargetUsers);
-            toReturn.TargetRole = (long)form.TargetRole;
+            toReturn.TargetRole = form.TargetRole;
             toReturn.TargetEveryone = form.TargetEveryone;
             toReturn.NextDispatch = CommonTools.ToUnixMilliTime(form.DispatchTime);
             toReturn.DispatchDelay = form.NextDispatchPeriod;

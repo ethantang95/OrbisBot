@@ -33,9 +33,9 @@ namespace OrbisBot.Tasks.EventTasks
 
             //regex check the date
             //date format is yyyy/mm/dd hh:mm
-            var timeRegex = new Regex(@"\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}");
+            var timeRegex = new Regex(@"\d{2,4}\/\d{1,2}\/\d{1,2} \d{1,2}:\d{2}");
             //delay format is dd hh:mm
-            var delayRegex = new Regex(@"\d{2}.\d{2}:\d{2}");
+            var delayRegex = new Regex(@"\d{1,2}.\d{1,2}:\d{2}");
 
             if (!timeRegex.IsMatch(args[4]))
             {
