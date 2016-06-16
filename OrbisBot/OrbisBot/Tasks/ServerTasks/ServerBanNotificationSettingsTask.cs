@@ -47,7 +47,7 @@ namespace OrbisBot.Tasks.ServerTasks
 
         public override string UsageText()
         {
-            return "<enable|disable|message> OPTIONAL(\"welcome message\") \nThe message can use the tokens %u to reference the person that has joined the server";
+            return "<enable|disable>";
         }
     }
 }
