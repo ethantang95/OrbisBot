@@ -29,7 +29,7 @@ namespace OrbisBot.TaskPermissions.PermissionBuilders
 
         public W SetOverrideMuting(bool value)
         {
-            _overrideMuting = false;
+            _overrideMuting = value;
             return (W)this;
         }
 
