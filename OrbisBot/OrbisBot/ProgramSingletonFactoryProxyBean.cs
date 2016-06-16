@@ -221,7 +221,7 @@ namespace OrbisBot
 
             Client.UserJoined += DiscordMethods.OnUserJoinsServer;
 
-            Client.UserJoined += DiscordMethods.OnUserLeaveServer;
+            Client.UserLeft += DiscordMethods.OnUserLeaveServer;
 
             Client.UserBanned += DiscordMethods.OnUserBanned;
 

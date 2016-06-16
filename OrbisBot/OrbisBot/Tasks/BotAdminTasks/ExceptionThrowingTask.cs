@@ -40,5 +40,10 @@ namespace OrbisBot.Tasks
         {
             return "This command is not intended for you to use";
         }
+
+        public override IEnumerable<string> AdditionalCommandTexts()
+        {
+            return new List<string>() { "bot-wham", "bot-bam", "bot-oh-shit-son" };
+        }
     }
 }

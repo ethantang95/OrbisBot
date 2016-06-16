@@ -42,7 +42,7 @@ namespace OrbisBot.ServerSettings
         {
             if (!ServerSettings.ContainsKey(serverId))
             {
-                var serverSetting = new ServerSetting(serverId, false, false, false, string.Empty, string.Empty, string.Empty);
+                var serverSetting = new ServerSetting(serverId, false, false, false, false, string.Empty, string.Empty, string.Empty);
 
                 ServerSettings.Add(serverId, serverSetting);
 
@@ -79,6 +79,14 @@ namespace OrbisBot.ServerSettings
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
+        public void SetBanNotifEnable(ulong serverId, bool enable)
+        {
+            CheckAndCreateServer(serverId);
+            var server = ServerSettings[serverId];
+            server.EnableBanNotificaftion = enable;
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
+        }
+
         public void SetWelcomeMessage(ulong serverId, string message)
         {
             CheckAndCreateServer(serverId);
@@ -111,7 +119,7 @@ namespace OrbisBot.ServerSettings
             }
             else
             {
-                return new ServerSetting(0, false, false, false, string.Empty, string.Empty, string.Empty);
+                return new ServerSetting(0, false, false, false, false, string.Empty, string.Empty, string.Empty);
             }
         }
 

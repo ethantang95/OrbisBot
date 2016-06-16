@@ -288,6 +288,13 @@ namespace OrbisBot
                 return;
             }
 
+            var server = Context.Instance.ServerSettings.GetServerSettings(eventArgs.Server.Id);
+
+            if (!server.EnableBanNotificaftion)
+            {
+                return;
+            }
+
             try
             {
                 var result = await channel.SendMessage($"User {eventArgs.User.Name} has been banned from the server");
@@ -321,6 +328,13 @@ namespace OrbisBot
             var channel = GetChannelFromID(mainChannelID);
 
             if (channel == null)
+            {
+                return;
+            }
+
+            var server = Context.Instance.ServerSettings.GetServerSettings(eventArgs.Server.Id);
+
+            if (!server.EnableBanNotificaftion)
             {
                 return;
             }

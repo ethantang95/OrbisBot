@@ -45,8 +45,15 @@ namespace OrbisBot.Tasks
 
                 var prevPrefix = "";
 
+                TaskAbstract prevTask = null;
+
                 availableTasks.ForEach(s =>
                 {
+                    if (prevTask == s)
+                    {
+                        return;
+                    }
+
                     var prefix = s.CommandText().Split('-').First();
                     if (prevPrefix == prefix)
                     {
@@ -58,6 +65,16 @@ namespace OrbisBot.Tasks
                         returnMessage.AppendLine();
                         returnMessage.Append($"{s.CommandTrigger()} ");
                     }
+
+                    //append additional triggers
+                    if (s.AdditionalTriggers().Count() > 0)
+                    {
+                        returnMessage.Append("(");
+                        returnMessage.Append(string.Join(" ", s.AdditionalTriggers()));
+                        returnMessage.Append(") ");
+                    }
+
+                    prevTask = s;
                 });
             }
 

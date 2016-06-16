@@ -64,7 +64,7 @@ namespace OrbisBot.Tasks
             }
             else if (args[1].Equals("disable", StringComparison.InvariantCultureIgnoreCase))
             {
-                Context.Instance.ServerSettings.SetWelcomeEnable(messageSource.Server.Id, true);
+                Context.Instance.ServerSettings.SetWelcomeEnable(messageSource.Server.Id, false);
                 return "Server welcome message is now disabled";
             }
             else //it is a message

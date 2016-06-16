@@ -26,6 +26,7 @@ namespace OrbisBot.Events
             EventDAOAccessor = new EventAccessor(dao);
             _eventFetcherTimer = new Timer(new TimeSpan(0, EVENT_FETCH_INTERVAL, 0).TotalMilliseconds);
             _eventFetcherTimer.Elapsed += FetchAndHandleEvents;
+            _eventFetcherTimer.Start();
         }
 
         public void GetEvents()

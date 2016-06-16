@@ -63,7 +63,7 @@ namespace OrbisBot.Tasks.ServerTasks
             }
             else if (args[1].Equals("disable", StringComparison.InvariantCultureIgnoreCase))
             {
-                Context.Instance.ServerSettings.SetGoodbyeEnable(messageSource.Server.Id, true);
+                Context.Instance.ServerSettings.SetGoodbyeEnable(messageSource.Server.Id, false);
                 return "Server goodbye message is now disabled";
             }
             else //it is a message

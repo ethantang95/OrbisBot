@@ -174,6 +174,7 @@
     <Compile Include="Tasks\FunTasks\FiftyShadeFicTask.cs" />
     <Compile Include="Tasks\FunTasks\InsultTask.cs" />
     <Compile Include="Tasks\BotTasks\ListCommandsTask.cs" />
+    <Compile Include="Tasks\ServerTasks\ServerBanNotificationSettingsTask.cs" />
     <Compile Include="Tasks\ServerTasks\ServerGoodByeMsgSettingsTask.cs" />
     <Compile Include="Tasks\ServerTasks\ServerGoodByePmSettingsTask.cs" />
     <Compile Include="Tasks\ToolTasks\MentionRoleTask.cs" />
