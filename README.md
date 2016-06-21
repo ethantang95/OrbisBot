@@ -34,9 +34,7 @@ Lastly, what is a bot without some fun commands. OrbisBot can serve content to y
 The current version of OrbisBot is hosted on AWS EC2 and is up 99% of the time.
 
 ### Future Plans
-* Conversation supports
-* Event registration and reminders
 * Personal reminders
 * Specific game trade markets, group activity building, and character builds
-* Sound and music support
+* Sound and music support (Currently working on a super awesome version of this)
 * Channel wide events and games where the bot is acting as the host
