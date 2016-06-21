@@ -19,6 +19,7 @@ using OrbisBot.Tasks.BotTasks;
 using OrbisBot.Events;
 using OrbisBot.Tasks.EventTasks;
 using OrbisBot.Tasks.ServerTasks;
+using OrbisBot.Tasks.FunTasks;
 
 namespace OrbisBot
 {
@@ -108,6 +109,7 @@ namespace OrbisBot
             AddTask(new CutePictureTask(CreateFilePermission(Constants.CUTE_PICTURE_FILE)));
             AddTask(new EdgeDrawerTask(CreateFilePermission(Constants.EDGE_IMAGE_FILE)));
             AddTask(new FiftyShadeFicTask(CreateFilePermission(Constants.FIFTY_SHADES_FIC_FILE)));
+            AddTask(new ImageFetchTask(CreateFilePermission(Constants.PICTURE_COMMAND_FILE)));
             AddTask(new InsultTask(CreateFilePermission(Constants.INSULT_FILE)));
             AddTask(new RedditTask(CreateFilePermission(Constants.REDDIT_FILE)));
             AddTask(new WolframAlphaTask(CreateFilePermission(Constants.WOLFRAMALPHA_SETTINGS_FILE)));

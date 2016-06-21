@@ -13,6 +13,7 @@ using OrbisBot.TaskHelpers.Reddit;
 using OrbisBot.TaskAbstracts;
 using HtmlAgilityPack;
 using OrbisBot.TaskPermissions;
+using OrbisBot.TaskHelpers.PhotoBucket;
 
 namespace OrbisBot.Tasks
 {
@@ -87,31 +88,7 @@ namespace OrbisBot.Tasks
             }
             else if (args[1].Equals("neko", StringComparison.InvariantCultureIgnoreCase))
             {
-                var web = new HtmlWeb();
-
-                var page = new Random().Next(0, 100);
-
-                var doc = web.Load($"http://photobucket.com/images/anime%20neko?page={page}");
-
-                var pNodes = doc.DocumentNode.Descendants("script");
-
-                pNodes = pNodes.Where(s => s.InnerText.Contains("Pb.Data.add('searchPageCollectionData'"));
-
-                var requestString = pNodes.First().InnerText;
-
-                requestString = requestString.Replace("Pb.Data.add('doPageCollection', true);\nPb.Data.add('searchPageCollectionData',", "");
-
-                requestString = requestString.Replace(");", "");
-
-                var requestJson = JObject.Parse(requestString);
-
-                var searchResults = requestJson["collectionData"]["items"]["objects"];
-
-                var searchLinks = searchResults.Select(s => s["fullsizeUrl"].Value<string>()).ToList();
-
-                return searchLinks[new Random().Next(0, searchLinks.Count)];
-
-
+                return PhotoBucketRandomHelper.GetRandomPicture("anime neko");
             }
             else
             {

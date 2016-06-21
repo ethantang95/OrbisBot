@@ -19,6 +19,7 @@ namespace OrbisBot
         public const string GLOBAL_SETTINGS_FOLDER = "GlobalSettings";
         public const string REGISTERED_CHANNEL_FILE = "RegisteredChannel.txt";
         public const string REGISTERED_SERVER_FILE = "RegisteredServer.txt";
+        public const string PICTURE_COMMAND_FILE = "Pictures.txt";
 
         public const string HIDE_LIST_FILE = "HideList.txt";
 
@@ -69,7 +70,7 @@ namespace OrbisBot
         public const string COMMAND_CHANNEL = "CommandChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.6.2 (Eridanus)";
+        public const string APP_VERSION = "0.6.3 (Eridanus)";
 
         public const string USAGE_INTRO = "This command's syntax is:";
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";

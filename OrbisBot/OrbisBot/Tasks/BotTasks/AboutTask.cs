@@ -51,5 +51,10 @@ namespace OrbisBot.Tasks
         {
             return Constants.NO_PARAMS_USAGE;
         }
+
+        public override IEnumerable<string> AdditionalCommandTexts()
+        {
+            return new List<string> { "info", "help" };
+        }
     }
 }
