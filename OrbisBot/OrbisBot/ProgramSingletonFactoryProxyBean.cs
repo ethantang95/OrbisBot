@@ -30,7 +30,7 @@ namespace OrbisBot
         public ChannelPermissionsWrapper ChannelPermission { get; private set; }
         public ServerSettingsWrapper ServerSettings { get; private set; }
         public GlobalSetting GlobalSetting { get; private set; }
-        public Dictionary<ulong, StateTaskAbstract> InProgressStateTasks { get; private set; }
+        public Dictionary<ulong, MultiInputTaskAbstract> InProgressStateTasks { get; private set; }
         public Dictionary<string, string> OAuthKeys { get; private set; }
         public DBAccessor DB { get; private set; }
         public EventManager EventManager { get; private set; }
@@ -63,7 +63,7 @@ namespace OrbisBot
         {
             Client = new DiscordClient();
             Tasks = new Dictionary<string, TaskAbstract>();
-            InProgressStateTasks = new Dictionary<ulong, StateTaskAbstract>();
+            InProgressStateTasks = new Dictionary<ulong, MultiInputTaskAbstract>();
             OAuthKeys = new Dictionary<string, string>();
             ChannelPermission = new ChannelPermissionsWrapper();
             ServerSettings = new ServerSettingsWrapper();
@@ -120,6 +120,7 @@ namespace OrbisBot
 
             //ServerTasks
             AddTask(new ChangeMainChannelTask(CreateFilePermission(Constants.CHANGE_MAIN_CHANNEL_FILE, false, true, PermissionLevel.Admin, 1)));
+            AddTask(new ServerBanNotificationSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
             AddTask(new ServerGoodByeMsgSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
             AddTask(new ServerGoodByePmSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
             AddTask(new ServerWelcomeSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
@@ -188,7 +189,7 @@ namespace OrbisBot
             Client.Disconnect();
         }
 
-        public void AddStateTask(ulong userId, StateTaskAbstract task)
+        public void AddStateTask(ulong userId, MultiInputTaskAbstract task)
         {
             if (!InProgressStateTasks.ContainsKey(userId))
             {

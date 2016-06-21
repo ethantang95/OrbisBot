@@ -18,16 +18,20 @@ namespace OrbisBot.Tasks
 
         public override string AboutText()
         {
-            return "Automatically assign the roles for this bot based on the permission given to the users in this channel. Type commit as a parameter to actually assign the roles";
+            return "Automatically assign the roles for this bot based on the permission given to the users in this channel. Type commit as a parameter to actually assign the roles, type server after commit as a parameter to set it up for the entire server";
         }
 
         public override bool CheckArgs(string[] args)
         {
-            if (args.Length > 2)
+            if (args.Length > 3)
             {
                 return false;
             }
-            else if (args.Length == 2 && !args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
+            else if (args.Length >= 2 && !args[1].Equals("commit", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return false;
+            }
+            else if (args.Length == 3 && !args[2].Equals("server", StringComparison.InvariantCultureIgnoreCase))
             {
                 return false;
             }
@@ -49,8 +53,17 @@ namespace OrbisBot.Tasks
             );
 
             newRoles = newRoles.Where(s => s.Value != PermissionLevel.User).ToDictionary(s => s.Key, s => s.Value);
+            if (args.Length == 3)
+            {
+                var channels = messageSource.Server.TextChannels;
+                foreach (var channel in channels)
+                {
+                    newRoles.ToList().ForEach(s => Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, channel.Id, s.Key.Id, s.Value));
+                }
 
-            if (args.Length == 2)
+                return "roles has been successfully automatically assigned";
+            }
+            else if (args.Length == 2)
             {
                 newRoles.ToList().ForEach(s => Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, s.Key.Id, s.Value));
 
@@ -67,7 +80,7 @@ namespace OrbisBot.Tasks
 
         public override string UsageText()
         {
-            return "OPTIONAL<commit>";
+            return "*<commit> *<server>";
         }
 
         private PermissionLevel DeterminePermissionLevelFromPermissions(ServerPermissions permissions)

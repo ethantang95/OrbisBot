@@ -45,9 +45,9 @@ namespace OrbisBot.OrbScript
             return builder.ToString();
         }
 
-        internal static string MentionTargetRole(IEnumerable<Role> roleList)
+        internal static string MentionTargetRole(string roleID, IEnumerable<Role> roleList)
         {
-            return roleList.First().Mention;
+            return roleList.First(s => s.Id == ulong.Parse(roleID)).Mention;
         }
     }
 }

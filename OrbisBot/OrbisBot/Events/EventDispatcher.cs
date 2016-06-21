@@ -26,7 +26,7 @@ namespace OrbisBot.Events
 
         //maybe change this to a boolean in the future where an event failed to run, this way
         //it can saved and dispatched later
-        public static void Dispatch(EventForm eventForm) 
+        public static async void Dispatch(EventForm eventForm) 
         {
             if (!ProceedWithCommand(eventForm))
             {
@@ -38,7 +38,7 @@ namespace OrbisBot.Events
             }
             catch (Exception e)
             {
-                DiscordMethods.OnEventFailure(e, eventForm);
+                await DiscordMethods.OnEventFailure(e, eventForm);
             }
         }
 
@@ -90,28 +90,18 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var roles = new List<Role>();
-
-            if (eventForm.TargetEveryone.Value)
-            {
-                roles.Add(server.Roles.First(s => s.IsEveryone));
-            }
-
-            if (eventForm.TargetRole > 0)
-            {
-                var role = server.Roles.FirstOrDefault(s => s.Id == eventForm.TargetRole);
-
-                if (role != null)
-                {
-                    roles.Add(role);
-                }
-            }
+            var roles = Context.Instance.Client.Servers.First(s => s.Id == eventForm.ServerId).Roles;
 
             var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList(roles).SetUserList(mentionUsers);
 
             var engine = new OrbScriptEngine(config, user);
 
             engine.SetArgs();
+
+            if (eventForm.TargetRole != 0)
+            {
+                engine.SetCustomArgs("role", eventForm.TargetRole.ToString());
+            }
 
             var message = engine.EvaluateString($"$user reminds: {eventForm.Message}");
 
@@ -128,28 +118,18 @@ namespace OrbisBot.Events
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
-            var roles = new List<Role>();
-
-            if (eventForm.TargetEveryone.Value)
-            {
-                roles.Add(server.Roles.First(s => s.IsEveryone));
-            }
-
-            if (eventForm.TargetRole > 0)
-            {
-                var role = server.Roles.FirstOrDefault(s => s.Id == eventForm.TargetRole);
-
-                if (role != null)
-                {
-                    roles.Add(role);
-                }
-            }
+            var roles = Context.Instance.Client.Servers.First(s => s.Id == eventForm.ServerId).Roles;
 
             var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList            (roles).SetUserList(mentionUsers);
 
             var engine = new OrbScriptEngine(config, user);
 
             engine.SetArgs();
+
+            if (eventForm.TargetRole != 0)
+            {
+                engine.SetCustomArgs("role", eventForm.TargetRole.ToString());
+            }
 
             var message = engine.EvaluateString($"$user reminds: {eventForm.Message}");
 

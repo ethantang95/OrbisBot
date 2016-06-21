@@ -37,6 +37,11 @@ namespace OrbisBot.OrbScript
             _vars.Add("user", _focusUser.Name);
         }
 
+        public void SetCustomArgs(string name, string value)
+        {
+            _vars.Add(name, value);
+        }
+
         public string EvaluateString(string s)
         {
             _evalString = s;
@@ -220,7 +225,7 @@ namespace OrbisBot.OrbScript
                 case "MentionGroup": CheckIfType(name, OrbScriptBuildType.Events);
                     return ScriptFunctions.MentionGroup(_config.UserList);
                 case "MentonTargetRole": CheckIfType(name, OrbScriptBuildType.Events);
-                    return ScriptFunctions.MentionTargetRole(_config.RoleList);
+                    return ScriptFunctions.MentionTargetRole(args[0], _config.RoleList);
 
                 case "Add": return ScriptBasicFunctions.Add(args[0], args[1]);
                 case "IntAdd": return ScriptBasicFunctions.IntAdd(args[0], args[1]);

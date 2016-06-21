@@ -23,7 +23,7 @@ namespace OrbisBot.Tasks.ServerTasks
 
         public override bool CheckArgs(string[] args)
         {
-            return args.Length == 2;
+            return args.Length == 2 && (args[1].Equals("enable", StringComparison.InvariantCultureIgnoreCase) || args[1].Equals("disable", StringComparison.InvariantCultureIgnoreCase));
         }
 
         public override string CommandText()

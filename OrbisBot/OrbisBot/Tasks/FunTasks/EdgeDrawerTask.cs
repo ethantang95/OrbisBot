@@ -14,7 +14,7 @@ using OrbisBot.TaskPermissions;
 
 namespace OrbisBot.Tasks
 {
-    class EdgeDrawerTask : StateTaskAbstract
+    class EdgeDrawerTask : MultiInputTaskAbstract
     {
         public EdgeDrawerTask(FileBasedTaskPermission permission) : base(permission)
         {

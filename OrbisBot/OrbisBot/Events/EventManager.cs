@@ -34,7 +34,7 @@ namespace OrbisBot.Events
             FetchAndHandleEvents(null, null);
         }
 
-        private void FetchAndHandleEvents(object o, ElapsedEventArgs args)
+        private async void FetchAndHandleEvents(object o, ElapsedEventArgs args)
         {
             //fetch also any events that hasn't been updated
             var events = EventDAOAccessor.GetEvents(new DateTime(0), DateTime.UtcNow.AddMinutes(EVENT_FETCH_INTERVAL + 1));
@@ -60,7 +60,7 @@ namespace OrbisBot.Events
                 }
                 catch (Exception e)
                 {
-                    DiscordMethods.SendExceptionMsg(e);
+                    await DiscordMethods.SendExceptionMsg(e);
                 }
             }
 
