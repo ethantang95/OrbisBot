@@ -85,6 +85,7 @@ namespace OrbisBot
 
             //BotTasks
             AddTask(new AboutTask(CreateFilePermission(Constants.ABOUT_SETTINGS_FILE)));
+            AddTask(new BotHelpTask(CreateFilePermission(Constants.HELP_SETTINGS_FILE)));
             AddTask(new BotJoinTask(CreateDiscretePermission(false, false, PermissionLevel.User, 30)));
             AddTask(new BotMentionTask(CreateFilePermission(Constants.BOT_MENTION_FILE)));
             AddTask(new BotMuteTask(CreateFilePermission(Constants.BOT_CONTROL_FILE, false, true, PermissionLevel.Admin, 1)));
@@ -125,6 +126,7 @@ namespace OrbisBot
             AddTask(new ServerBanNotificationSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
             AddTask(new ServerGoodByeMsgSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
             AddTask(new ServerGoodByePmSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
+            AddTask(new ServerSetTriggerCharTask(CreateDiscretePermission(false, false, PermissionLevel.Owner, 1)));
             AddTask(new ServerWelcomeSettingsTask(CreateDiscretePermission(false, true, PermissionLevel.Admin, 1)));
 
             //ToolTasks
@@ -173,9 +175,9 @@ namespace OrbisBot
 
         public void AddTask(TaskAbstract toAdd)
         {
-            Tasks.Add(toAdd.CommandTrigger(), toAdd);
+            Tasks.Add(toAdd.CommandText(), toAdd);
 
-            foreach (var trigger in toAdd.AdditionalTriggers())
+            foreach (var trigger in toAdd.AdditionalCommandTexts())
             {
                 Tasks.Add(trigger, toAdd);
             }
@@ -235,8 +237,12 @@ namespace OrbisBot
             {
                 Client.ExecuteAndWait(async () =>
                 {
-                    //Connect to the Discord server using our token
+                //Connect to the Discord server using our token
+#if DEBUG
+                    var token = ConfigurationManager.AppSettings["DiscordDevLoginToken"];
+#else
                     var token = ConfigurationManager.AppSettings[Constants.DISCORD_TOKEN_KEY];
+#endif
                     await Client.Connect(token);
                     Client.SetGame($"AWS EC2 - {Constants.APP_VERSION}");
                     await Task.Delay(5000); //wait for 5 seconds to connect

@@ -54,7 +54,7 @@ namespace OrbisBot.Tasks
 
         public override IEnumerable<string> AdditionalCommandTexts()
         {
-            return new List<string> { "info", "help" };
+            return new List<string> { "info" };
         }
     }
 }

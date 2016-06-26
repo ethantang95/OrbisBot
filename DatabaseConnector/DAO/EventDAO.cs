@@ -208,13 +208,28 @@ namespace DatabaseConnector.DAO
             return result > 0;
         }
 
-        public List<EventModel> FindObjectByName(string searchStr, long channelID)
+        public List<EventModel> FindObjectByName(string searchStr, ulong channelID)
         {
             var search_name = "Search";
             var sql = $"SELECT * FROM {Constants.EVENT_TABLE_NAME} WHERE {Constants.EVENT_NAME} LIKE @{search_name} AND {Constants.CHANNELID_COLUMN} == @{Constants.CHANNELID_COLUMN};";
 
             var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
             sqlParams.Add(search_name, new Tuple<DbType, object>(DbType.String, $"%{searchStr}%"));
+            sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.String, channelID.ToString()));
+
+            var command = new SQLiteCommand(sql);
+            command = CommandBuilder.AddParameters(sqlParams, command);
+
+            var result = _connection.ExecuteReader(command, ReaderParser);
+
+            return result;
+        }
+
+        public List<EventModel> FindObjectByChannel(ulong channelID)
+        {
+            var sql = $"SELECT * FROM {Constants.EVENT_TABLE_NAME} WHERE {Constants.CHANNELID_COLUMN} == @{Constants.CHANNELID_COLUMN};";
+
+            var sqlParams = new Dictionary<string, Tuple<DbType, object>>();
             sqlParams.Add(Constants.CHANNELID_COLUMN, new Tuple<DbType, object>(DbType.String, channelID.ToString()));
 
             var command = new SQLiteCommand(sql);

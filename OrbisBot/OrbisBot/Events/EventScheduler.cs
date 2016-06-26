@@ -92,10 +92,7 @@ namespace OrbisBot.Events
         {
             DestroyEvent();
             EventDispatcher.Dispatch(_form);
-            if (EventFinished != null)
-            {
-                EventFinished(this, _form);
-            }
+            EventFinished?.Invoke(this, _form);
         }
     }
 }

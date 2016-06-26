@@ -47,6 +47,8 @@ namespace OrbisBot.Tasks
 
                 TaskAbstract prevTask = null;
 
+                var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(messageSource.Server.Id);
+
                 availableTasks.ForEach(s =>
                 {
                     if (prevTask == s)
@@ -57,20 +59,20 @@ namespace OrbisBot.Tasks
                     var prefix = s.CommandText().Split('-').First();
                     if (prevPrefix == prefix)
                     {
-                        returnMessage.Append($"{s.CommandTrigger()} ");
+                        returnMessage.Append($"{triggerChar}{s.CommandText()} ");
                     }
                     else
                     {
                         prevPrefix = prefix;
                         returnMessage.AppendLine();
-                        returnMessage.Append($"{s.CommandTrigger()} ");
+                        returnMessage.Append($"{triggerChar}{s.CommandText()} ");
                     }
 
                     //append additional triggers
-                    if (s.AdditionalTriggers().Count() > 0)
+                    if (s.AdditionalCommandTexts().Count() > 0)
                     {
                         returnMessage.Append("(");
-                        returnMessage.Append(string.Join(" ", s.AdditionalTriggers()));
+                        returnMessage.Append(string.Join(" ", s.AdditionalCommandTexts().Select(r => $"{triggerChar}{s}")));
                         returnMessage.Append(") ");
                     }
 

@@ -16,12 +16,13 @@ namespace OrbisBot.ServerSettings
         public string WelcomeMsg { get; set; }
         public string GoodbyeMsg { get; set; }
         public string GoodbyePms { get; set; }
+        public char TriggerChar { get; set; }
 
         public ServerSetting()
         {
-
+            TriggerChar = '-';
         }
-        public ServerSetting(ulong serverID, bool enableWelcome, bool enableGoodBye, bool enableGoodByePms, bool enableBanNotification, string welcomeMsg, string goodbyeMsg, string goodbyePms)
+        public ServerSetting(ulong serverID, bool enableWelcome = false, bool enableGoodBye = false, bool enableGoodByePms = false, bool enableBanNotification = false, string welcomeMsg = "", string goodbyeMsg = "", string goodbyePms = "", char triggerChar = '-')
         {
             ServerId = serverID;
             EnableWelcome = enableWelcome;
@@ -30,6 +31,7 @@ namespace OrbisBot.ServerSettings
             WelcomeMsg = welcomeMsg;
             GoodbyeMsg = goodbyeMsg;
             GoodbyePms = goodbyePms;
+            TriggerChar = triggerChar;
         }
     }
 }

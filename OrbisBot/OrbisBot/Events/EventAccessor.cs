@@ -38,7 +38,7 @@ namespace OrbisBot.Events
                 return -1;
             }
 
-            var items = _eventDAO.FindObjectByName(form.EventName, (long)form.ChannelId);
+            var items = _eventDAO.FindObjectByName(form.EventName, form.ChannelId);
 
             return items.Select(r => r.ID).Max();
         }
@@ -80,7 +80,14 @@ namespace OrbisBot.Events
 
         public List<EventForm> FindEventByName(string search, ulong channelID)
         {
-            var result = _eventDAO.FindObjectByName(search, (long)channelID);
+            var result = _eventDAO.FindObjectByName(search, channelID);
+
+            return result.Select(EventFormParser).ToList();
+        }
+
+        public List<EventForm> FindEventByChannel(ulong channelID)
+        {
+            var result = _eventDAO.FindObjectByChannel(channelID);
 
             return result.Select(EventFormParser).ToList();
         }

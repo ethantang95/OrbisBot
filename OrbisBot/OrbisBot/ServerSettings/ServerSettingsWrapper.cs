@@ -9,11 +9,11 @@ namespace OrbisBot.ServerSettings
 {
     class ServerSettingsWrapper
     {
-        public Dictionary<ulong, ServerSetting> ServerSettings { get; private set; }
+        private Dictionary<ulong, ServerSetting> _serverSettings;
 
         public ServerSettingsWrapper()
         {
-            ServerSettings = new Dictionary<ulong, ServerSetting>();
+            _serverSettings = new Dictionary<ulong, ServerSetting>();
             GetAllRegisteredServers();
         }
 
@@ -35,16 +35,16 @@ namespace OrbisBot.ServerSettings
                 return;
             }
 
-            ServerSettings.Add(serverId, serverSetting);
+            _serverSettings.Add(serverId, serverSetting);
         }
 
         private void CheckAndCreateServer(ulong serverId)
         {
-            if (!ServerSettings.ContainsKey(serverId))
+            if (!_serverSettings.ContainsKey(serverId))
             {
-                var serverSetting = new ServerSetting(serverId, false, false, false, false, string.Empty, string.Empty, string.Empty);
+                var serverSetting = new ServerSetting(serverId);
 
-                ServerSettings.Add(serverId, serverSetting);
+                _serverSettings.Add(serverId, serverSetting);
 
                 SaveServerID();
             }
@@ -52,13 +52,13 @@ namespace OrbisBot.ServerSettings
 
         private void SaveServerID()
         {
-            FileHelper.WriteToFile(ServerSettings.Keys.Select(s => s.ToString()).ToList(), Constants.REGISTERED_SERVER_FILE);
+            FileHelper.WriteToFile(_serverSettings.Keys.Select(s => s.ToString()).ToList(), Constants.REGISTERED_SERVER_FILE);
         }
 
         public void SetWelcomeEnable(ulong serverId, bool enable)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.EnableWelcome = enable;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
@@ -66,7 +66,7 @@ namespace OrbisBot.ServerSettings
         public void SetGoodbyeEnable(ulong serverId, bool enable)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.EnableGoodbyeMsgs = enable;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
@@ -74,7 +74,7 @@ namespace OrbisBot.ServerSettings
         public void SetGoodByePmEnable(ulong serverId, bool enable)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.EnableGoodbyePms = enable;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
@@ -82,7 +82,7 @@ namespace OrbisBot.ServerSettings
         public void SetBanNotifEnable(ulong serverId, bool enable)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.EnableBanNotificaftion = enable;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
@@ -90,7 +90,7 @@ namespace OrbisBot.ServerSettings
         public void SetWelcomeMessage(ulong serverId, string message)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.WelcomeMsg = message;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
@@ -98,7 +98,7 @@ namespace OrbisBot.ServerSettings
         public void SetGoodByeMessage(ulong serverId, string message)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.GoodbyeMsg = message;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
@@ -106,44 +106,58 @@ namespace OrbisBot.ServerSettings
         public void SetGoodByePm(ulong serverId, string message)
         {
             CheckAndCreateServer(serverId);
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             server.GoodbyePms = message;
+            FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
+        }
+
+        public void SetTriggerChar(ulong serverId, char triggerChar)
+        {
+            CheckAndCreateServer(serverId);
+            var server = _serverSettings[serverId];
+            server.TriggerChar = triggerChar;
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
 
         public ServerSetting GetServerSettings(ulong serverId)
         {
-            if (ServerSettings.ContainsKey(serverId))
+            if (_serverSettings.ContainsKey(serverId))
             {
-                return ServerSettings[serverId];
+                return _serverSettings[serverId];
             }
             else
             {
-                return new ServerSetting(0, false, false, false, false, string.Empty, string.Empty, string.Empty);
+                return new ServerSetting(0);
             }
         }
 
         public string GetWelcomeMessage(ulong serverId)
         {
             CheckAndCreateServer(serverId);
-            return ServerSettings[serverId].WelcomeMsg;
+            return _serverSettings[serverId].WelcomeMsg;
         }
 
         public string GetGoodbyeMessage(ulong serverId)
         {
             CheckAndCreateServer(serverId);
-            return ServerSettings[serverId].GoodbyeMsg;
+            return _serverSettings[serverId].GoodbyeMsg;
         }
 
         public string GetGoodbyePm(ulong serverId)
         {
             CheckAndCreateServer(serverId);
-            return ServerSettings[serverId].GoodbyePms;
+            return _serverSettings[serverId].GoodbyePms;
+        }
+
+        public char GetTriggerChar(ulong serverId)
+        {
+            CheckAndCreateServer(serverId);
+            return _serverSettings[serverId].TriggerChar;
         }
 
         private void SaveServerSettings(ulong serverId)
         {
-            var server = ServerSettings[serverId];
+            var server = _serverSettings[serverId];
             FileHelper.WriteObjectToFile(Path.Combine(Constants.SERVER_OPTIONS_FOLDER, serverId.ToString()), server);
         }
     }

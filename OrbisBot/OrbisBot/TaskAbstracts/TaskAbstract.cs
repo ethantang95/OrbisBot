@@ -262,16 +262,6 @@ namespace OrbisBot.TaskAbstracts
             }
         }
 
-        public string CommandTrigger()
-        {
-            return Constants.TRIGGER_CHAR + CommandText();
-        }
-
-        public IEnumerable<string> AdditionalTriggers()
-        {
-            return AdditionalCommandTexts().Select(s => Constants.TRIGGER_CHAR + s);
-        }
-
         public virtual IEnumerable<string> AdditionalCommandTexts()
         {
             return new List<string>();

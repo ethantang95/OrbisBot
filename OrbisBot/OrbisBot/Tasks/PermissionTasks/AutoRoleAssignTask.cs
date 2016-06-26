@@ -73,7 +73,7 @@ namespace OrbisBot.Tasks
             {
                 var messageBuilder = new StringBuilder().AppendLine("The following roles will be assigned if you commit:");
                 newRoles.ToList().ForEach(s => messageBuilder.AppendLine($"{s.Key.Name} => {s.Value}"));
-                messageBuilder.AppendLine($"type \"{CommandTrigger()} commit\" to assign these roles");
+                messageBuilder.AppendLine($"type \"{CommandText()} commit\" to assign these roles");
                 return messageBuilder.ToString();
             }
         }

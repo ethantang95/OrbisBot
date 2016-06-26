@@ -136,10 +136,8 @@
     <Compile Include="TaskAbstracts\MultiInputTaskAbstract.cs" />
     <Compile Include="TaskHelpers\AdminUtils\GeneralAdminUtils.cs" />
     <Compile Include="TaskHelpers\AWS\AWSS3UploadUtil.cs" />
-    <Compile Include="TaskHelpers\CustomMessages\CustomMessageBuilder.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandFileHandler.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandForm.cs" />
-    <Compile Include="TaskHelpers\CustomMessages\CustomMessageUtils.cs" />
     <Compile Include="TaskHelpers\PhotoBucket\PhotoBucketRandomHelper.cs" />
     <Compile Include="TaskHelpers\Reddit\RedditRandomHelper.cs" />
     <Compile Include="TaskHelpers\UserFinder\UserFinderUtil.cs" />
@@ -158,6 +156,7 @@
     <Compile Include="TaskPermissions\RegisteredChannelTaskPermission.cs" />
     <Compile Include="TaskPermissions\TaskPermissionAbstract.cs" />
     <Compile Include="Tasks\BotTasks\AboutTask.cs" />
+    <Compile Include="Tasks\BotTasks\BotHelpTask.cs" />
     <Compile Include="Tasks\BotTasks\BotJoinTask.cs" />
     <Compile Include="Tasks\BotTasks\BotSetupTask.cs" />
     <Compile Include="Tasks\EventTasks\CreateEventTask.cs" />
@@ -184,6 +183,7 @@
     <Compile Include="Tasks\ServerTasks\ServerBanNotificationSettingsTask.cs" />
     <Compile Include="Tasks\ServerTasks\ServerGoodByeMsgSettingsTask.cs" />
     <Compile Include="Tasks\ServerTasks\ServerGoodByePmSettingsTask.cs" />
+    <Compile Include="Tasks\ServerTasks\ServerSetTriggerCharTask.cs" />
     <Compile Include="Tasks\ToolTasks\MentionRoleTask.cs" />
     <Compile Include="Tasks\CustomCommandTasks\MigrateCommandTask.cs" />
     <Compile Include="Tasks\BotAdminTasks\ProxyPMTask.cs" />

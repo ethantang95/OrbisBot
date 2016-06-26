@@ -7,7 +7,6 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
-using OrbisBot.TaskHelpers.CustomMessages;
 using OrbisBot.OrbScript;
 using OrbisBot.TaskPermissions;
 
@@ -62,7 +61,7 @@ namespace OrbisBot.Tasks
                 .SetRoleList(messageSource.Server.Roles)
                 .SetUserList(messageSource.Channel.Users)
                 .SetCallIterations(iterations)
-                .SetSourceCommand(CommandTrigger());
+                .SetSourceCommand(CommandText());
 
             var engine = new OrbScriptEngine(engineConfig, messageSource.User);
             engine.SetArgs(commandArgs);
@@ -103,7 +102,7 @@ namespace OrbisBot.Tasks
             if (_customCommands.Count == 0)
             {
                 CustomCommandFileHandler.RemoveTaskFile(_commandText + ".txt");
-                Context.Instance.Tasks.Remove(this.CommandTrigger());
+                Context.Instance.Tasks.Remove(CommandText());
             }
             else
             {
@@ -114,15 +113,6 @@ namespace OrbisBot.Tasks
         public void UpdateCommand(string[] newCommands, MessageEventArgs source)
         {
             var content = _customCommands[source.Channel.Id];
-
-            foreach (var customReturn in newCommands)
-            {
-                var fakeParams = Enumerable.Repeat("1", content.MaxArgs).ToArray();
-                var validationBuilder = new CustomMessageBuilder(customReturn, fakeParams, source.User, source.Channel.Users, source.Server.Roles, Context.Instance.GlobalSetting.HideList);
-                var result = validationBuilder.GenerateGeneralMessage().EvaluateCommandTokens(source).GetMessage();
-            }
-
-            //validation complete here
 
             content.ReturnValues.AddRange(newCommands);
 

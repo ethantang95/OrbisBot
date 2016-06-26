@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using OrbisBot.Tasks;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.Events;
-using OrbisBot.TaskHelpers.CustomMessages;
 using OrbisBot.OrbScript;
 
 namespace OrbisBot
@@ -141,10 +140,18 @@ namespace OrbisBot
                     }
                     else
                     {
-                        var commandSplitted = eventArgs.Message.Text.Split(' ');
-                        if (Context.Instance.Tasks.ContainsKey(commandSplitted[0].ToLower()))
+                        //first, check for the trigger char
+                        var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(eventArgs.Server.Id);
+
+                        if (eventArgs.Message.Text[0] != triggerChar)
                         {
-                            var task = Context.Instance.Tasks[commandSplitted[0].ToLower()];
+                            return;
+                        }
+
+                        var command = eventArgs.Message.Text.Split(' ')[0].Substring(1);
+                        if (Context.Instance.Tasks.ContainsKey(command.ToLower()))
+                        {
+                            var task = Context.Instance.Tasks[command.ToLower()];
                             var args = CommandParser.ParseCommand(eventArgs.Message.Text);
                             task.RunTask(args, eventArgs);
                         }

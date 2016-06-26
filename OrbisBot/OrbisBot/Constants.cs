@@ -61,6 +61,7 @@ namespace OrbisBot
         public const string RANDOM_COMIC_FILE = "RandomComic.txt";
         public const string EDGE_IMAGE_FILE = "EdgeImage.txt";
         public const string EVENTS_FILE = "Events.txt"; //all permission associated with events
+        public const string HELP_SETTINGS_FILE = "Help.txt";
 
         public const string DISCORD_USERNAME_KEY = "DiscordLoginUserName";
         public const string DISCORD_PASSWORD_KEY = "DiscordLoginPassword";
@@ -70,7 +71,7 @@ namespace OrbisBot
         public const string COMMAND_CHANNEL = "CommandChannel";
         public const string DEVELOPERS = "Developers";
 
-        public const string APP_VERSION = "0.6.3 (Eridanus)";
+        public const string APP_VERSION = "0.6.4 (Eridanus)";
 
         public const string USAGE_INTRO = "This command's syntax is:";
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";

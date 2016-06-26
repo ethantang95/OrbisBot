@@ -7,7 +7,6 @@ using Discord;
 using OrbisBot.Permission;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.TaskAbstracts;
-using OrbisBot.TaskHelpers.CustomMessages;
 using OrbisBot.TaskPermissions;
 using OrbisBot.TaskPermissions.PermissionBuilders;
 using OrbisBot.TaskPermissions.Implmentations;
@@ -63,11 +62,13 @@ namespace OrbisBot.Tasks
             //we are no longer validating the commands because it basically is a hard NP problem or even a halting problem, so we will fail on runtime
             var customCommand = new CustomCommandForm(args[1], maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList(), 30);
 
+            var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(messageSource.Server.Id);
+
             if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))
             {
                 var task = (CustomTask)Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
                 task.AddContent(customCommand);
-                return $"The command {task.CommandTrigger()} has been added";
+                return $"The command {triggerChar}{task.CommandText()} has been added";
             }
 
             var customCommandList = new List<CustomCommandForm> { customCommand };
@@ -83,7 +84,7 @@ namespace OrbisBot.Tasks
 
             CustomCommandFileHandler.SaveCustomTask(newTask.GetCustomCommands());
 
-            return $"The command {newTask.CommandTrigger()} has been added";
+            return $"The command {triggerChar}{newTask.CommandText()} has been added";
         }
 
         public override string UsageText()

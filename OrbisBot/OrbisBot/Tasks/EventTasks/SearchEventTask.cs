@@ -17,12 +17,12 @@ namespace OrbisBot.Tasks.EventTasks
 
         public override string AboutText()
         {
-            return "Search for tasks by name in this channel";
+            return "Search for tasks by name in this channel or all the events in this channel";
         }
 
         public override bool CheckArgs(string[] args)
         {
-            return args.Length == 2;
+            return args.Length <= 2;
         }
 
         public override string CommandText()
@@ -32,7 +32,9 @@ namespace OrbisBot.Tasks.EventTasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            var events = Context.Instance.EventManager.EventDAOAccessor.FindEventByName(args[1], messageSource.Channel.Id);
+            var events = args.Length == 2 ?
+                    Context.Instance.EventManager.EventDAOAccessor.FindEventByName(args[1], messageSource.Channel.Id) :
+                    Context.Instance.EventManager.EventDAOAccessor.FindEventByChannel(messageSource.Channel.Id);
 
             var builder = new StringBuilder();
 
@@ -41,7 +43,7 @@ namespace OrbisBot.Tasks.EventTasks
                 builder.AppendLine($"ID: {s.EventId}")
                         .AppendLine($"Name: {s.EventName}")
                         .AppendLine($"Message: {s.Message}")
-                        .AppendLine($"Next Dispatch: {s.DispatchTime}");
+                        .AppendLine($"Next Dispatch: {s.DispatchTime} UTC");
 
                 if (s.NextDispatchPeriod > 0)
                 {
@@ -51,7 +53,8 @@ namespace OrbisBot.Tasks.EventTasks
 
             if (events.Count == 0)
             {
-                builder.AppendLine($"There are no events found for the name {args[1]}");
+                builder.AppendLine($"There are no events found ");
+                builder.Append(args.Length == 2 ? $"for {args[1]}" : "for your channel");
             }
 
             return builder.ToString();
@@ -59,7 +62,7 @@ namespace OrbisBot.Tasks.EventTasks
 
         public override string UsageText()
         {
-            return "\"(event name)\"";
+            return "*\"(event name)\"";
         }
     }
 }
