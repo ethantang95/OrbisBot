@@ -33,19 +33,19 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            if (!Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))
+            if (!Context.Instance.Tasks.ContainsKey(args[1]))
             {
                 return $"The command {args[1]} does not exist in this channel";
             }
 
-            if (!(Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]] is CustomTask))
+            if (!(Context.Instance.Tasks[args[1]] is CustomTask))
             {
                 return $"The command {args[1]} is not a custom command";
             }
 
             var newOptions = CommandParser.ParseList(args[2]);
 
-            var command = (CustomTask)Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
+            var command = (CustomTask)Context.Instance.Tasks[args[1]];
 
             if (command.TaskPermission.GetCommandPermissionForChannel(messageSource.Channel.Id) == PermissionLevel.UsageDenied)
             {

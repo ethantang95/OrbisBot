@@ -130,43 +130,41 @@ namespace OrbisBot
             {
                 try
                 {
+                    //first, check for the trigger char
+                    var triggerChar = eventArgs.Channel.IsPrivate ?
+                            '-' : Context.Instance.ServerSettings.GetTriggerChar(eventArgs.Server.Id);
+
+                    if (eventArgs.Message.Text[0] != triggerChar && !eventArgs.Channel.IsPrivate)
+                    {
+                        return;
+                    }
+
+                    var command = eventArgs.Message.Text.Split(' ')[0].Substring(1);
+                    if (Context.Instance.Tasks.ContainsKey(command.ToLower()))
+                    {
+                        var task = Context.Instance.Tasks[command.ToLower()];
+                        var args = CommandParser.ParseCommand(eventArgs.Message.Text);
+                        task.RunTask(args, eventArgs);
+                    }
+                    else if (eventArgs.Message.IsMentioningMe())
+                    {
+                        var aboutTask = Context.Instance.Tasks["bot-mention"];
+                        aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
+                        //pass in a dummy string to bypass the NPE
+                    }
+                    else if (Context.Instance.InProgressStateTasks.ContainsKey(eventArgs.User.Id))
+                    {
+                        var task = Context.Instance.InProgressStateTasks[eventArgs.User.Id];
+                        var args = CommandParser.ParseCommand(eventArgs.Message.Text);
+                        task.RunStateTask(args, eventArgs);
+                    }
                     if (eventArgs.Channel.IsPrivate)
                     {
                         //private message, forward it to the private inbox
-                            var result = await GetCommandChannel().SendMessage($"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
+                        var result = await GetCommandChannel().SendMessage($"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
 
-                        var replyResult = await eventArgs.User.PrivateChannel.SendMessage("Your message has been sent to a developer, he/she will get back to you shortly. The command trigger for the bot is '-'. To know more about the bot, try '-about'");
+                        var replyResult = await eventArgs.User.PrivateChannel.SendMessage("Your message has been sent to a developer, he/she will get back to you shortly. The command trigger for the bot is '-'. To know more about the bot, try '-about'. You may use commands inside a private channel with the bot, however, it is not guarenteed the commands will be stable as the bot was made for server usage. The developers are currently working on it");
 
-                    }
-                    else
-                    {
-                        //first, check for the trigger char
-                        var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(eventArgs.Server.Id);
-
-                        if (eventArgs.Message.Text[0] != triggerChar)
-                        {
-                            return;
-                        }
-
-                        var command = eventArgs.Message.Text.Split(' ')[0].Substring(1);
-                        if (Context.Instance.Tasks.ContainsKey(command.ToLower()))
-                        {
-                            var task = Context.Instance.Tasks[command.ToLower()];
-                            var args = CommandParser.ParseCommand(eventArgs.Message.Text);
-                            task.RunTask(args, eventArgs);
-                        }
-                        else if (eventArgs.Message.IsMentioningMe())
-                        {
-                            var aboutTask = Context.Instance.Tasks[Constants.TRIGGER_CHAR + "bot-mention"];
-                            aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
-                            //pass in a dummy string to bypass the NPE
-                        }
-                        else if (Context.Instance.InProgressStateTasks.ContainsKey(eventArgs.User.Id))
-                        {
-                            var task = Context.Instance.InProgressStateTasks[eventArgs.User.Id];
-                            var args = CommandParser.ParseCommand(eventArgs.Message.Text);
-                            task.RunStateTask(args, eventArgs);
-                        }
                     }
                 }
                 catch (Exception ex)

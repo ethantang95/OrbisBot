@@ -77,7 +77,5 @@ namespace OrbisBot
         public const string NO_PARAMS_USAGE = "This task takes in no additional parameters";
 
         public const string DISCORD_API_ENDPOINT = "https://discordapp.com/api/";
-
-        public const string TRIGGER_CHAR = "-";
     }
 }

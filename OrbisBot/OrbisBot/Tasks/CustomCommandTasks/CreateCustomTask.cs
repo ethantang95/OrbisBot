@@ -48,9 +48,9 @@ namespace OrbisBot.Tasks
             //%e(eval) represents an evaluation of a mathematical expression
             //%u represents self
 
-            int maxParams = Int32.Parse(args[2]);
+            int maxParams = int.Parse(args[2]);
 
-            if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]) && Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]].GetType() != typeof(CustomTask))
+            if (Context.Instance.Tasks.ContainsKey(args[1]) && Context.Instance.Tasks[args[1]].GetType() != typeof(CustomTask))
             {
                 return "The name of the command already exist and is not a custom command";
             }
@@ -64,9 +64,9 @@ namespace OrbisBot.Tasks
 
             var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(messageSource.Server.Id);
 
-            if (Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))
+            if (Context.Instance.Tasks.ContainsKey(args[1]))
             {
-                var task = (CustomTask)Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
+                var task = (CustomTask)Context.Instance.Tasks[args[1]];
                 task.AddContent(customCommand);
                 return $"The command {triggerChar}{task.CommandText()} has been added";
             }

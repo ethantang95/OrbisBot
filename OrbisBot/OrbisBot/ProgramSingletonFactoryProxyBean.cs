@@ -250,7 +250,7 @@ namespace OrbisBot
                 });
             }
             catch (Exception e)
-            {
+            { 
                 //loop it to restart... yeah this might not be a good idea
                 Console.WriteLine($"An error has occurred {e.ToString()}");
                 _restartToken = true;

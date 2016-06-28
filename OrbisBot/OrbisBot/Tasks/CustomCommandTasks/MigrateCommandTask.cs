@@ -35,12 +35,12 @@ namespace OrbisBot.Tasks
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
             //check to see if it exists
-            if (!Context.Instance.Tasks.ContainsKey(Constants.TRIGGER_CHAR + args[1]))
+            if (!Context.Instance.Tasks.ContainsKey(args[1]))
             {
                 return $"The command {args[1]} does not exist on this server";
             }
 
-            var task = Context.Instance.Tasks[Constants.TRIGGER_CHAR + args[1]];
+            var task = Context.Instance.Tasks[args[1]];
 
             if (!(task is CustomTask))
             {

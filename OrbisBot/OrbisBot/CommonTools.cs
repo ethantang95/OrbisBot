@@ -155,7 +155,7 @@ namespace OrbisBot
                 offset = tst.BaseUtcOffset.Hours;
             }
 
-            return offset + ":00";
+            return offset > 0 ? $"+{offset}:00" : $"{offset}:00";
         }
     }
 }
