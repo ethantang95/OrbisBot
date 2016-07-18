@@ -7,6 +7,8 @@ using OrbisBot.Tasks;
 using OrbisBot.TaskHelpers.CustomCommands;
 using OrbisBot.Events;
 using OrbisBot.OrbScript;
+using OrbisBot.TaskHelpers.ImageCreator;
+using OrbisBot.TaskHelpers.AWS;
 
 namespace OrbisBot
 {
@@ -34,12 +36,24 @@ namespace OrbisBot
 
         public static Channel GetCommandChannel()
         {
-            return GetChannelFromID(UInt64.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
+            return GetChannelFromID(ulong.Parse(ConfigurationManager.AppSettings[Constants.COMMAND_CHANNEL]));
         }
 
         public static void SetGame(string game)
         {
             Context.Instance.Client.SetGame(game);
+        }
+
+        public static async Task<Message> SendChannelMessage(Channel channel, string message)
+        {
+            if (message.Length > 2000)
+            {
+                var imageMsg = LongTextToImage.TextToImage(message);
+
+                message = AWSS3UploadUtil.UploadImage(imageMsg);
+            }
+
+            return await channel.SendMessage(message);
         }
 
         public static async Task<bool> SendPrivateMessage(ulong userId, string message)
@@ -54,7 +68,7 @@ namespace OrbisBot
             }
             try
             {
-                var result = await user.PrivateChannel.SendMessage(message);
+                var result = await SendChannelMessage(user.PrivateChannel, message);
             }
             catch (Exception e)
             {
@@ -68,7 +82,7 @@ namespace OrbisBot
         {
             try
             {
-                var result = await GetCommandChannel().SendMessage($"An exception has occurred with the details {ex.ToString()}");
+                var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred with the details {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -80,7 +94,7 @@ namespace OrbisBot
         {
             try
             {
-                var result = await GetCommandChannel().SendMessage($"channel {eventArgs.Channel.Name} of {eventArgs.Server.Name} has logged the message of {message}");
+                var result = await SendChannelMessage(GetCommandChannel(), $"channel {eventArgs.Channel.Name} of {eventArgs.Server.Name} has logged the message of {message}");
             }
             catch (Exception e)
             {
@@ -92,7 +106,7 @@ namespace OrbisBot
         {
             try
             { 
-                var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.ToString()}");
+                var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred in channel {eventArgs.Channel.Name} in server {eventArgs.Server.Name} with the message: {eventArgs.Message.Text}. \n The exception details are: {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -104,7 +118,7 @@ namespace OrbisBot
         {
             try
             {
-                var result = await GetCommandChannel().SendMessage($"An exception has occurred in attempting to send private message to {user.Id} - {user.Name} with the message: {message}. \n The exception details are: {ex.ToString()}");
+                var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred in attempting to send private message to {user.Id} - {user.Name} with the message: {message}. \n The exception details are: {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -116,7 +130,7 @@ namespace OrbisBot
         {
             try
             {
-                var result = await GetCommandChannel().SendMessage( $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.ToString()}");
+                var result = await SendChannelMessage(GetCommandChannel(), $"An event {eventForm.EventId} has failed to be dispatched for server {eventForm.ServerId}, channel {eventForm.ChannelId}, user {eventForm.UserId}. The event message is {eventForm.Message}. \n The exception details are: {ex.ToString()}");
             }
             catch (Exception e)
             {
@@ -134,23 +148,22 @@ namespace OrbisBot
                     var triggerChar = eventArgs.Channel.IsPrivate ?
                             '-' : Context.Instance.ServerSettings.GetTriggerChar(eventArgs.Server.Id);
 
-                    if (eventArgs.Message.Text[0] != triggerChar && !eventArgs.Channel.IsPrivate)
+                    //execute the task
+                    if (eventArgs.Message.Text.Length != 0 && eventArgs.Message.Text[0] == triggerChar)
                     {
-                        return;
-                    }
-
-                    var command = eventArgs.Message.Text.Split(' ')[0].Substring(1);
-                    if (Context.Instance.Tasks.ContainsKey(command.ToLower()))
-                    {
-                        var task = Context.Instance.Tasks[command.ToLower()];
-                        var args = CommandParser.ParseCommand(eventArgs.Message.Text);
-                        task.RunTask(args, eventArgs);
-                    }
-                    else if (eventArgs.Message.IsMentioningMe())
-                    {
-                        var aboutTask = Context.Instance.Tasks["bot-mention"];
-                        aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
-                        //pass in a dummy string to bypass the NPE
+                        var command = eventArgs.Message.Text.Split(' ')[0].Substring(1);
+                        if (Context.Instance.Tasks.ContainsKey(command.ToLower()))
+                        {
+                            var task = Context.Instance.Tasks[command.ToLower()];
+                            var args = CommandParser.ParseCommand(eventArgs.Message.Text);
+                            task.RunTask(args, eventArgs);
+                        }
+                        else if (eventArgs.Message.IsMentioningMe())
+                        {
+                            var aboutTask = Context.Instance.Tasks["bot-mention"];
+                            aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
+                            //pass in a dummy string to bypass the NPE
+                        }
                     }
                     else if (Context.Instance.InProgressStateTasks.ContainsKey(eventArgs.User.Id))
                     {
@@ -158,12 +171,12 @@ namespace OrbisBot
                         var args = CommandParser.ParseCommand(eventArgs.Message.Text);
                         task.RunStateTask(args, eventArgs);
                     }
-                    if (eventArgs.Channel.IsPrivate)
+                    else if (eventArgs.Channel.IsPrivate)
                     {
                         //private message, forward it to the private inbox
-                        var result = await GetCommandChannel().SendMessage($"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
+                        var result = await SendChannelMessage(GetCommandChannel(), $"User {eventArgs.User.Name}, {eventArgs.User.Id}: {eventArgs.Message.Text}");
 
-                        var replyResult = await eventArgs.User.PrivateChannel.SendMessage("Your message has been sent to a developer, he/she will get back to you shortly. The command trigger for the bot is '-'. To know more about the bot, try '-about'. You may use commands inside a private channel with the bot, however, it is not guarenteed the commands will be stable as the bot was made for server usage. The developers are currently working on it");
+                        var replyResult = await SendChannelMessage(eventArgs.User.PrivateChannel, "Your message has been sent to a developer, he/she will get back to you shortly. The command trigger for the bot is '-'. To know more about the bot, try '-about'. You may use commands inside a private channel with the bot, however, it is not guarenteed the commands will be stable as the bot was made for server usage. The developers are currently working on it");
 
                     }
                 }
@@ -201,13 +214,13 @@ namespace OrbisBot
 
                     var message = engine.EvaluateString(server.WelcomeMsg);
 
-                    var result = await channel.SendMessage(message);
+                    var result = await SendChannelMessage(channel, message);
                 }
                 catch (Exception e)
                 {
                     try
                     {
-                        var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.WelcomeMsg}. \n The exception details are: {e.ToString()}");
+                        var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.WelcomeMsg}. \n The exception details are: {e.ToString()}");
                     }
                     catch (Exception ex)
                     {
@@ -244,13 +257,13 @@ namespace OrbisBot
 
                     var message = engine.EvaluateString(server.GoodbyeMsg);
 
-                    var result = await channel.SendMessage(message);
+                    var result = await SendChannelMessage(channel, message);
                 }
                 catch (Exception e)
                 {
                     try
                     {
-                        var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.GoodbyeMsg}. \n The exception details are: {e.ToString()}");
+                        var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name} with the message: {server.GoodbyeMsg}. \n The exception details are: {e.ToString()}");
                     }
                     catch (Exception ex)
                     {
@@ -273,7 +286,7 @@ namespace OrbisBot
 
                     var message = engine.EvaluateString(server.GoodbyePms);
 
-                    var result = await eventArgs.User.SendMessage(message);
+                    var result = await SendChannelMessage(eventArgs.User.PrivateChannel, message);
                 }
                 catch (Exception e)
                 {
@@ -302,13 +315,13 @@ namespace OrbisBot
 
             try
             {
-                var result = await channel.SendMessage($"User {eventArgs.User.Name} has been banned from the server");
+                var result = await SendChannelMessage(channel, $"User {eventArgs.User.Name} has been banned from the server");
             }
             catch (Exception e)
             {
                 try
                 {
-                    var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name}. \n The exception details are: {e.ToString()}");
+                    var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name}. \n The exception details are: {e.ToString()}");
                 }
                 catch (Exception ex)
                 {
@@ -318,7 +331,7 @@ namespace OrbisBot
 
             try
             {
-                var result = await eventArgs.Server.Owner.SendMessage($"User {eventArgs.User.Name} has been banned from the server");
+                var result = await SendChannelMessage(eventArgs.Server.Owner.PrivateChannel, $"User {eventArgs.User.Name} has been banned from the server");
             }
             catch (Exception e)
             {
@@ -346,13 +359,13 @@ namespace OrbisBot
 
             try
             {
-                var result = await channel.SendMessage($"User {eventArgs.User.Name} has been unbanned from the server");
+                var result = await SendChannelMessage(channel, $"User {eventArgs.User.Name} has been unbanned from the server");
             }
             catch (Exception e)
             {
                 try
                 {
-                    var result = await GetCommandChannel().SendMessage($"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name}. \n The exception details are: {e.ToString()}");
+                    var result = await SendChannelMessage(GetCommandChannel(), $"An exception has occurred in channel {channel.Name} in server {eventArgs.Server.Name}. \n The exception details are: {e.ToString()}");
                 }
                 catch (Exception ex)
                 {
@@ -362,7 +375,7 @@ namespace OrbisBot
 
             try
             {
-                var result = await eventArgs.Server.Owner.SendMessage($"User {eventArgs.User.Name} has been unbanned from the server");
+                var result = await SendChannelMessage(eventArgs.Server.Owner.PrivateChannel, $"User {eventArgs.User.Name} has been unbanned from the server");
             }
             catch (Exception e)
             {

@@ -101,6 +101,7 @@ namespace OrbisBot
 
             //EventTasks
             AddTask(new CreateEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
+            AddTask(new DevRemoveEventTask(new CommandChannelTaskPermissionBuilder().BuildPermission()));
             AddTask(new RemoveEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
             AddTask(new SearchEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
             AddTask(new SkipEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));

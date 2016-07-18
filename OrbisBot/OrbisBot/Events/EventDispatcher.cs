@@ -33,7 +33,7 @@ namespace OrbisBot.Events
             }
             try
             {
-                EventDispatch(eventForm);
+                await EventDispatch(eventForm);
             }
             catch (Exception e)
             {
@@ -55,23 +55,23 @@ namespace OrbisBot.Events
 
         private static async Task PublishTask(string message, Channel channel)
         {
-            if (message == "" || message == String.Empty)
+            if (message == "" || message == string.Empty)
             {
                 return;
             }
 
-            var result = await channel.SendMessage(message);
+            var result = await DiscordMethods.SendChannelMessage(channel, message);
         }
 
-        private static void EventDispatch(EventForm eventForm)
+        private static async Task EventDispatch(EventForm eventForm)
         {
             switch (eventForm.EventType)
             {
-                case EventType.ChannelEvent: DispatchChannelEvent(eventForm);
+                case EventType.ChannelEvent: await DispatchChannelEvent(eventForm);
                     break;
-                case EventType.ServerEvent: DispatchServerEvent(eventForm);
+                case EventType.ServerEvent: await DispatchServerEvent(eventForm);
                     break;
-                case EventType.UserEvent: DispatchUserEvent(eventForm);
+                case EventType.UserEvent: await DispatchUserEvent(eventForm);
                     break;
                 case EventType.InternalError: throw new InvalidOperationException($"{eventForm.EventId} has an undefined event type");
                 default: throw new NotImplementedException($"An event type of {eventForm.EventType} has been tried to be executed");
@@ -79,7 +79,7 @@ namespace OrbisBot.Events
             }
         }
 
-        private static async void DispatchChannelEvent(EventForm eventForm)
+        private static async Task DispatchChannelEvent(EventForm eventForm)
         {
             var channel = DiscordMethods.GetChannelFromID(eventForm.ChannelId);
 
@@ -107,7 +107,7 @@ namespace OrbisBot.Events
             await PublishTask(message, channel);
         }
 
-        private static async void DispatchServerEvent(EventForm eventForm)
+        private static async Task DispatchServerEvent(EventForm eventForm)
         {
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
 
@@ -135,7 +135,7 @@ namespace OrbisBot.Events
             await PublishTask(message, mainChannel);
         }
 
-        private static async void DispatchUserEvent(EventForm eventForm)
+        private static async Task DispatchUserEvent(EventForm eventForm)
         {
             //this will just pm the user
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
@@ -148,7 +148,7 @@ namespace OrbisBot.Events
 
             var message = engine.EvaluateString($"Reminder: {eventForm.Message}");
 
-            await user.PrivateChannel.SendMessage(message);
+            await DiscordMethods.SendChannelMessage(user.PrivateChannel, message);
         }
     }
 }

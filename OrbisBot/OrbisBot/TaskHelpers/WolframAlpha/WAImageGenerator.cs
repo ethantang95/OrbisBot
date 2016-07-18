@@ -12,8 +12,8 @@ namespace OrbisBot.TaskHelpers.WolframAlpha
 
     sealed class WAImageGenerator
     {
-        private const int TitleSize = 35;
-        private const int TitleTopMargin = 10;
+        private const int TITLE_SIZE = 35;
+        private const int TITLE_TOP_MARGIN = 10;
         private List<Pod> _pods { get; set; }
         private int _height { get; set; }
         private int _width { get; set; }
@@ -32,7 +32,7 @@ namespace OrbisBot.TaskHelpers.WolframAlpha
 
         private void AddPod(Pod pod)
         {
-            _height += TitleSize;
+            _height += TITLE_SIZE;
             _pods.Add(pod);
             foreach (var subPod in pod.SubPods)
             {
@@ -60,7 +60,7 @@ namespace OrbisBot.TaskHelpers.WolframAlpha
                 foreach (var pod in _pods)
                 {
                     graphicsDrawer.DrawString(pod.Title, GenerateFont(), new SolidBrush(Color.Black), GenerateTextBox(currentHeight));
-                    currentHeight += TitleSize;
+                    currentHeight += TITLE_SIZE;
                     foreach (var subPod in pod.SubPods)
                     {
                         if (subPod.Image != null)
@@ -87,7 +87,7 @@ namespace OrbisBot.TaskHelpers.WolframAlpha
 
         private RectangleF GenerateTextBox(int heightLocation)
         {
-            var textArea = new RectangleF(0, heightLocation + TitleTopMargin, _width, TitleSize - TitleTopMargin);
+            var textArea = new RectangleF(0, heightLocation + TITLE_TOP_MARGIN, _width, TITLE_SIZE - TITLE_TOP_MARGIN);
             return textArea;
         }
 

@@ -11,6 +11,7 @@ using System.Net;
 using System.IO;
 using OrbisBot.TaskHelpers.AWS;
 using OrbisBot.TaskPermissions;
+using System.Drawing.Imaging;
 
 namespace OrbisBot.Tasks
 {
@@ -140,7 +141,7 @@ namespace OrbisBot.Tasks
 
             var greyScaleMini = new double[9];
             var edge = new Edge();
-            var edgeMap = new Bitmap(width, height);
+            var edgeMap = new Bitmap(width, height, PixelFormat.Format16bppArgb1555);
 
             for (var i = 1; i < height - 1; i++)
             {

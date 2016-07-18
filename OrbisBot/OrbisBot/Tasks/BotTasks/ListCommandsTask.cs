@@ -82,6 +82,7 @@ namespace OrbisBot.Tasks
 
             returnMessage.AppendLine();
             returnMessage.AppendLine("Type about after a command to see what it does or usage to see how to use it.");
+            returnMessage.AppendLine("For full documentation of the commands, it is available at https://github.com/ethantang95/OrbisBot/blob/master/Documentation/Commands%20Documentation.pdf");
 
             return returnMessage.ToString();
         }

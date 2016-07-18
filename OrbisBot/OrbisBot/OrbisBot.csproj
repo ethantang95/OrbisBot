@@ -138,6 +138,7 @@
     <Compile Include="TaskHelpers\AWS\AWSS3UploadUtil.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandFileHandler.cs" />
     <Compile Include="TaskHelpers\CustomCommands\CustomCommandForm.cs" />
+    <Compile Include="TaskHelpers\ImageCreator\LongTextToImage.cs" />
     <Compile Include="TaskHelpers\PhotoBucket\PhotoBucketRandomHelper.cs" />
     <Compile Include="TaskHelpers\Reddit\RedditRandomHelper.cs" />
     <Compile Include="TaskHelpers\UserFinder\UserFinderUtil.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Tasks\BotTasks\BotJoinTask.cs" />
     <Compile Include="Tasks\BotTasks\BotSetupTask.cs" />
     <Compile Include="Tasks\EventTasks\CreateEventTask.cs" />
+    <Compile Include="Tasks\EventTasks\DevRemoveEventTask.cs" />
     <Compile Include="Tasks\EventTasks\RemoveEventTask.cs" />
     <Compile Include="Tasks\EventTasks\SearchEventTask.cs" />
     <Compile Include="Tasks\EventTasks\SkipEventTask.cs" />

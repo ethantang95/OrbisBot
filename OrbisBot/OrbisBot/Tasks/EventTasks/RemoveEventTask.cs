@@ -99,7 +99,7 @@ namespace OrbisBot.Tasks.EventTasks
 
         public override string UsageText()
         {
-            return "\"(event name)\"";
+            return "\"(event name OR ID)\"";
         }
 
         public override string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)

@@ -38,7 +38,7 @@ namespace OrbisBot.OrbScript
 
         private bool isContinueID(char ch)
         {
-            return (char.IsLetterOrDigit(ch) || ch == '_');
+            return (char.IsLetterOrDigit(ch) || ch == '_' || ch == '-');
         }
 
         private bool isContinueNum(char ch)

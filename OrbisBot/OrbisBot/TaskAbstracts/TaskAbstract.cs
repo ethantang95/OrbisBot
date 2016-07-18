@@ -118,6 +118,7 @@ namespace OrbisBot.TaskAbstracts
 
                 await DiscordMethods.OnMessageFailure(e, messageSource);
             }
+
             await PublishMessage(taskResult, messageSource);
 
             PostTaskExecution(success, messageSource);
@@ -156,14 +157,14 @@ namespace OrbisBot.TaskAbstracts
 
         protected async Task<Message> PublishMessage(string message, MessageEventArgs messageSource)
         {
-            if (message == "" || message == String.Empty)
+            if (message == "" || message == string.Empty)
             {
                 return null;
             }
             var discordClient = Context.Instance.Client;
             try
             {
-                return await messageSource.Channel.SendMessage(message);
+                return await DiscordMethods.SendChannelMessage(messageSource.Channel, message);
             }
             catch (Exception ex)
             {
@@ -178,7 +179,7 @@ namespace OrbisBot.TaskAbstracts
 
             try
             {
-                return await messageSource.User.PrivateChannel.SendMessage(message);
+                return await DiscordMethods.SendChannelMessage(messageSource.User.PrivateChannel, message);
             }
             catch (Exception ex)
             {
