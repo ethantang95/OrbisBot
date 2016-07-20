@@ -72,7 +72,7 @@ namespace OrbisBot.Tasks
                     if (s.AdditionalCommandTexts().Count() > 0)
                     {
                         returnMessage.Append("(");
-                        returnMessage.Append(string.Join(" ", s.AdditionalCommandTexts().Select(r => $"{triggerChar}{s}")));
+                        returnMessage.Append(string.Join(" ", s.AdditionalCommandTexts().Select(r => $"{triggerChar}{r}")));
                         returnMessage.Append(") ");
                     }
 

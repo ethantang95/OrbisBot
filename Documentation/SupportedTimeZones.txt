@@ -1,0 +1,31 @@
+This is a file about the supported time zones that OrbisBot has.
+
+GMT - 0:00
+UTC - 0:00
+WET - System determined with daylight savings
+CET - System determined with daylight savings
+EET - System determined with daylight savings
+MSK - +3:00
+GST - +4:00
+TTFT - +5:00
+SLST - +5:30
+BST - +6:00
+WIT - +7:00
+AWST - System determined with daylight savings
+ACST - System determined with daylight savings
+JST - +9:00
+KST - +9:00
+AEST - System determined with daylight savings
+NCT - +11:00
+NZST - System determined with daylight savings
+CVT - -1:00
+UYST - -2:00
+PMST - -3:00
+NST - System determined with daylight savings
+AST - -4:00
+EST - System determined with daylight savings
+CST - System determined with daylight savings
+MST - System determined with daylight savings
+PST - System determined with daylight savings
+AKST - System determined with daylight savings
+HST - -10:00

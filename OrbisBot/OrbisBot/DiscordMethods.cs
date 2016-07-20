@@ -50,7 +50,7 @@ namespace OrbisBot
             {
                 var imageMsg = LongTextToImage.TextToImage(message);
 
-                message = AWSS3UploadUtil.UploadImage(imageMsg);
+                message = $"The message exceeded the 2000 character limit of discord. The result is now uploaded onto an image at: {AWSS3UploadUtil.UploadImage(imageMsg)}";
             }
 
             return await channel.SendMessage(message);
