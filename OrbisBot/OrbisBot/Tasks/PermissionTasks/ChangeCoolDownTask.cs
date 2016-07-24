@@ -53,7 +53,7 @@ namespace OrbisBot.Tasks
                 return "You do not have sufficient permission to change the cooldown of the command";
             }
 
-            var cooldown = Int32.Parse(args[2]);
+            var cooldown = int.Parse(args[2]);
 
             command.TaskPermission.SetCoolDownForChannel(messageSource.Channel.Id, cooldown);
 

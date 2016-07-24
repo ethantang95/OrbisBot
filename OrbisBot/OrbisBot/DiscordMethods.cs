@@ -158,12 +158,12 @@ namespace OrbisBot
                             var args = CommandParser.ParseCommand(eventArgs.Message.Text);
                             task.RunTask(args, eventArgs);
                         }
-                        else if (eventArgs.Message.IsMentioningMe())
-                        {
-                            var aboutTask = Context.Instance.Tasks["bot-mention"];
-                            aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
-                            //pass in a dummy string to bypass the NPE
-                        }
+                    }
+                    else if (eventArgs.Message.IsMentioningMe())
+                    {
+                        var aboutTask = Context.Instance.Tasks["bot-mention"];
+                        aboutTask.RunTask(new string[] { "dummy" }, eventArgs);
+                        //pass in a dummy string to bypass the NPE
                     }
                     else if (Context.Instance.InProgressStateTasks.ContainsKey(eventArgs.User.Id))
                     {

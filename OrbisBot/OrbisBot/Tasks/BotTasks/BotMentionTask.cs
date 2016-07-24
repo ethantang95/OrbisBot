@@ -33,7 +33,8 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            return $"Hello {messageSource.User.Name}, I am OrbisBot, type -About to learn more about me";
+            var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(messageSource.Server.Id);
+            return $"Hello {messageSource.User.Name}, I am OrbisBot, type {triggerChar}About to learn more about me. To activate this bot in this server, the character is {triggerChar}";
         }
 
         public override string UsageText()

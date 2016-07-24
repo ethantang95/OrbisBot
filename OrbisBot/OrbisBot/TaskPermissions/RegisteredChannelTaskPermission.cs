@@ -9,11 +9,11 @@ using OrbisBot.TaskPermissions.Interfaces;
 
 namespace OrbisBot.TaskPermissions
 {
-    class RegisteredChannelTaskPermission : TaskPermissionAbstract
+    class RegisteredChannelTaskPermission<T> : TaskPermissionAbstract where T : ICommandPermissionForm
     {
         IPermissionSaver _saver;
-        IEnumerable<ICommandPermissionForm> _forms;
-        public RegisteredChannelTaskPermission(CommandPermission permission, IEnumerable<ICommandPermissionForm> permissionForms, IPermissionSaver saver) : base(permission)
+        ICollection<T> _forms;
+        public RegisteredChannelTaskPermission(CommandPermission permission, ICollection<T> permissionForms, IPermissionSaver saver) : base(permission)
         {
             _forms = permissionForms;
             _saver = saver;
@@ -73,6 +73,27 @@ namespace OrbisBot.TaskPermissions
         {
             return Context.Instance.ChannelPermission.GetUserPermission(messageEventArgs.Channel.Id,
                 messageEventArgs.User.Id);
+        }
+
+        public override void AddPermission(ICommandPermissionForm permission)
+        {
+            _forms.Add((T)permission);
+            _saver.SaveSettings(_forms);
+            base.AddPermission(permission);
+        }
+
+        public override void RemovePermission(ulong channelId)
+        {
+            var form = _forms.First(s => s.Channel == channelId);
+            _forms.Remove(form);
+            _saver.SaveSettings(_forms);
+            base.RemovePermission(channelId);
+        }
+
+        public override void UpdatePermission(ICommandPermissionForm permission)
+        {
+            RemovePermission(permission.Channel);
+            AddPermission(permission);
         }
     }
 }

@@ -37,17 +37,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            //the first args will be what the command is called
-            //the second args is how many (most) args will the commands take
-            //the third args are the commands that will be randomly picked
-            //commands can be specified with these replacement args
-            //%1...N represents the args passed by the user calling the custom command
-            //%r(a:b) represents getting a random number between the range of a to b
-            //%v1...N(a) represents that the value inside there will be watched
-            //%?(%ea op %eb)(a : b) represents a boolean evaluation where a or b are the return results
-            //%e(eval) represents an evaluation of a mathematical expression
-            //%u represents self
-
             int maxParams = int.Parse(args[2]);
 
             if (Context.Instance.Tasks.ContainsKey(args[1]) && Context.Instance.Tasks[args[1]].GetType() != typeof(CustomTask))
@@ -73,7 +62,7 @@ namespace OrbisBot.Tasks
 
             var customCommandList = new List<CustomCommandForm> { customCommand };
 
-            var permission = new RegisteredChannelTaskPermissionBuilder()
+            var permission = new RegisteredChannelTaskPermissionBuilder<CustomCommandForm>()
                     .SetSaver(new SaveCustomCommands())
                     .SetPermissions(customCommandList)
                     .BuildPermission();

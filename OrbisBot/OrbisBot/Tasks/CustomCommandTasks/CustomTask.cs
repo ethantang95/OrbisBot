@@ -16,7 +16,7 @@ namespace OrbisBot.Tasks
     {
         private string _commandText;
         private Dictionary<ulong, CustomCommandForm> _customCommands;
-        public CustomTask(string commandName, List<CustomCommandForm> commands, RegisteredChannelTaskPermission permission) : base(permission)
+        public CustomTask(string commandName, List<CustomCommandForm> commands, RegisteredChannelTaskPermission<CustomCommandForm> permission) : base(permission)
         {
             _commandText = commandName;
             _customCommands = commands.ToDictionary(s => s.Channel, s => s);
@@ -86,27 +86,23 @@ namespace OrbisBot.Tasks
             if (!_customCommands.ContainsKey(toAdd.Channel))
             {
                 _customCommands.Add(toAdd.Channel, toAdd);
-                TaskPermission.CommandPermission.ChannelPermission.Add(toAdd.Channel, new ChannelPermissionSetting(toAdd.PermissionLevel, toAdd.CoolDown));
+                TaskPermission.AddPermission(toAdd);
             }
             else
             {
                 _customCommands[toAdd.Channel] = toAdd;
+                TaskPermission.UpdatePermission(toAdd);
             }
-            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
         }
 
         public void RemoveCommand(ulong channelId)
         {
             _customCommands.Remove(channelId);
-            TaskPermission.CommandPermission.ChannelPermission.Remove(channelId);
+            TaskPermission.RemovePermission(channelId);
             if (_customCommands.Count == 0)
             {
                 CustomCommandFileHandler.RemoveTaskFile(_commandText + ".txt");
                 Context.Instance.Tasks.Remove(CommandText());
-            }
-            else
-            {
-                CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
             }
         }
 
@@ -116,7 +112,7 @@ namespace OrbisBot.Tasks
 
             content.ReturnValues.AddRange(newCommands);
 
-            CustomCommandFileHandler.SaveCustomTask(GetCustomCommands());
+            TaskPermission.UpdatePermission(content);
         }
 
         public List<CustomCommandForm> GetCustomCommands()

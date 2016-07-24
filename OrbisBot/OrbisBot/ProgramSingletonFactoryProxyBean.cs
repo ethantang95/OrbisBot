@@ -142,7 +142,7 @@ namespace OrbisBot
             files.ForEach(s =>
             {
                 var customTaskContents = CustomCommandFileHandler.GetCustomTaskFromFile(s);
-                var permission = new RegisteredChannelTaskPermissionBuilder()
+                var permission = new RegisteredChannelTaskPermissionBuilder<CustomCommandForm>()
                         .SetSaver(new SaveCustomCommands())
                         .SetPermissions(customTaskContents)
                         .BuildPermission();

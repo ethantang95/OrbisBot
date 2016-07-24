@@ -24,5 +24,22 @@ namespace OrbisBot.TaskPermissions
         public abstract void SetCommandPermissionForChannel(ulong channelId, PermissionLevel newPermissionLevel);
 
         public abstract void SetCoolDownForChannel(ulong channelId, int cooldown);
+
+        public virtual void AddPermission(ICommandPermissionForm permission)
+        {
+            CommandPermission.AddPermission(permission);
+        }
+
+        public virtual void RemovePermission(ulong channelId)
+        {
+            CommandPermission.ChannelPermission.Remove(channelId);
+        }
+
+        public virtual void UpdatePermission(ICommandPermissionForm permission)
+        {
+            //kind of a really lazy implementation to ensure update
+            RemovePermission(permission.Channel);
+            AddPermission(permission);
+        }
     }
 }

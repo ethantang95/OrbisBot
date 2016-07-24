@@ -29,8 +29,9 @@ namespace OrbisBot.Tasks
             //we don't need channel registeration because channel permission does it when we register
             if (messageSource.Server.Owner.Id == messageSource.User.Id)
             {
+                var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(messageSource.Server.Id);
                 Context.Instance.ChannelPermission.SetUserPermission(messageSource.Server.Id, messageSource.Channel.Id, messageSource.User.Id, PermissionLevel.Owner);
-                return "You were detected as the owner of this channel, you have been granted the permission level of owner. Try the command -user-autopermission to automatically assign members to their proper role for this bot based on their server permissions";
+                return $"You were detected as the owner of this channel, you have been granted the permission level of owner. Try the command {triggerChar}user-autopermission to automatically assign members to their proper role for this bot based on their server permissions";
             }
 
             if (Context.Instance.ChannelPermission.ContainsChannel(messageSource.Channel.Id) &&

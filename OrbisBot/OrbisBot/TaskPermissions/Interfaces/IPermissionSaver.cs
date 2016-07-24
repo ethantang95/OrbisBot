@@ -9,6 +9,6 @@ namespace OrbisBot.TaskPermissions.Interfaces
 {
     interface IPermissionSaver
     {
-        void SaveSettings(IEnumerable<ICommandPermissionForm> permission);
+        void SaveSettings<T>(ICollection<T> permission) where T : ICommandPermissionForm;
     }
 }
