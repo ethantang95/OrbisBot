@@ -11,16 +11,15 @@ namespace OrbisBot.OrbScript
     class OrbScriptEngine
     {
         private OrbScriptConfiger _config;
-        private User _focusUser;
         private string _evalString;
         private Dictionary<string, string> _vars;
-        private OrbScriptLexer _lexer;
+        private Dictionary<string, string> _evals;
 
-        public OrbScriptEngine(OrbScriptConfiger config, User focusUser)
+        public OrbScriptEngine(OrbScriptConfiger config)
         {
             _config = config;
-            _focusUser = focusUser;
             _vars = new Dictionary<string, string>();
+            _evals = new Dictionary<string, string>();
         }
 
         public void SetArgs()
@@ -34,7 +33,7 @@ namespace OrbisBot.OrbScript
             {
                 _vars.Add($"param{i+1}", args[i]);
             }
-            _vars.Add("user", _focusUser.Name);
+            _vars.Add("user", _config.FocusUser.Name);
         }
 
         public void SetCustomArgs(string name, string value)
@@ -73,7 +72,20 @@ namespace OrbisBot.OrbScript
             return builder.ToString();
         }
 
-        private bool ExtractVariables()
+        private bool InspectVarDeclarationBeginning()
+        {
+            var lexer = new OrbScriptLexer(_evalString);
+            if (!lexer.inspect("$"))
+            {
+                return false;
+            }
+            lexer.consume("$");
+            var varName = lexer.consumeVar();
+
+            return _vars.ContainsKey(varName);
+        }
+
+        private void ExtractVariables()
         {
             //args will have the format $<name>=(<eval>)
             while (_lexer.inspect("$"))
@@ -208,15 +220,15 @@ namespace OrbisBot.OrbScript
                     return OrbisBotFunctions.SetVariable(args[0], args[1], _config.EventArgs.Channel.Id, _config.SourceCommand);
                 case "SetUserVariable":
                     CheckIfType(name, OrbScriptBuildType.Standard);
-                    return OrbisBotFunctions.SetUserVariable(args[0], args[1], _config.EventArgs.Channel.Id, _focusUser.Id, _config.SourceCommand);
+                    return OrbisBotFunctions.SetUserVariable(args[0], args[1], _config.EventArgs.Channel.Id, _config.FocusUser.Id, _config.SourceCommand);
                 case "GetVariable":
                     CheckIfType(name, OrbScriptBuildType.Standard);
                     return OrbisBotFunctions.GetVariable(args[0], args[1], _config.EventArgs.Channel.Id, _config.SourceCommand);
                 case "GetUserVariable":
                     CheckIfType(name, OrbScriptBuildType.Standard);
-                    return OrbisBotFunctions.GetUserVariable(args[0], args[1], _config.EventArgs.Channel.Id, _focusUser.Id, _config.SourceCommand);
+                    return OrbisBotFunctions.GetUserVariable(args[0], args[1], _config.EventArgs.Channel.Id, _config.FocusUser.Id, _config.SourceCommand);
 
-                case "MentionUser": return ScriptFunctions.MentionUser(_focusUser);
+                case "MentionUser": return ScriptFunctions.MentionUser(_config.FocusUser);
                 case "FindAndMentionUser": CheckIfType(name, OrbScriptBuildType.Standard, OrbScriptBuildType.Events);
                     return ScriptFunctions.FindAndMentionUser(args[0], _config.UserList, _config.IgnoreList);
                 case "FindUser": CheckIfType(name, OrbScriptBuildType.Standard, OrbScriptBuildType.Events);
@@ -251,13 +263,12 @@ namespace OrbisBot.OrbScript
                 case "Or": return ScriptBasicFunctions.Or(args[0], args[1]);
                 case "Xor": return ScriptBasicFunctions.Xor(args[0], args[1]);
                 case "If": return ScriptBasicFunctions.If(args[0], args[1], args[2]);
-                //case "Loop": return ScriptBasicFunctions.LessEqual(args[0], args[1]);
                 case "Random": return ScriptBasicFunctions.Random(args[0], args[1]);
                 case "Time": return ScriptBasicFunctions.Time(args[0]);
                 case "BoolToNum": return ScriptCastFunctions.BoolToNum(args[0]);
                 case "NumToBool": return ScriptCastFunctions.NumToBool(args[0]);
                 case "TimeToUnix": return ScriptCastFunctions.TimeToUnix(args[0]);
-                case "UixToTime": return ScriptCastFunctions.UnixToTime(args[0]);
+                case "UnixToTime": return ScriptCastFunctions.UnixToTime(args[0]);
                 default: throw new ArgumentException($"Function {name} does not exist");
             }
         }

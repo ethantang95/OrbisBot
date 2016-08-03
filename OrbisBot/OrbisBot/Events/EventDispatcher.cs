@@ -84,16 +84,21 @@ namespace OrbisBot.Events
             var channel = DiscordMethods.GetChannelFromID(eventForm.ChannelId);
 
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
-
+            
             var server = DiscordMethods.GetServerFromID(eventForm.ServerId);
+
+            if (server == null)
+            {
+                throw new Exception($"Server {eventForm.ServerId} cannot be found, the owner might have dismissed the bot from the server");
+            }
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
             var roles = Context.Instance.Client.Servers.First(s => s.Id == eventForm.ServerId).Roles;
 
-            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList(roles).SetUserList(mentionUsers);
+            var config = new OrbScriptConfiger(user, OrbScriptBuildType.Events).SetRoleList(roles).SetUserList(mentionUsers);
 
-            var engine = new OrbScriptEngine(config, user);
+            var engine = new OrbScriptEngine(config);
 
             engine.SetArgs();
 
@@ -113,15 +118,20 @@ namespace OrbisBot.Events
 
             var server = DiscordMethods.GetServerFromID(eventForm.ServerId);
 
+            if (server == null)
+            {
+                throw new Exception($"Server {eventForm.ServerId} cannot be found, the owner might have dismissed the bot from the server");
+            }
+
             var mainChannel = server.TextChannels.First(s => s.Id == Context.Instance.ChannelPermission.GetMainChannelForServer(server.Id));
 
             var mentionUsers = server.Users.Where(s => eventForm.TargetUsers.Contains(s.Id));
 
             var roles = Context.Instance.Client.Servers.First(s => s.Id == eventForm.ServerId).Roles;
 
-            var config = new OrbScriptConfiger(OrbScriptBuildType.Events).SetRoleList            (roles).SetUserList(mentionUsers);
+            var config = new OrbScriptConfiger(user, OrbScriptBuildType.Events).SetRoleList            (roles).SetUserList(mentionUsers);
 
-            var engine = new OrbScriptEngine(config, user);
+            var engine = new OrbScriptEngine(config);
 
             engine.SetArgs();
 
@@ -140,9 +150,9 @@ namespace OrbisBot.Events
             //this will just pm the user
             var user = DiscordMethods.GetUserFromID(eventForm.UserId);
 
-            var config = new OrbScriptConfiger(OrbScriptBuildType.PrivateMessage);
+            var config = new OrbScriptConfiger(user, OrbScriptBuildType.PrivateMessage);
 
-            var engine = new OrbScriptEngine(config, user);
+            var engine = new OrbScriptEngine(config);
 
             engine.SetArgs();
 

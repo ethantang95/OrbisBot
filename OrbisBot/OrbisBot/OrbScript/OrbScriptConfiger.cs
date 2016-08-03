@@ -12,14 +12,16 @@ namespace OrbisBot.OrbScript
     {
         public IEnumerable<User> UserList { get; private set; }
         public IEnumerable<Role> RoleList { get; private set; }
+        public User FocusUser { get; private set; }
         public HashSet<ulong> IgnoreList { get; private set; }
         public OrbScriptBuildType BuildType { get; private set; }
         public MessageEventArgs EventArgs { get; private set; }
         public string SourceCommand { get; private set; }
         public int Iterations { get; private set; }
 
-        public OrbScriptConfiger(OrbScriptBuildType buildType = OrbScriptBuildType.Standard)
+        public OrbScriptConfiger(User focusUSer, OrbScriptBuildType buildType = OrbScriptBuildType.Standard)
         {
+            FocusUser = focusUSer;
             BuildType = buildType;
             UserList = new List<User>();
             RoleList = new List<Role>();
