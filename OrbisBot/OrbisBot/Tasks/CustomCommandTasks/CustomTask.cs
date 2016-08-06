@@ -55,7 +55,7 @@ namespace OrbisBot.Tasks
 
             var iterations = HasVariable(messageSource.Channel.Id, "iterations") ? (int)GetVariable(messageSource.Channel.Id, "iterations") : 0;
 
-            var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.Standard)
+            var engineConfig = new OrbScriptConfiger(messageSource.User, OrbScriptBuildType.Standard)
                 .SetEventArgs(messageSource)
                 .SetIgnoreList(Context.Instance.GlobalSetting.HideList)
                 .SetRoleList(messageSource.Server.Roles)
@@ -63,7 +63,7 @@ namespace OrbisBot.Tasks
                 .SetCallIterations(iterations)
                 .SetSourceCommand(CommandText());
 
-            var engine = new OrbScriptEngine(engineConfig, messageSource.User);
+            var engine = new OrbScriptEngine(engineConfig);
             engine.SetArgs(commandArgs);
 
             string result;

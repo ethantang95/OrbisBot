@@ -115,6 +115,9 @@
     <Compile Include="Events\EventScheduler.cs" />
     <Compile Include="GlobalSettings\GlobalSetting.cs" />
     <Compile Include="OrbScript\Functions\OrbisBotFunctions.cs" />
+    <Compile Include="OrbScript\OrbScriptEvaluator.cs" />
+    <Compile Include="OrbScript\OrbScriptException.cs" />
+    <Compile Include="OrbScript\OrbScriptExtractor.cs" />
     <Compile Include="OrbScript\Functions\ScriptBasicFunctions.cs" />
     <Compile Include="OrbScript\Functions\ScriptCastFunctions.cs" />
     <Compile Include="OrbScript\OrbScriptConfiger.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="OrbScript\OrbScriptLexer.cs" />
     <Compile Include="OrbScript\OrbScriptUtils.cs" />
     <Compile Include="OrbScript\Functions\ScriptDiscordFunctions.cs" />
+    <Compile Include="OrbScript\SymbolConstants.cs" />
     <Compile Include="Permission\ICommandPermmissionForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramSingletonFactoryProxyBean.cs" />

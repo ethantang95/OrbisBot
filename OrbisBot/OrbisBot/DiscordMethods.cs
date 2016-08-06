@@ -204,11 +204,11 @@ namespace OrbisBot
             {
                 try
                 {
-                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.JoinLeave)
+                    var engineConfig = new OrbScriptConfiger(eventArgs.User, OrbScriptBuildType.JoinLeave)
                         .SetRoleList(eventArgs.Server.Roles)
                         .SetUserList(eventArgs.Server.Users);
 
-                    var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
+                    var engine = new OrbScriptEngine(engineConfig);
 
                     engine.SetArgs();
 
@@ -247,11 +247,11 @@ namespace OrbisBot
             {
                 try
                 {
-                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.JoinLeave)
+                    var engineConfig = new OrbScriptConfiger(eventArgs.User, OrbScriptBuildType.JoinLeave)
                         .SetRoleList(eventArgs.Server.Roles)
                         .SetUserList(eventArgs.Server.Users);
 
-                    var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
+                    var engine = new OrbScriptEngine(engineConfig);
 
                     engine.SetArgs();
 
@@ -276,11 +276,11 @@ namespace OrbisBot
             {
                 try
                 {
-                    var engineConfig = new OrbScriptConfiger(OrbScriptBuildType.JoinLeave)
+                    var engineConfig = new OrbScriptConfiger(eventArgs.User, OrbScriptBuildType.JoinLeave)
                         .SetRoleList(eventArgs.Server.Roles)
                         .SetUserList(eventArgs.Server.Users);
 
-                    var engine = new OrbScriptEngine(engineConfig, eventArgs.User);
+                    var engine = new OrbScriptEngine(engineConfig);
 
                     engine.SetArgs();
 
