@@ -27,7 +27,7 @@ namespace OrbisBot.Tasks
         public override bool CheckArgs(string[] args)
         {
             int maxParams;
-            return !(args.Length != 4 || !Int32.TryParse(args[2], out maxParams)) ;
+            return !(args.Length != 4 || !int.TryParse(args[2], out maxParams)) ;
         }
 
         public override string CommandText()
@@ -37,9 +37,17 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            int maxParams = int.Parse(args[2]);
+            var newCommandName = args[1];
+            var maxParams = int.Parse(args[2]);
+            var isUpperName = false;
 
-            if (Context.Instance.Tasks.ContainsKey(args[1]) && Context.Instance.Tasks[args[1]].GetType() != typeof(CustomTask))
+            if (newCommandName.Any(s => char.IsUpper(s)))
+            {
+                newCommandName = newCommandName.ToLower();
+                isUpperName = true;
+            }
+
+            if (Context.Instance.Tasks.ContainsKey(newCommandName) && Context.Instance.Tasks[newCommandName].GetType() != typeof(CustomTask))
             {
                 return "The name of the command already exist and is not a custom command";
             }
@@ -49,13 +57,13 @@ namespace OrbisBot.Tasks
             var customReturns = CommandParser.ParseList(rawArgs[3]);
 
             //we are no longer validating the commands because it basically is a hard NP problem or even a halting problem, so we will fail on runtime
-            var customCommand = new CustomCommandForm(args[1], maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList(), 30);
+            var customCommand = new CustomCommandForm(newCommandName, maxParams, messageSource.Channel.Id, PermissionLevel.User, customReturns.ToList(), 30);
 
             var triggerChar = Context.Instance.ServerSettings.GetTriggerChar(messageSource.Server.Id);
 
-            if (Context.Instance.Tasks.ContainsKey(args[1]))
+            if (Context.Instance.Tasks.ContainsKey(newCommandName))
             {
-                var task = (CustomTask)Context.Instance.Tasks[args[1]];
+                var task = (CustomTask)Context.Instance.Tasks[newCommandName];
                 task.AddContent(customCommand);
                 return $"The command {triggerChar}{task.CommandText()} has been added";
             }
@@ -67,13 +75,15 @@ namespace OrbisBot.Tasks
                     .SetPermissions(customCommandList)
                     .BuildPermission();
 
-            var newTask = new CustomTask(args[1], customCommandList, permission);
+            var newTask = new CustomTask(newCommandName, customCommandList, permission);
 
             Context.Instance.AddTask(newTask);
 
             CustomCommandFileHandler.SaveCustomTask(newTask.GetCustomCommands());
 
-            return $"The command {triggerChar}{newTask.CommandText()} has been added";
+            var upperNotice = isUpperName ? "Your command contains an uppercase character, it has automatically been converted to all lower cases; however, you can still call the command with upper caes" : string.Empty;
+
+            return $"The command {triggerChar}{newTask.CommandText()} has been added. {upperNotice}";
         }
 
         public override string UsageText()

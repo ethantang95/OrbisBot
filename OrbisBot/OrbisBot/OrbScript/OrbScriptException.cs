@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.OrbScript
 {
-    class OrbScriptException : Exception
+    public class OrbScriptException : Exception
     {
         public OrbScriptException(string message) : base(message)
         {

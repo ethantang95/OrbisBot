@@ -8,6 +8,12 @@ namespace OrbisBot.OrbScript
 {
     public class OrbScriptLexer
     {
+        public const string STRING_BRACKET_START = "{";
+        public const string STRING_BRACKET_END = "}";
+
+        public const char STRING_BRACKET_START_CHAR = '{';
+        public const char STRING_BRACKET_END_CHAR = '}';
+
         public string Token { get; private set; }
 
         private enum Kind { SIMPLE, VAR, NUM, STRING, EOF }

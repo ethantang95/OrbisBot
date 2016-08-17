@@ -37,8 +37,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrbScriptTests\OrbScriptEvaluatorTests.cs" />
     <Compile Include="OrbScriptTests\OrbScriptExtractorTests.cs" />
-    <Compile Include="OrbScriptTests\OrbScriptLexerTest.cs" />
+    <Compile Include="OrbScriptTests\OrbScriptLexerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

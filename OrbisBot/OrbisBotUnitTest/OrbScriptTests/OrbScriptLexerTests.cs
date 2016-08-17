@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace OrbisBotUnitTest.OrbScriptTests
 {
     [TestFixture]
-    public class OrbScriptLexerTest
+    public class OrbScriptLexerTests
     {
         [Test]
         public void TestLexerConstructor()

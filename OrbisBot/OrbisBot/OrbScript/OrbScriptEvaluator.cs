@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace OrbisBot.OrbScript
 {
-    class OrbScriptEvaluator
+    public class OrbScriptEvaluator
     {
+        OrbScriptExtractorResults _extractedInfo;
+
+        public OrbScriptEvaluator(OrbScriptExtractorResults extractedInfo)
+        {
+            _extractedInfo = extractedInfo;
+        }
     }
 }
