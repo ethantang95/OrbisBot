@@ -2,7 +2,7 @@
 Orbisbot is a currently in development discord chat bot with many features already. It is built in C# on its own custom commands framework over the Discord.NET Core APIs.
 
 ### Commands
-[Link to Commands](https://github.com/ethantang95/OrbisBot/blob/master/Documentations/Commands%20Documentation.pdf)
+[Link to Commands](https://github.com/ethantang95/OrbisBot/blob/master/Documentation/Commands%20Documentation.pdf)
 
 ### Features
 
