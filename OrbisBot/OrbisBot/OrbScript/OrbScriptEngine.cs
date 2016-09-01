@@ -257,7 +257,7 @@ namespace OrbisBot.OrbScript
                 case "BoolToNum": return ScriptCastFunctions.BoolToNum(args[0]);
                 case "NumToBool": return ScriptCastFunctions.NumToBool(args[0]);
                 case "TimeToUnix": return ScriptCastFunctions.TimeToUnix(args[0]);
-                case "UixToTime": return ScriptCastFunctions.UnixToTime(args[0]);
+                case "UnixToTime": return ScriptCastFunctions.UnixToTime(args[0]);
                 default: throw new ArgumentException($"Function {name} does not exist");
             }
         }

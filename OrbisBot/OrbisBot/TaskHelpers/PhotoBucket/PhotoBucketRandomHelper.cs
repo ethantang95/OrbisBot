@@ -47,6 +47,11 @@ namespace OrbisBot.TaskHelpers.PhotoBucket
 
             var searchLinks = searchResults.Select(s => s["fullsizeUrl"].Value<string>()).ToList();
 
+            if (searchLinks.Count == 0)
+            {
+                return $"No images found for query {query}";
+            }
+
             return searchLinks[new Random().Next(0, searchLinks.Count)];
         }
     }

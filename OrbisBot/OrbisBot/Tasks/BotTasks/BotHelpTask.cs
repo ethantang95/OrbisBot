@@ -32,7 +32,8 @@ namespace OrbisBot.Tasks.BotTasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            var returnText = new StringBuilder("If you would like to get help for this bot, please visit https://discord.gg/gYaXtX2");
+            var returnText = new StringBuilder();
+            returnText.AppendLine("If you would like to get help for this bot, please visit https://discord.gg/gYaXtX2");
             returnText.AppendLine("Additionally, if you would like to see its source code, it is available at https://github.com/ethantang95/OrbisBot");
             returnText.AppendLine("You may also find the developer Cygnus - Zero2G in various bot related channels and pm me for extra help");
 
