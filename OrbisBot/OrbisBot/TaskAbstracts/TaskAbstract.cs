@@ -290,7 +290,7 @@ namespace OrbisBot.TaskAbstracts
 
         public virtual string ExceptionMessage(Exception ex, MessageEventArgs eventArgs)
         {
-            return string.Empty;
+            return "An error has occurred when using this command, the developers has been notified";
         }
 
         public int CompareTo(TaskAbstract other)

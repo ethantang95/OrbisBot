@@ -54,7 +54,7 @@ namespace OrbisBot.Tasks.EventTasks
 
                 if (candidates.Count > 1)
                 {
-                    return "Found more than one event with that name, please search the event by name to confirm the event you want to delete";
+                    return "Found more than one event with that name, please search the event by name to confirm the event you want to delete with -events-find";
                 }
                 else if (candidates.Count == 0)
                 {

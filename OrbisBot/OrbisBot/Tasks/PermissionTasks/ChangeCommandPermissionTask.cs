@@ -19,8 +19,6 @@ namespace OrbisBot.Tasks
 
         public override string TaskComponent(string[] args, MessageEventArgs messageSource)
         {
-            args[1] = "-" + args[1];
-
             //first, check to see if the command exists
             if (!Context.Instance.Tasks.ContainsKey(args[1]))
             {

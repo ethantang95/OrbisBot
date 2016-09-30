@@ -244,7 +244,7 @@ namespace OrbisBot
 #else
                     var token = ConfigurationManager.AppSettings[Constants.DISCORD_TOKEN_KEY];
 #endif
-                    await Client.Connect(token);
+                    await Client.Connect($"Bot {token}");
                     Client.SetGame($"AWS EC2 - {Constants.APP_VERSION}");
                     await Task.Delay(5000); //wait for 5 seconds to connect
                     EventManager.GetEvents();

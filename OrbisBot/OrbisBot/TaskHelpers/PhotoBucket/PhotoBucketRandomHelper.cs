@@ -35,6 +35,11 @@ namespace OrbisBot.TaskHelpers.PhotoBucket
 
             pNodes = pNodes.Where(s => s.InnerText.Contains("Pb.Data.add('searchPageCollectionData'"));
 
+            if (pNodes.Count() == 0)
+            {
+                return $"No images found for query {query}";
+            }
+
             var requestString = pNodes.First().InnerText;
 
             requestString = requestString.Replace("Pb.Data.add('doPageCollection', true);\nPb.Data.add('searchPageCollectionData',", "");
@@ -46,11 +51,6 @@ namespace OrbisBot.TaskHelpers.PhotoBucket
             var searchResults = requestJson["collectionData"]["items"]["objects"];
 
             var searchLinks = searchResults.Select(s => s["fullsizeUrl"].Value<string>()).ToList();
-
-            if (searchLinks.Count == 0)
-            {
-                return $"No images found for query {query}";
-            }
 
             return searchLinks[new Random().Next(0, searchLinks.Count)];
         }
