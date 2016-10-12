@@ -107,6 +107,7 @@ namespace OrbisBot
             AddTask(new SkipEventTask(CreateFilePermission(Constants.EVENTS_FILE, false, false, PermissionLevel.Moderator, 1)));
 
             //FunTasks
+            AddTask(new BlockifyTask(CreateFilePermission(Constants.BLOCKIFY_FILE)));
             AddTask(new ComicGeneratorTask(CreateFilePermission(Constants.RANDOM_COMIC_FILE)));
             AddTask(new CutePictureTask(CreateFilePermission(Constants.CUTE_PICTURE_FILE)));
             AddTask(new EdgeDrawerTask(CreateFilePermission(Constants.EDGE_IMAGE_FILE)));

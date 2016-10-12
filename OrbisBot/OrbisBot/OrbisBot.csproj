@@ -165,6 +165,7 @@
     <Compile Include="Tasks\EventTasks\RemoveEventTask.cs" />
     <Compile Include="Tasks\EventTasks\SearchEventTask.cs" />
     <Compile Include="Tasks\EventTasks\SkipEventTask.cs" />
+    <Compile Include="Tasks\FunTasks\BlockifyTask.cs" />
     <Compile Include="Tasks\FunTasks\ImageFetchTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AdjustUserPermissionTask.cs" />
     <Compile Include="Tasks\PermissionTasks\AutoRoleAssignTask.cs" />
